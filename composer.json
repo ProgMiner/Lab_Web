@@ -1,0 +1,25 @@
+{
+    "name": "progminer/lab1_web",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eridan Domoratskiy",
+            "email": "eridan200@mail.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lab_Web\\": "src"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
