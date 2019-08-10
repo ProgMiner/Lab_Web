@@ -2,7 +2,7 @@
 if (!defined('LAB1_WEB')) die();
 
 use Lab_Web\Utility; ?>
-<form action="<?=Utility::url(__DIR__.'/../../index.php')?>" method="get" id="form" class="fancy-box">
+<form action="<?=Utility::url(__DIR__.'/../../../index.php')?>" method="get" id="form" class="fancy-box">
     <table>
         <tr class="form-error-container">
             <td id="form-error-container" colspan="2"></td>
