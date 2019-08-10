@@ -75,15 +75,15 @@ class CompModelImpl implements CompModel {
     }
 
     public function getResult($x, $y, $r) {
-        if ($x >= 0 && $y <= 0 && $x * $x + $y * $y < $r) {
+        if ($x >= 0 && $y <= 0 && $x * $x + $y * $y < $r * $r) {
             return true;
         }
 
-        if ($x <= 0 && $y <= 0 && $x >= -$r && $y >= -$r / 2) {
+        if ($x <= 0 && $y <= 0 && $x >= -$r && $y > -$r / 2) {
             return true;
         }
 
-        if ($x <= 0 && $y >= 0 && 2 * $y <= $x + $r) {
+        if ($x <= 0 && $y >= 0 && 2 * $y < $x + $r) {
             return true;
         }
 
