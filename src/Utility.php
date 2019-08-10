@@ -46,34 +46,10 @@ final class Utility {
     }
 
     public static function url($path) {
-        return self::removeRelativeComponentsFromPath(str_replace(__ROOT__, '.', $path));
-    }
-
-    // https://www.php.net/manual/ru/function.realpath.php#84012
-    public static function removeRelativeComponentsFromPath($path, $absolute = false) {
-        $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
-        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
-        $absolute = $absolute && strpos($path, DIRECTORY_SEPARATOR) === 0;
-
-        $absolutes = array();
-        foreach ($parts as $part) {
-            if ('.' == $part) {
-                continue;
-            }
-
-            if ('..' == $part) {
-                array_pop($absolutes);
-            } else {
-                $absolutes[] = $part;
-            }
-        }
-
-        return ($absolute ? DIRECTORY_SEPARATOR : '').implode(DIRECTORY_SEPARATOR, $absolutes);
+        return str_replace(__ROOT__, '.', $path);
     }
 
     public static function inlineImage($path, $mime = null, $headers = []) {
-        $path = self::removeRelativeComponentsFromPath($path, true);
-
         if (!is_string($mime)) {
             $mime = mime_content_type($path);
         }

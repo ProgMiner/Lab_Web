@@ -17,11 +17,11 @@ use Lab_Web\Utility; ?>
         </tr>
         <tr>
             <td><label for="y-input">Y: </label></td>
-            <td><input type="text" name="y" id="y-input" autocomplete="off"<?=is_numeric($y) ? "value=\"$y\"" : ''?> /></td>
+            <td><input type="text" name="y" id="y-input"<?=is_numeric($y) ? " value=\"$y\"" : ''?> /></td>
         </tr>
         <tr>
             <td><label for="r-input">R: </label></td>
-            <td><input type="text" name="r" id="r-input" autocomplete="off"<?=is_numeric($r) ? "value=\"$r\"" : ''?> /></td>
+            <td><input type="text" name="r" id="r-input"<?=is_numeric($r) ? " value=\"$r\"" : ''?> /></td>
         </tr>
         <tr>
             <td colspan="2"><input type="submit" value="Поїхали!"></td>
