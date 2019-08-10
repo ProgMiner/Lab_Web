@@ -22,12 +22,14 @@ class CompView implements View {
         if ($this->model->isResultAvailable()) {
             sort($xes);
 
+            echo '<!--';
             foreach ($xes as $x) {
                 /** @noinspection PhpUnusedLocalVariableInspection */
                 $result = $this->model->getResult($x, $y, $r);
 
                 require __DIR__ . '/../../assets/templates/comp/result.php';
             }
+            echo '-->';
         } else {
             require __DIR__ . '/../../assets/templates/comp/form.php';
         }

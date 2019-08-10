@@ -82,6 +82,10 @@ use Lab_Web\Utility; ?>
             margin: 0 auto;
         }
 
+        .fancy-box + .fancy-box {
+            margin-inline-start: 0.5ch;
+        }
+
         .form-error-container:not(.shown-form-error-container) {
             display: none;
         }
@@ -291,7 +295,7 @@ use Lab_Web\Utility; ?>
         const currentTimeInterval = setInterval(function() {
             const date = new Date();
 
-            const offset = date.getTimezoneOffset() / 60;
+            const offset = -date.getTimezoneOffset() / 60;
             currentTimeCell.innerText = date.getFullYear() + '-' + complete(date.getMonth() + 1) + '-' + complete(date.getDate()) + ' ' +
                 complete(date.getHours()) + ':' + complete(date.getMinutes()) + ':' + complete(date.getSeconds()) + ' ' +
                 'UTC' + (offset >= 0 ? '+' : '') + offset;

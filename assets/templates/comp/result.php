@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpUndefinedVariableInspection */
 if (!defined('LAB1_WEB')) die(); ?>
-<table class="fancy-box">
+--><table class="fancy-box">
     <tr>
         <td>X: </td>
         <td><?=$x?></td>
@@ -17,4 +17,4 @@ if (!defined('LAB1_WEB')) die(); ?>
         <td>Result: </td>
         <td data-oaoaoa="align-justify">point is<?=$result ? '' : "n't"?> included in the area</td>
     </tr>
-</table>
+</table><!--
