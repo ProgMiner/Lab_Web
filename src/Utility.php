@@ -38,4 +38,24 @@ final class Utility {
 
         return $default;
     }
+
+    public static function url($path) {
+        return self::getAbsolutePath(str_replace(__ROOT__, '.', $path));
+    }
+
+    // https://www.php.net/manual/ru/function.realpath.php#84012
+    public static function getAbsolutePath($path) {
+        $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+        $absolutes = array();
+        foreach ($parts as $part) {
+            if ('.' == $part) continue;
+            if ('..' == $part) {
+                array_pop($absolutes);
+            } else {
+                $absolutes[] = $part;
+            }
+        }
+        return implode(DIRECTORY_SEPARATOR, $absolutes);
+    }
 }

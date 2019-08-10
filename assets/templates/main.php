@@ -1,4 +1,6 @@
-<?php if (!defined('LAB1_WEB')) die(); ?>
+<?php if (!defined('LAB1_WEB')) die();
+
+use Lab_Web\Utility; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,13 +8,13 @@
     <title>Lab1_Web</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="194x194" href="/assets/favicon/favicon-194x194.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
-    <link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?=Utility::url(__DIR__.'/../../assets/favicon/apple-touch-icon.png')?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?=Utility::url(__DIR__.'/../../assets/favicon/favicon-32x32.png')?>">
+    <link rel="icon" type="image/png" sizes="194x194" href="<?=Utility::url(__DIR__.'/../../assets/favicon/favicon-194x194.png')?>">
+    <link rel="icon" type="image/png" sizes="192x192" href="<?=Utility::url(__DIR__.'/../../assets/favicon/android-chrome-192x192.png')?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?=Utility::url(__DIR__.'/../../assets/favicon/favicon-16x16.png')?>">
+    <link rel="mask-icon" href="<?=Utility::url(__DIR__.'/../../assets/favicon/safari-pinned-tab.svg')?>" color="#5bbad5">
+    <link rel="manifest" href="<?=Utility::url(__DIR__.'/../../assets/favicon/site.webmanifest')?>">
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
 
@@ -232,7 +234,7 @@
 
         <tr class="header">
             <td style="position: relative;">
-                <img src="/assets/images/areas.png" alt="Area" style="pointer-events: none; user-select: none;" />
+                <img src="<?=Utility::url(__DIR__.'/../../assets/images/areas.png')?>" alt="Area" style="pointer-events: none; user-select: none;" />
 
                 <h3 style="margin-right: -46px; transform: rotate(1deg); position: absolute; right: 0;" data-oaoaoa="ib align-right">
                     Доморацкого&nbsp;&nbsp;<br />
@@ -264,12 +266,12 @@
             </td>
         </tr>
 
-        <tr><td><br />&nbsp;&nbsp;&nbsp;<img src="/assets/images/itmo-logo.png" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></td></tr>
+        <tr><td><br />&nbsp;&nbsp;&nbsp;<img src="<?=Utility::url(__DIR__.'/../../assets/images/itmo-logo.png')?>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></td></tr>
     </table>
 
     <div id="jepa">
         <!--suppress CheckImageSize -->
-        <img src="/assets/images/1-12676-512.png" style="background: url('/assets/images/1-12676-128.png');" alt="жепа" width="128" height="128" />
+        <img src="<?=Utility::url(__DIR__.'/../../assets/images/1-12676-512.png')?>" style="background: url('<?=Utility::url(__DIR__.'/../../assets/images/1-12676-128.png')?>');" alt="жепа" width="128" height="128" />
     </div>
 
     <div id="rocket"></div>
