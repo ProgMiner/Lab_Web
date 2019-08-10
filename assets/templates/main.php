@@ -127,6 +127,11 @@ use Lab_Web\Utility; ?>
             font-size: 0.7em;
         }
 
+        a[data-oaoaoa~="invisible"] {
+            text-decoration: inherit;
+            color: inherit;
+        }
+
         #background {
             background-color: rgba(255, 255, 255, 0.74);
             position: fixed;
@@ -222,7 +227,7 @@ use Lab_Web\Utility; ?>
         <tr class="header">
             <td>
                 <h1>
-                    Лабораторная работа №1<br />
+                    <a href="<?=Utility::url(__DIR__.'/../../')?>" data-oaoaoa="invisible">Лабораторная работа №I</a><br />
                     <span class="black-bg" data-oaoaoa="ib skew" style="font-family: Impact, serif;">по <span class="horizontal-rainbow" data-oaoaoa="bg-text">Веб-программированию</span></span><br />
                     <span style="opacity: 0.1; margin-right: 273px;">Программированию Интернет Приложений</span>
                 </h1>
@@ -274,7 +279,7 @@ use Lab_Web\Utility; ?>
             </td>
         </tr>
 
-        <tr><td><br />&nbsp;&nbsp;&nbsp;<img src="<?=Utility::inlineImage(__DIR__.'/../images/itmo-logo.png')?>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></td></tr>
+        <tr><td><br />&nbsp;&nbsp;&nbsp;<a href="http://ifmo.ru/" target="_blank"><img src="<?=Utility::inlineImage(__DIR__.'/../images/itmo-logo.png')?>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></a></td></tr>
     </table>
 
     <div id="jepa">
