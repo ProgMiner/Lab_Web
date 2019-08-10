@@ -43,7 +43,9 @@ class AreaView implements View {
 
     private function renderImage($areaPath) {
         if (!file_exists($this->cacheDir)) {
-            mkdir($this->cacheDir, 0777, true);
+            if (!mkdir($this->cacheDir, 0777, true)) {
+                return null;
+            }
         }
 
         if (!is_dir($this->cacheDir)) {
