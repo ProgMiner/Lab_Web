@@ -110,7 +110,7 @@ use Lab_Web\Utility; ?>
         }
 
         [data-oaoaoa~="drop"] {
-            transform: rotate(-160deg);
+            transform: rotate(-155deg);
             transform-origin: 80% 75%;
         }
 

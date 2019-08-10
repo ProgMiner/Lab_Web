@@ -83,7 +83,7 @@ class CompModelImpl implements CompModel {
             return true;
         }
 
-        if ($x <= 0 && $y >= 0 && $x >= 2 * $y + $r / 2) {
+        if ($x <= 0 && $y >= 0 && 2 * $y <= $x + $r) {
             return true;
         }
 
