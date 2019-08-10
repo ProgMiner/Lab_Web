@@ -10,15 +10,9 @@ use Lab_Web\Utility; ?>
         <tr>
             <td>X: </td>
             <td>
-                <label><input type="checkbox" name="x[]" value="-2"   <?=in_array(-2,   $xes) ? 'checked' : ''?>/> -2  </label>
-                <label><input type="checkbox" name="x[]" value="-1.5" <?=in_array(-1.5, $xes) ? 'checked' : ''?>/> -1.5</label>
-                <label><input type="checkbox" name="x[]" value="-1"   <?=in_array(-1,   $xes) ? 'checked' : ''?>/> -1  </label>
-                <label><input type="checkbox" name="x[]" value="-0.5" <?=in_array(-0.5, $xes) ? 'checked' : ''?>/> -0.5</label>
-                <label><input type="checkbox" name="x[]" value="0"    <?=in_array(0,    $xes) ? 'checked' : ''?>/> 1   </label>
-                <label><input type="checkbox" name="x[]" value="0.5"  <?=in_array(0.5,  $xes) ? 'checked' : ''?>/> 0.5 </label>
-                <label><input type="checkbox" name="x[]" value="1"    <?=in_array(1,    $xes) ? 'checked' : ''?>/> 1   </label>
-                <label><input type="checkbox" name="x[]" value="1.5"  <?=in_array(1.5,  $xes) ? 'checked' : ''?>/> 1.5 </label>
-                <label><input type="checkbox" name="x[]" value="2"    <?=in_array(2,    $xes) ? 'checked' : ''?>/> 2   </label><!--
+                <?php foreach ([-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2] as $x): ?>
+                    <label><input type="checkbox" name="x[]" value="<?=$x?>" <?=in_array($x, $xes) ? 'checked' : ''?>/><?=$x?> </label>
+                <?php endforeach; ?><!--
          --></td>
         </tr>
         <tr>

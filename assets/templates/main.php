@@ -47,6 +47,10 @@ use Lab_Web\Utility; ?>
             padding: 0 2px;
         }
 
+        label + label {
+            margin-inline-start: 0.5ch;
+        }
+
         button, input:not([type="checkbox"]) {
             box-sizing: border-box;
             width: 100%;
