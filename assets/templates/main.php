@@ -102,8 +102,8 @@ use Lab_Web\Utility; ?>
         }
 
         [data-oaoaoa~="drop"] {
-            transform: rotate(125deg);
-            transform-origin: 50% 90%;
+            transform: rotate(-160deg);
+            transform-origin: 80% 75%;
         }
 
         [data-oaoaoa~="skew"] {
@@ -234,7 +234,7 @@ use Lab_Web\Utility; ?>
 
         <tr class="header">
             <td style="position: relative;">
-                <img src="<?=Utility::url(__DIR__.'/../images/areas.png')?>" alt="Area" style="pointer-events: none; user-select: none;" />
+                <?php $this->areaView->render(); ?>
 
                 <h3 style="margin-right: -46px; transform: rotate(1deg); position: absolute; right: 0;" data-oaoaoa="ib align-right">
                     Доморацкого&nbsp;&nbsp;<br />
@@ -266,12 +266,14 @@ use Lab_Web\Utility; ?>
             </td>
         </tr>
 
-        <tr><td><br />&nbsp;&nbsp;&nbsp;<img src="<?=Utility::url(__DIR__.'/../images/itmo-logo.png')?>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></td></tr>
+        <tr><td><br />&nbsp;&nbsp;&nbsp;<img src="<?=Utility::inlineImage(__DIR__.'/../images/itmo-logo.png')?>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></td></tr>
     </table>
 
     <div id="jepa">
         <!--suppress CheckImageSize -->
-        <img src="<?=Utility::url(__DIR__.'/../images/1-12676-512.png')?>" style="background: url('<?=Utility::url(__DIR__.'/../images/1-12676-128.png')?>');" alt="жепа" width="128" height="128" />
+        <img src="<?=Utility::url(__DIR__.'/../images/1-12676-512.png')?>"
+             style="display: inline-block; background: url('<?=Utility::inlineImage(__DIR__.'/../images/1-12676-128.png')?>');"
+             width="128" height="128" alt="" />
     </div>
 
     <div id="rocket"></div>

@@ -3,6 +3,7 @@
 namespace Lab_Web\View;
 
 use Lab_Web\Model\CompModel;
+use Lab_Web\Utility;
 use Lab_Web\View;
 
 class CompView implements View {
@@ -10,11 +11,7 @@ class CompView implements View {
     private $model;
 
     public function __construct($model) {
-        if (!$model instanceof CompModel) {
-            throw new \InvalidArgumentException(sprintf('$model is not %s!', CompModel::class));
-        }
-
-        $this->model = $model;
+        $this->model = Utility::assertInstanceOf($model, CompModel::class);
     }
 
     public function render() {

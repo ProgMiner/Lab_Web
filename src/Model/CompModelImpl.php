@@ -2,8 +2,6 @@
 
 namespace Lab_Web\Model;
 
-use Lab_Web\Utility;
-
 class CompModelImpl implements CompModel {
 
     private $available = true;
@@ -77,7 +75,17 @@ class CompModelImpl implements CompModel {
     }
 
     public function getResult($x, $y, $r) {
-        // TODO
+        if ($x >= 0 && $y <= 0 && $x * $x + $y * $y < $r) {
+            return true;
+        }
+
+        if ($x <= 0 && $y <= 0 && $x >= -$r && $y >= -$r) {
+            return true;
+        }
+
+        if ($x <= 0 && $y >= 0 && $x >= 2 * $y + $r / 2) {
+            return true;
+        }
 
         return false;
     }
