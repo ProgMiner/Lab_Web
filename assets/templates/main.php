@@ -227,7 +227,7 @@ use Lab_Web\Utility; ?>
         <tr class="header">
             <td>
                 <h1>
-                    <a href="<?=Utility::url(__DIR__.'/../../')?>" data-oaoaoa="invisible">Лабораторная работа №I</a><br />
+                    <a href="<?=Utility::url(__DIR__.'/../../index.php')?>" data-oaoaoa="invisible">Лабораторная работа №I</a><br />
                     <span class="black-bg" data-oaoaoa="ib skew" style="font-family: Impact, serif;">по <span class="horizontal-rainbow" data-oaoaoa="bg-text">Веб-программированию</span></span><br />
                     <span style="opacity: 0.1; margin-right: 273px;">Программированию Интернет Приложений</span>
                 </h1>
