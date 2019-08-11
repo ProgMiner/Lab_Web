@@ -29,7 +29,7 @@ use Lab_Web\Utility; ?>
     </table>
 </form>
 
-<script>
+<script type="text/javascript">
     "use strict";
 
     function displayFormError(error, element) {

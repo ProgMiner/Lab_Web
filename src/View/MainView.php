@@ -19,6 +19,6 @@ class MainView implements View {
     }
 
     public function render() {
-        require __DIR__.'/../../assets/templates/main.php';
+        require __ROOT__.'/assets/templates/main.php';
     }
 }

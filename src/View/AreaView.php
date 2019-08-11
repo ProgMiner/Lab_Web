@@ -1,10 +1,14 @@
-<?php /** @noinspection DuplicatedCode */
+<?php
 
 namespace Lab_Web\View;
 
 use Lab_Web\Model\CompModel;
 use Lab_Web\Utility;
 use Lab_Web\View;
+use Lab_Web\View\AreaView\CanvasRenderer;
+use Lab_Web\View\AreaView\GdRenderer;
+use Lab_Web\View\AreaView\ImagickRenderer;
+use Lab_Web\View\AreaView\Renderer;
 
 class AreaView implements View {
 
@@ -20,25 +24,25 @@ class AreaView implements View {
     }
 
     public function render() {
-        $path = __DIR__.'/../../assets/images/areas.png';
+        $path = __ROOT__.'/assets/images/areas.png';
 
-        $generated = false;
+        $canvas = false;
         if ($this->model->isResultAvailable()) {
-            $generated = true;
-
             $newPath = $this->renderImage($path);
-            if ($newPath === null) {
-                $generated = false;
+
+            if ($newPath === null || true) {
+                $canvas = true;
             } else {
-                $path = Utility::inlineImage($newPath);
+                /** @noinspection PhpUnusedLocalVariableInspection */
+                $path = $newPath;
             }
         }
 
-        if (!$generated) {
-            $path = Utility::inlineImage($path);
+        if ($canvas) {
+            (new CanvasRenderer(205, 205))->render($this->model, $path, 'area-canvas');
+        } else {
+            require __ROOT__.'/assets/templates/area/img.php';
         }
-
-        ?><img src="<?=$path?>" alt="Area" style="pointer-events: none; user-select: none;" /><?php
     }
 
     private function renderImage($areaPath) {
@@ -60,89 +64,15 @@ class AreaView implements View {
             return $path;
         }
 
-        if (class_exists(\Imagick::class) && $this->renderImageImagick($path, $areaPath)) {
-            return $path;
-        }
+        foreach ([ImagickRenderer::class, GdRenderer::class] as $rendererType) {
+            /** @var Renderer $renderer */
+            $renderer = new $rendererType();
 
-        if (function_exists('imagecreatefrompng') && $this->renderImageGd($path, $areaPath)) {
-            return $path;
+            if ($renderer->render($this->model, $areaPath, $path)) {
+                return $path;
+            }
         }
 
         return null;
-    }
-
-    private function renderImageImagick($path, $areaPath) {
-        try {
-            $image = new \Imagick($areaPath);
-
-            $width = $image->getImageWidth();
-            $height = $image->getImageHeight();
-
-            $centerX = round($width / 2) - 1;
-            $centerY = round($height / 2) - 1;
-
-            $r = $this->model->getR();
-            $zoomX = 80 * $width / 205 / $r;
-            $zoomY = 80 * $height / 205 / $r;
-            $y = -$this->model->getY() * $zoomY;
-
-            $canvas = new \ImagickDraw();
-            $canvas->setFillColor(new \ImagickPixel('#ff0000'));
-            foreach ($this->model->getXes() as $x) {
-                $canvas->circle($centerX + $x * $zoomX, $centerY + $y, 1, 1);
-            }
-
-            $image->drawImage($canvas);
-            $image->writeImage($path);
-        } catch (\ImagickException $e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private function renderImageGd($path, $areaPath) {
-        $image = imagecreatefrompng($areaPath);
-
-        if ($image === false) {
-            return false;
-        }
-
-        try {
-            $width = imagesx($image);
-            $height = imagesy($image);
-            if ($width === false || $height === false) {
-                throw new \RuntimeException();
-            }
-
-            $centerX = round($width / 2) - 1;
-            $centerY = round($height / 2) - 1;
-
-            $r = $this->model->getR();
-            $zoomX = 80 * $width / 205 / $r;
-            $zoomY = 80 * $height / 205 / $r;
-
-            $color = imagecolorallocate($image, 255, 0, 0);
-            if ($color === false) {
-                throw new \RuntimeException();
-            }
-
-            $y = -$this->model->getY() * $zoomY;
-            foreach ($this->model->getXes() as $x) {
-                if (imagefilledellipse($image, $centerX + $x * $zoomX, $centerY + $y, 2, 2, $color) === false) {
-                    throw new \RuntimeException();
-                }
-            }
-
-            if (imagepng($image, $path) === false) {
-                throw new \RuntimeException();
-            }
-        } catch (\RuntimeException $e) {
-            return false;
-        } finally {
-            imagedestroy($image);
-        }
-
-        return true;
     }
 }

@@ -56,6 +56,16 @@ use Lab_Web\Utility; ?>
             width: 100%;
         }
 
+        .header, .header h1, .header h2, .header h3, .header h4, .header h5, .header h6 {
+            font-family: serif;
+            font-weight: bold;
+            color: #111;
+        }
+
+        .header {
+            font-size: 14pt;
+        }
+
         .horizontal-rainbow {
             background: linear-gradient(to right, #F00, #FFA500, #FF0, #0F0, #0FF, #00F, #F0F);
         }
@@ -65,14 +75,9 @@ use Lab_Web\Utility; ?>
             color: #fff;
         }
 
-        .header, .header h1, .header h2, .header h3, .header h4, .header h5, .header h6 {
-            font-family: serif;
-            font-weight: bold;
-            color: #111;
-        }
-
-        .header {
-            font-size: 14pt;
+        .area {
+            pointer-events: none;
+            user-select: none;
         }
 
         .fancy-box {
@@ -293,7 +298,7 @@ use Lab_Web\Utility; ?>
 </div>
 
 <?php if ($this->model->doFrontendTimeUpdate()): ?>
-    <script>
+    <script type="text/javascript">
         "use strict";
 
         const currentTimeCell = document.getElementById("current-time");
@@ -303,7 +308,7 @@ use Lab_Web\Utility; ?>
             const offset = -date.getTimezoneOffset() / 60;
             currentTimeCell.innerText = date.getFullYear() + '-' + complete(date.getMonth() + 1) + '-' + complete(date.getDate()) + ' ' +
                 complete(date.getHours()) + ':' + complete(date.getMinutes()) + ':' + complete(date.getSeconds()) + ' ' +
-                'UTC' + (offset >= 0 ? '+' : '') + offset;
+                'UTC' + (offset > 0 ? '+' : '') + (offset !== 0 ? offset : '');
         }, 500);
 
         function complete(src, length = 2, char = '0') {

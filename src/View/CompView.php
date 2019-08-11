@@ -27,11 +27,11 @@ class CompView implements View {
                 /** @noinspection PhpUnusedLocalVariableInspection */
                 $result = $this->model->getResult($x, $y, $r);
 
-                require __DIR__ . '/../../assets/templates/comp/result.php';
+                require __ROOT__.'/assets/templates/comp/result.php';
             }
             echo '-->';
         } else {
-            require __DIR__ . '/../../assets/templates/comp/form.php';
+            require __ROOT__.'/assets/templates/comp/form.php';
         }
     }
 }
