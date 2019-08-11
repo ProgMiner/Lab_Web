@@ -85,10 +85,9 @@ use Lab_Web\Utility; ?>
             border: solid 2px hotpink;
             padding: 10px;
             margin: 0 auto;
-        }
 
-        .fancy-box + .fancy-box {
-            margin-inline-start: 0.5ch;
+            margin-inline-start: 0.25ch;
+            margin-inline-end: 0.25ch;
         }
 
         .form-error-container:not(.shown-form-error-container) {
