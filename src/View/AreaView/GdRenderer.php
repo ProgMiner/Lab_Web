@@ -5,6 +5,10 @@ namespace Lab_Web\View\AreaView;
 class GdRenderer extends Renderer {
 
     public function render($compModel, $areaPath, $path) {
+        if (!self::canBeUsed()) {
+            return false;
+        }
+
         $image = imagecreatefrompng($areaPath);
 
         try {
