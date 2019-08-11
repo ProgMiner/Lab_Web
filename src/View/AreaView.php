@@ -30,7 +30,7 @@ class AreaView implements View {
         if ($this->model->isResultAvailable()) {
             $newPath = $this->renderImage($path);
 
-            if ($newPath === null || true) {
+            if ($newPath === null) {
                 $canvas = true;
             } else {
                 /** @noinspection PhpUnusedLocalVariableInspection */
