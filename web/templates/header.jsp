@@ -79,7 +79,6 @@
         }
 
         .area {
-            pointer-events: none;
             user-select: none;
         }
 

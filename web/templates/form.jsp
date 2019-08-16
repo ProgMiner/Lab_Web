@@ -34,7 +34,7 @@
                         <tr>
                             <% final Number r = compModel.getR();
                                for (int currentR : CompModelImpl.ALLOWED_RS) { %>
-                                <td><button name="r" value="<%=currentR%>" <%=Integer.valueOf(currentR).equals(r) ? "checked" : ""%>><%=currentR%></button></td>
+                                <td><button name="r" value="<%=currentR%>" <%=Integer.valueOf(currentR).equals(r) ? "class=\"selected-button\"" : ""%>><%=currentR%></button></td>
                             <% } %>
                         </tr>
                     </table>
@@ -140,7 +140,7 @@
 
                 if (validateX(true) && validateY(true) && validateR(true)) {
                     document.body.style.pointerEvents = "none";
-                    setTimeout(() => form.submit(), 1500);
+                    setTimeout(() => form.submit(), 1700);
 
                     document.getElementById("rocket").classList.add("flying-rocket");
                 }
@@ -165,9 +165,9 @@
             <% HistoryNode historyNode = historyHead;
                while (historyNode != null) { %>
                 <tr>
-                    <td><%=historyNode.x%></td>
+                    <td><%=(int) historyNode.x%></td>
                     <td><%=historyNode.y%></td>
-                    <td><%=historyNode.r%></td>
+                    <td><%=(int) historyNode.r%></td>
                     <td><%=historyNode.result ? "" : "not"%> included</td>
                 </tr>
                 <% historyNode = historyNode.next;

@@ -40,9 +40,9 @@ public class ControllerServlet extends HttpServlet {
     }
 
     private void updateHistory(HttpSession session, CompModel compModel) {
-        double x = compModel.getX().intValue();
-        double y = compModel.getY().intValue();
-        double r = compModel.getR().intValue();
+        double x = compModel.getX().doubleValue();
+        double y = compModel.getY().doubleValue();
+        double r = compModel.getR().doubleValue();
 
         final HistoryNode previous = (HistoryNode) session.getAttribute(HISTORY_ATTRIBUTE_NAME);
         if (previous == null ||
