@@ -2,6 +2,7 @@ package ru.byprogminer.Lab2_Web;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -10,7 +11,6 @@ import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.LinkedList;
 
-@SuppressWarnings("WeakerAccess")
 public final class Utility {
 
     private Utility() {
@@ -46,22 +46,30 @@ public final class Utility {
                 mime = conn.getContentType();
             }
 
-            if (mime == null) {
-                final Path tmp = Files.createTempFile("inlineImage", Paths.get(path).getFileName().toString());
-                Files.write(tmp, bytes);
-
-                mime = Files.probeContentType(tmp);
-            }
-
-            if (mime != null) {
-                headers.addFirst(mime);
-            }
-
-            return "data:" + String.join(",", headers) + ";base64," + Base64.getEncoder().encodeToString(bytes);
+            return inlineImage(bytes, Paths.get(path).getFileName().toString(), mime, headers);
         } catch (Throwable e) {
             e.printStackTrace();
             return path;
         }
+    }
+
+    public static String inlineImage(byte[] bytes, String suffix, String mime, LinkedList<String> headers) throws IOException {
+        if (mime == null) {
+            final Path tmp = Files.createTempFile("inlineImage", suffix);
+            Files.write(tmp, bytes);
+
+            mime = Files.probeContentType(tmp);
+        }
+
+        return inlineImage(bytes, mime, headers);
+    }
+
+    public static String inlineImage(byte[] bytes, String mime, LinkedList<String> headers) {
+        if (mime != null) {
+            headers.addFirst(mime);
+        }
+
+        return "data:" + String.join(",", headers) + ";base64," + Base64.getEncoder().encodeToString(bytes);
     }
 
     public static Boolean parseBoolean(String str, Boolean defaultValue) {

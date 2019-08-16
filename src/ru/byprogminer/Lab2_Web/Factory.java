@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Optional;
 
-@SuppressWarnings("WeakerAccess")
 public class Factory {
 
     private final HttpServletRequest request;

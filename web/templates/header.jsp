@@ -1,18 +1,8 @@
 <%--suppress CssUnusedSymbol --%>
-<%@ page import="ru.byprogminer.Lab2_Web.Utility" %><%--
---%><%@ page import="ru.byprogminer.Lab2_Web.model.MainModel" %><%--
---%><%@ page import="ru.byprogminer.Lab2_Web.view.AreaView" %><%--
---%><%@ page import="ru.byprogminer.Lab2_Web.view.CompView" %><%--
---%><%@ page import="java.time.ZonedDateTime" %><%--
---%><%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="java.time.format.TextStyle" %>
-<%@ page import="java.util.Locale" %><%--
+<%@ page import="ru.byprogminer.Lab2_Web.AreaRenderer" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.ControllerServlet" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.Utility" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
---%><%!
-    private <T> T getSessionObject(String name, Class<T> clazz, HttpServletRequest request) {
-        return clazz.cast(request.getAttribute(name));
-    }
-%><%--
 --%><%
     if (request.getAttribute("LAB2_WEB") == null) return;
     final String baseUrl = Utility.getBaseUrl(request);
@@ -67,7 +57,7 @@
             margin-inline-start: 0.5ch;
         }
 
-        button, input:not([type="checkbox"]) {
+        button, input:not([type="radio"]) {
             box-sizing: border-box;
             width: 100%;
         }
@@ -98,12 +88,41 @@
 
         .fancy-box {
             display: inline-block;
-            border: solid 2px hotpink;
+            border: solid 2px #ff69b4;
             padding: 10px;
             margin: 0 auto;
 
             margin-inline-start: 0.25ch;
             margin-inline-end: 0.25ch;
+        }
+
+        table.bordered {
+            border-collapse: collapse;
+        }
+
+        table.bordered td, table.bordered th {
+            border: solid 1px #db7093;
+            padding: 3px 10px;
+        }
+
+        table.bordered td,
+        table.bordered tr:first-child th {
+            border-top: none;
+        }
+
+        table.bordered td:first-child,
+        table.bordered th:first-child {
+            border-left: none;
+        }
+
+        table.bordered td,
+        table.bordered tr:last-child th {
+            border-bottom: none;
+        }
+
+        table.bordered td:last-child,
+        table.bordered th:last-child {
+            border-right: none;
         }
 
         .form-error-container:not(.shown-form-error-container) {
@@ -115,6 +134,11 @@
             border: solid 1px #999;
             background: #111;
             color: #fff;
+        }
+
+        button.selected-button {
+            font-weight: bold;
+            color: #ff0000;
         }
 
         [data-oaoaoa~="align-justify"] {
@@ -195,7 +219,7 @@
         }
 
         #form-error-container {
-            border: solid 2px darkred;
+            border: solid 2px #8b0000;
         }
 
         #jepa {
@@ -267,7 +291,27 @@
 
         <tr class="header">
             <td style="position: relative;">
-                <% getSessionObject("MainView.areaView", AreaView.class, request).render(request, response); %>
+                <% final CompModel compModel = (CompModel) request.getAttribute("compModel");
+                   if (compModel.isResultAvailable()) { %>
+                    <canvas id="area-canvas" class="area" width="205" height="205"
+                            style="background: url('<%=Utility.inlineImage(baseUrl, request.getContextPath() + ControllerServlet.AREAS_IMAGE_PATH)%>');">
+                        <img src="<%=request.getAttribute("areaUrl")%>" alt="Area" />
+                    </canvas>
+
+                    <script type="text/javascript">
+                        (function() {
+                            const canvas = document.getElementById("area-canvas");
+                            const context = canvas.getContext("2d");
+
+                            <% final AreaRenderer.Calculator areaCalc = new AreaRenderer.Calculator(205, 205, compModel.getR().doubleValue()); %>
+
+                            context.fillStyle = "#ff0000";
+                            context.beginPath();
+                            context.arc(<%=areaCalc.translateX(compModel.getX().doubleValue()) + 0.5%>, <%=areaCalc.translateY(compModel.getY().doubleValue()) + 0.5%>, 2, 0, 360);
+                            context.fill();
+                        })();
+                    </script>
+                <% } else { %><img src="<%=request.getAttribute("areaUrl")%>" alt="Area" class="area" /><% } %>
 
                 <h3 style="margin-right: -46px; transform: rotate(1deg); position: absolute; right: 0;" data-oaoaoa="ib align-right">
                     Доморацкого&nbsp;&nbsp;<br />
@@ -277,67 +321,4 @@
             </td>
         </tr>
 
-        <tr><td><% getSessionObject("MainView.compView", CompView.class, request).render(request, response); %></td></tr>
-
-        <tr>
-            <td>
-                <div class="fancy-box" data-oaoaoa="small-text">
-                    <table>
-                        <tr>
-                            <td>Current time:</td>
-                            <td data-oaoaoa="align-justify" id="current-time">
-                                <% final MainModel model = getSessionObject("MainView.model", MainModel.class, request);
-                                   final ZonedDateTime currentTime = model.getCurrentTime(); %>
-                                <%=currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))%>
-                                <%=currentTime.getZone().getDisplayName(TextStyle.FULL, Locale.getDefault())%>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Elapsed time:</td>
-                            <td data-oaoaoa="align-justify"><%=String.format("%.15f", model.getElapsedTime())%> ms.</td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-        </tr>
-
-        <tr><td><br />&nbsp;&nbsp;&nbsp;<a href="http://ifmo.ru/" target="_blank"><img src="<%=Utility.inlineImage(baseUrl, request.getContextPath() + "/assets/images/itmo-logo.png")%>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></a></td></tr>
-    </table>
-
-    <div id="jepa">
-        <!--suppress CheckImageSize -->
-        <img src="<%=request.getContextPath()%>/assets/images/1-12676-512.png"
-             style="display: inline-block; background: url('<%=Utility.inlineImage(baseUrl, request.getContextPath() + "/assets/images/1-12676-128.png")%>');"
-             width="128" height="128" alt="" />
-    </div>
-
-    <div id="rocket"></div>
-</div>
-
-<% if (model.doFrontendTimeUpdate()) { %>
-    <script type="text/javascript">
-        "use strict";
-
-        const currentTimeCell = document.getElementById("current-time");
-        const currentTimeInterval = setInterval(function() {
-            const date = new Date();
-
-            const offset = -date.getTimezoneOffset() / 60;
-            currentTimeCell.innerText = date.getFullYear() + '-' + complete(date.getMonth() + 1) + '-' + complete(date.getDate()) + ' ' +
-                complete(date.getHours()) + ':' + complete(date.getMinutes()) + ':' + complete(date.getSeconds()) + ' ' +
-                'UTC' + (offset > 0 ? '+' : '') + (offset !== 0 ? offset : '');
-        }, 500);
-
-        function complete(src, length = 2, char = '0') {
-            src = src + '';
-
-            while (src.length < length) {
-                src = char + src;
-            }
-
-            return src;
-        }
-    </script>
-<% } %>
-</body>
-</html>
+        <tr><td>

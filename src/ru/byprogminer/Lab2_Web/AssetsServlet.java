@@ -1,6 +1,5 @@
 package ru.byprogminer.Lab2_Web;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +12,7 @@ import java.io.OutputStream;
 public class AssetsServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final InputStream is = getServletContext().getResourceAsStream(request.getRequestURI().substring(request.getContextPath().length()));
         final OutputStream os = response.getOutputStream();
 

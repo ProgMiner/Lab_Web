@@ -57,7 +57,7 @@ public class CompModelImpl implements CompModel {
         double halfR = r / 2;
 
         return (x >= 0 && y >= 0 && x * x + y * y < halfR * halfR) ||
-               (x <= 0 && y >= 0 && y > x - halfR) ||
-               (x >= 0 && y <= 0 && x <= r && y >= -r);
+               (x >= 0 && y <= 0 && y > x - halfR) ||
+               (x <= 0 && y >= 0 && x >= -r && y <= r);
     }
 }
