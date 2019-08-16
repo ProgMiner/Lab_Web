@@ -6,8 +6,6 @@
 --%><%@ page import="java.util.Locale" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><% if (request.getAttribute("LAB2_WEB") == null) return; %>
-</td></tr>
-
             <tr>
                 <td>
                     <div class="fancy-box" data-oaoaoa="small-text">
@@ -44,29 +42,29 @@
     </div>
 
     <% if (mainModel.doFrontendTimeUpdate()) { %>
-    <script type="text/javascript">
-        "use strict";
+        <script type="text/javascript">
+            "use strict";
 
-        const currentTimeCell = document.getElementById("current-time");
-        const currentTimeInterval = setInterval(function() {
-            const date = new Date();
+            const currentTimeCell = document.getElementById("current-time");
+            const currentTimeInterval = setInterval(function() {
+                const date = new Date();
 
-            const offset = -date.getTimezoneOffset() / 60;
-            currentTimeCell.innerText = date.getFullYear() + '-' + complete(date.getMonth() + 1) + '-' + complete(date.getDate()) + ' ' +
-                complete(date.getHours()) + ':' + complete(date.getMinutes()) + ':' + complete(date.getSeconds()) + ' ' +
-                'UTC' + (offset > 0 ? '+' : '') + (offset !== 0 ? offset : '');
-        }, 500);
+                const offset = -date.getTimezoneOffset() / 60;
+                currentTimeCell.innerText = date.getFullYear() + '-' + complete(date.getMonth() + 1) + '-' + complete(date.getDate()) + ' ' +
+                    complete(date.getHours()) + ':' + complete(date.getMinutes()) + ':' + complete(date.getSeconds()) + ' ' +
+                    'UTC' + (offset > 0 ? '+' : '') + (offset !== 0 ? offset : '');
+            }, 500);
 
-        function complete(src, length = 2, char = '0') {
-            src = src + '';
+            function complete(src, length = 2, char = '0') {
+                src = src + '';
 
-            while (src.length < length) {
-                src = char + src;
+                while (src.length < length) {
+                    src = char + src;
+                }
+
+                return src;
             }
-
-            return src;
-        }
-    </script>
+        </script>
     <% } %>
 </body>
 </html>

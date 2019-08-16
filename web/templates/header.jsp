@@ -1,13 +1,14 @@
-<%--suppress CssUnusedSymbol --%>
-<%@ page import="ru.byprogminer.Lab2_Web.AreaRenderer" %><%--
+<%--suppress CssUnusedSymbol --%><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.AreaRenderer" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.model.CompModel" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.ControllerServlet" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.Utility" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><%
     if (request.getAttribute("LAB2_WEB") == null) return;
     final String baseUrl = Utility.getBaseUrl(request);
-%>
-<!DOCTYPE html>
+%><%--
+--%><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -53,10 +54,6 @@
             padding: 0 2px;
         }
 
-        label + label {
-            margin-inline-start: 0.5ch;
-        }
-
         button, input:not([type="radio"]) {
             box-sizing: border-box;
             width: 100%;
@@ -94,6 +91,30 @@
 
             margin-inline-start: 0.25ch;
             margin-inline-end: 0.25ch;
+        }
+
+        table.framework {
+            border-collapse: collapse;
+        }
+
+        table.framework td {
+            padding-bottom: 0;
+            border-bottom: 0;
+            padding-top: 0;
+            border-top: 0;
+
+            padding-inline-start: 0.25ch;
+            padding-inline-end: 0.25ch;
+            border-inline-start: 0;
+            border-inline-end: 0;
+        }
+
+        table.framework td:first-child {
+            padding-inline-start: 0;
+        }
+
+        table.framework td:last-child {
+            padding-inline-end: 0;
         }
 
         table.bordered {
@@ -248,7 +269,22 @@
         }
 
         #rocket {
-            display: none;
+            position: fixed;
+            z-index: 1000;
+            bottom: 0;
+            left: 0;
+            top: -100%;
+            right: -25%;
+            background-image: url("<%=request.getContextPath()%>/assets/images/25568165.png");
+            background-position: 100% 0;
+            background-size: cover;
+            transform: scale(0);
+            transform-origin: 0 100%;
+        }
+
+        #rocket.flying-rocket {
+            transition: 2s cubic-bezier(1, 0, 1, 1);
+            transform: scale(1);
         }
 
         @media(max-width: 920px) {
@@ -271,7 +307,7 @@
         <tr class="header">
             <td>
                 <h1>
-                    <a href="<%=request.getContextPath()%>/" data-oaoaoa="invisible">Лабораторная работа №I</a><br />
+                    <a href="<%=request.getContextPath()%>/" data-oaoaoa="invisible">Лабораторная работа №II</a><br />
                     <span class="black-bg" data-oaoaoa="ib skew" style="font-family: Impact, serif;">по <span class="horizontal-rainbow" data-oaoaoa="bg-text">Веб-программированию</span></span><br />
                     <span style="opacity: 0.1; margin-right: 273px;">Программированию Интернет Приложений</span>
                 </h1>
@@ -284,7 +320,7 @@
                     Вариант
                     <span data-oaoaoa="ib" style="transform: scaleX(-1);">№</span><!--
                  --><span data-oaoaoa="ib" style="transform: rotate(-4deg);">211</span><!--
-                 --><span data-oaoaoa="ib" style="transform: rotate(4deg);">008</span>
+                 --><span data-oaoaoa="ib" style="transform: rotate(4deg);">025</span>
                 </h2>
             </td>
         </tr>
@@ -320,5 +356,3 @@
                 </h3>
             </td>
         </tr>
-
-        <tr><td>
