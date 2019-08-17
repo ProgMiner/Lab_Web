@@ -1,6 +1,9 @@
 package ru.byprogminer.Lab2_Web;
 
 import ru.byprogminer.Lab2_Web.model.CompModel;
+import ru.byprogminer.Lab2_Web.utility.AreaRenderer;
+import ru.byprogminer.Lab2_Web.utility.Factory;
+import ru.byprogminer.Lab2_Web.utility.JspUtility;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,12 +16,15 @@ import java.io.IOException;
 @WebServlet("/")
 public class ControllerServlet extends HttpServlet {
 
+    public static final String APP_NAME = "Lab2_Web";
+
+    public static final String SECURITY_ATTRIBUTE_NAME = "LAB2_WEB";
     public static final String HISTORY_ATTRIBUTE_NAME = "history";
     public static final String AREAS_IMAGE_PATH = "/assets/images/areas.png";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("LAB2_WEB", new Object());
+        request.setAttribute(SECURITY_ATTRIBUTE_NAME, new Object());
 
         final Factory factory = new Factory(request);
         final CompModel compModel = factory.makeCompModel();
@@ -27,8 +33,7 @@ public class ControllerServlet extends HttpServlet {
         request.setAttribute("compModel", compModel);
 
         request.setAttribute("areaUrl", new AreaRenderer(request.getServletContext())
-                .renderArea(AREAS_IMAGE_PATH, Utility.inlineImage(Utility.getBaseUrl(request),
-                        request.getContextPath() + AREAS_IMAGE_PATH), compModel));
+                .renderArea(AREAS_IMAGE_PATH, new JspUtility(request).inlineImage(AREAS_IMAGE_PATH), compModel));
 
         if (compModel.isResultAvailable()) {
             updateHistory(request.getSession(), compModel);

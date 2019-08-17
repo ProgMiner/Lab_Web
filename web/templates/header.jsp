@@ -1,25 +1,25 @@
 <%--suppress CssUnusedSymbol --%><%--
---%><%@ page import="ru.byprogminer.Lab2_Web.AreaRenderer" %><%--
---%><%@ page import="ru.byprogminer.Lab2_Web.model.CompModel" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.ControllerServlet" %><%--
---%><%@ page import="ru.byprogminer.Lab2_Web.Utility" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.model.CompModel" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.utility.AreaRenderer" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.utility.JspUtility" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><%
-    if (request.getAttribute("LAB2_WEB") == null) return;
-    final String baseUrl = Utility.getBaseUrl(request);
+    if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return;
+    final JspUtility utility = new JspUtility(request);
 %><%--
 --%><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Lab1_Web</title>
+    <title><%=ControllerServlet.APP_NAME%></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="apple-touch-icon" sizes="180x180" href="<%=request.getContextPath()%>/assets/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="<%=request.getContextPath()%>/assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="194x194" href="<%=request.getContextPath()%>/assets/favicon/favicon-194x194.png">
     <link rel="icon" type="image/png" sizes="192x192" href="<%=request.getContextPath()%>/assets/favicon/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="<%=Utility.inlineImage(baseUrl, request.getContextPath() + "/assets/favicon/favicon-16x16.png")%>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%=utility.inlineImage("/assets/favicon/favicon-16x16.png")%>">
     <link rel="mask-icon" href="<%=request.getContextPath()%>/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
     <link rel="manifest" href="<%=request.getContextPath()%>/assets/favicon/site.webmanifest">
     <meta name="msapplication-TileColor" content="#603cba">
@@ -329,7 +329,7 @@
                 <% final CompModel compModel = (CompModel) request.getAttribute("compModel");
                    if (compModel.isResultAvailable()) { %>
                     <canvas id="area-canvas" class="area" width="205" height="205"
-                            style="background: url('<%=Utility.inlineImage(baseUrl, request.getContextPath() + ControllerServlet.AREAS_IMAGE_PATH)%>');">
+                            style="background: url('<%=utility.inlineImage(ControllerServlet.AREAS_IMAGE_PATH)%>');">
                         <img src="<%=request.getAttribute("areaUrl")%>" alt="Area" />
                     </canvas>
 

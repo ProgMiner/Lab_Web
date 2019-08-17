@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %><%--
---%><% if (request.getAttribute("LAB2_WEB") == null) return; %><%--
+--%><% if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return; %><%--
 --%><%@ include file="header.jsp" %><%--
 --%><% final double x = compModel.getX().doubleValue();
        final double y = compModel.getY().doubleValue();

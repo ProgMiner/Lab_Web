@@ -1,4 +1,4 @@
-package ru.byprogminer.Lab2_Web;
+package ru.byprogminer.Lab2_Web.utility;
 
 import ru.byprogminer.Lab2_Web.model.CompModel;
 import ru.byprogminer.Lab2_Web.model.CompModelImpl;

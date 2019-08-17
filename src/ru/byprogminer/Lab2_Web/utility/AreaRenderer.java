@@ -1,4 +1,4 @@
-package ru.byprogminer.Lab2_Web;
+package ru.byprogminer.Lab2_Web.utility;
 
 import ru.byprogminer.Lab2_Web.model.CompModel;
 
@@ -63,7 +63,7 @@ public class AreaRenderer {
             final ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write(canvas, "PNG", os);
 
-            return Utility.inlineImage(os.toByteArray(), "image/png", new LinkedList<>());
+            return JspUtility.inlineImage(os.toByteArray(), "image/png", new LinkedList<>());
         } catch (Throwable e) {
             e.printStackTrace();
             return areaUrl;

@@ -1,14 +1,13 @@
-<%@ page import="ru.byprogminer.Lab2_Web.Utility" %><%--
+<%@ page import="ru.byprogminer.Lab2_Web.model.CompModelImpl" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.model.MainModel" %><%--
 --%><%@ page import="java.time.ZonedDateTime" %><%--
 --%><%@ page import="java.time.format.DateTimeFormatter" %><%--
 --%><%@ page import="java.time.format.TextStyle" %><%--
---%><%@ page import="java.util.Locale" %><%--
---%><%@ page import="ru.byprogminer.Lab2_Web.model.CompModelImpl" %><%--
 --%><%@ page import="java.util.Arrays" %><%--
+--%><%@ page import="java.util.Locale" %><%--
 --%><%@ page import="java.util.stream.Collectors" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
---%><% if (request.getAttribute("LAB2_WEB") == null) return; %>
+--%><% if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return; %>
             <tr>
                 <td>
                     <div class="fancy-box" data-oaoaoa="small-text">
@@ -31,13 +30,13 @@
                 </td>
             </tr>
 
-            <tr><td><br />&nbsp;&nbsp;&nbsp;<a href="http://ifmo.ru/" target="_blank"><img src="<%=Utility.inlineImage(baseUrl, request.getContextPath() + "/assets/images/itmo-logo.png")%>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></a></td></tr>
+            <tr><td><br />&nbsp;&nbsp;&nbsp;<a href="http://ifmo.ru/" target="_blank"><img src="<%=utility.inlineImage("/assets/images/itmo-logo.png")%>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></a></td></tr>
         </table>
 
         <div id="jepa">
             <!--suppress CheckImageSize -->
             <img src="<%=request.getContextPath()%>/assets/images/1-12676-512.png"
-                 style="display: inline-block; background: url('<%=Utility.inlineImage(baseUrl, request.getContextPath() + "/assets/images/1-12676-128.png")%>');"
+                 style="display: inline-block; background: url('<%=utility.inlineImage("/assets/images/1-12676-128.png")%>');"
                  width="128" height="128" alt="" />
         </div>
 
