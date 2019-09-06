@@ -135,7 +135,7 @@
 
             sendForm("GET", "<%=request.getContextPath()%>/", {
                 x: findNearest((x - centerX) / zoomX, [<%=Arrays.stream(CompModelImpl.ALLOWED_XES).mapToObj(Integer::toString).collect(Collectors.joining(", "))%>]),
-                y: Math.min(Math.max((centerY - y) / zoomY, <%=CompModelImpl.ALLOWED_YS_RANGE[0]%>), <%=CompModelImpl.ALLOWED_YS_RANGE[1]%>),
+                y: Math.min(Math.max((centerY - y) / zoomY, <%=CompModelImpl.ALLOWED_YS_RANGE[0] - 0.00000001%>), <%=CompModelImpl.ALLOWED_YS_RANGE[1] - 0.00000001%>),
                 r: r
             });
         });
