@@ -76,7 +76,7 @@
             }
         <% } %>
 
-        document.querySelectorAll(".area").forEach((node) => node.onclick = function(event) {
+        Array.prototype.forEach.call(document.querySelectorAll(".area"), node => node.onclick = function(event) {
             const r = getR();
 
             if (r == null) {
@@ -121,7 +121,7 @@
             function findNearest(value, list) {
                 let delta = Number.MAX_VALUE, val;
 
-                list.forEach(function(v) {
+                Array.prototype.forEach.call(list, function(v) {
                     const currentDelta = Math.abs(value - v);
 
                     if (delta > currentDelta) {

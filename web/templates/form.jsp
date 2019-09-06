@@ -51,7 +51,7 @@
 
         (function() {
             function displayFormError(error, element) {
-                document.querySelectorAll(".form-error-container").forEach(node => node.classList.add("shown-form-error-container"));
+                Array.prototype.forEach.call(document.querySelectorAll(".form-error-container"), node => node.classList.add("shown-form-error-container"));
                 document.getElementById("form-error-container").innerText = error;
 
                 if (element !== undefined) {
@@ -60,7 +60,7 @@
             }
 
             function hideFormError(element) {
-                document.querySelectorAll(".form-error-container").forEach(node => node.classList.remove("shown-form-error-container"));
+                Array.prototype.forEach.call(document.querySelectorAll(".form-error-container"), node => node.classList.remove("shown-form-error-container"));
 
                 if (element !== undefined) {
                     element.classList.remove("bad-content");
@@ -119,11 +119,11 @@
             const validateY = (submit) => validateField(yInput.value, submit, yInput, "Y", <%=CompModelImpl.ALLOWED_YS_RANGE[0]%>, <%=CompModelImpl.ALLOWED_YS_RANGE[1]%>);
             const validateR = (submit) => validateChecked(submit, rButtons, "R", (btn) => btn.value === rInput.value);
 
-            xRadios.forEach((node) => node.onclick = () => validateX(false));
+            Array.prototype.forEach.call(xRadios, node => node.onclick = () => validateX(false));
             yInput.oninput = () => validateY(false);
 
-            rButtons.forEach((node) => node.onclick = function () {
-                rButtons.forEach((node) => node.classList.remove("selected-button"));
+            Array.prototype.forEach.call(rButtons, node => node.onclick = function () {
+                Array.prototype.forEach.call(rButtons, node => node.classList.remove("selected-button"));
                 node.classList.add("selected-button");
 
                 validateR(rInput.value = node.value, false);
