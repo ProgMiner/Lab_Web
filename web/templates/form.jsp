@@ -1,5 +1,4 @@
-<%@ page import="ru.byprogminer.Lab2_Web.HistoryNode" %><%--
---%><%@ page contentType="text/html;charset=UTF-8" %><%--
+<%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><% if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return; %><%--
 --%><%@ include file="header.jsp" %><%--
 --%><tr><td>
@@ -149,30 +148,5 @@
             };
         })();
     </script>
-
-    <% final HistoryNode historyHead = (HistoryNode) request.getSession().getAttribute(ControllerServlet.HISTORY_ATTRIBUTE_NAME);
-       if (historyHead != null) { %>
-        </td></tr><tr><td>
-
-        <table class="fancy-box bordered" style="padding-top: 0;">
-            <tr><th colspan="6">Results history</th></tr>
-            <tr>
-                <th colspan="1">X</th>
-                <th>Y</th>
-                <th>R</th>
-                <th>Result</th>
-            </tr>
-            <% HistoryNode historyNode = historyHead;
-               while (historyNode != null) { %>
-                <tr>
-                    <td><%=historyNode.x.intValue()%></td>
-                    <td><%=historyNode.y%></td>
-                    <td><%=historyNode.r.intValue()%></td>
-                    <td><%=historyNode.result ? "" : "not"%> included</td>
-                </tr>
-                <% historyNode = historyNode.next;
-               } %>
-        </table>
-    <% } %>
 </td></tr>
 <%@ include file="footer.jsp" %>

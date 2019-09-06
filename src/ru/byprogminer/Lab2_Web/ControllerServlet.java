@@ -33,12 +33,15 @@ public class ControllerServlet extends HttpServlet {
         request.setAttribute("mainModel", factory.makeMainModel());
         request.setAttribute("compModel", compModel);
 
-        request.setAttribute("areaUrl", new AreaRenderer(request.getServletContext())
-                .renderArea(AREAS_IMAGE_PATH, new JspUtility(request).inlineImage(AREAS_IMAGE_PATH), compModel));
-
         if (compModel.isResultAvailable()) {
             updateHistory(request.getSession(), compModel);
+        }
 
+        request.setAttribute("areaUrl", new AreaRenderer(request.getServletContext())
+                .renderArea(AREAS_IMAGE_PATH, new JspUtility(request).inlineImage(AREAS_IMAGE_PATH),
+                        (HistoryNode) request.getSession().getAttribute(HISTORY_ATTRIBUTE_NAME)));
+
+        if (compModel.isResultAvailable()) {
             request.getRequestDispatcher("templates/result.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("templates/form.jsp").forward(request, response);

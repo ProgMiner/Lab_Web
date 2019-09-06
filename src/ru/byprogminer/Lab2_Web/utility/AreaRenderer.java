@@ -1,6 +1,6 @@
 package ru.byprogminer.Lab2_Web.utility;
 
-import ru.byprogminer.Lab2_Web.model.CompModel;
+import ru.byprogminer.Lab2_Web.HistoryNode;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -9,7 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class AreaRenderer {
 
@@ -51,8 +53,8 @@ public class AreaRenderer {
         this.context = context;
     }
 
-    public String renderArea(String areaPath, String areaUrl, CompModel compModel) {
-        if (!compModel.isResultAvailable()) {
+    public String renderArea(String areaPath, String areaUrl, HistoryNode historyNode) {
+        if (historyNode == null) {
             return areaUrl;
         }
 
@@ -65,18 +67,25 @@ public class AreaRenderer {
             graphics.drawImage(image, 0, 0, null);
             graphics.setColor(Color.RED);
 
-            final Calculator calc = new Calculator(image.getWidth(), image.getHeight(), compModel.getR());
-            graphics.fillArc(
-                    calc.translateX(compModel.getX())
-                            .subtract(BigDecimal.valueOf(2))
-                            .setScale(0, RoundingMode.HALF_UP)
-                            .intValue(),
-                    calc.translateY(compModel.getY())
-                            .subtract(BigDecimal.valueOf(2))
-                            .setScale(0, RoundingMode.HALF_UP)
-                            .intValue(),
-                    5, 5, 0, 360
-            );
+            final Map<BigDecimal, Calculator> calcs = new HashMap<>();
+            while (historyNode != null) {
+                final Calculator calc = calcs.computeIfAbsent(historyNode.r, r ->
+                        new Calculator(image.getWidth(), image.getHeight(), r));
+
+                graphics.fillArc(
+                        calc.translateX(historyNode.x)
+                                .subtract(BigDecimal.valueOf(2))
+                                .setScale(0, RoundingMode.HALF_UP)
+                                .intValue(),
+                        calc.translateY(historyNode.y)
+                                .subtract(BigDecimal.valueOf(2))
+                                .setScale(0, RoundingMode.HALF_UP)
+                                .intValue(),
+                        5, 5, 0, 360
+                );
+
+                historyNode = historyNode.next;
+            }
 
             final ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write(canvas, "PNG", os);

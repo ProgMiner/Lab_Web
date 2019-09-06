@@ -1,9 +1,12 @@
 <%--suppress CssUnusedSymbol --%><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.ControllerServlet" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.HistoryNode" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.model.CompModel" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.AreaRenderer" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.JspUtility" %><%--
 --%><%@ page import="java.math.BigDecimal" %><%--
+--%><%@ page import="java.util.HashMap" %><%--
+--%><%@ page import="java.util.Map" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><%
     if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return;
@@ -228,6 +231,7 @@
         }
 
         #body {
+            width: 100%;
             height: 100%;
             position: relative;
             z-index: 1;
@@ -300,60 +304,67 @@
     </style>
 </head>
 <body>
-<div id="body">
-    <div id="background"></div>
+<table id="body">
+    <tr>
+        <td style="vertical-align: top;">
+            <div id="background"></div>
 
-    <table id="main">
-        <tr class="header">
-            <td>
-                <h1>
-                    <a href="<%=request.getContextPath()%>/" data-oaoaoa="invisible">Лабораторная работа №II</a><br />
-                    <span class="black-bg" data-oaoaoa="ib skew" style="font-family: Impact, serif;">по <span class="horizontal-rainbow" data-oaoaoa="bg-text">Веб-программированию</span></span><br />
-                    <span style="opacity: 0.1; margin-right: 273px;">Программированию Интернет Приложений</span>
-                </h1>
-            </td>
-        </tr>
+            <table id="main">
+                <tr class="header">
+                    <td>
+                        <h1>
+                            <a href="<%=request.getContextPath()%>/" data-oaoaoa="invisible">Лабораторная работа №II</a><br />
+                            <span class="black-bg" data-oaoaoa="ib skew" style="font-family: Impact, serif;">по <span class="horizontal-rainbow" data-oaoaoa="bg-text">Веб-программированию</span></span><br />
+                            <span style="opacity: 0.1; margin-right: 273px;">Программированию Интернет Приложений</span>
+                        </h1>
+                    </td>
+                </tr>
 
-        <tr class="header">
-            <td>
-                <h2>
-                    Вариант
-                    <span data-oaoaoa="ib" style="transform: scaleX(-1);">№</span><!--
-                 --><span data-oaoaoa="ib" style="transform: rotate(-4deg);">211</span><!--
-                 --><span data-oaoaoa="ib" style="transform: rotate(4deg);">025</span>
-                </h2>
-            </td>
-        </tr>
+                <tr class="header">
+                    <td>
+                        <h2>
+                            Вариант
+                            <span data-oaoaoa="ib" style="transform: scaleX(-1);">№</span><!--
+                         --><span data-oaoaoa="ib" style="transform: rotate(-4deg);">211</span><!--
+                         --><span data-oaoaoa="ib" style="transform: rotate(4deg);">025</span>
+                        </h2>
+                    </td>
+                </tr>
 
-        <tr class="header">
-            <td style="position: relative;">
-                <div id="area-error" style="display: none;"></div>
-                <% final CompModel compModel = (CompModel) request.getAttribute("compModel");
-                   if (compModel.isResultAvailable()) { %>
-                    <canvas id="area-canvas" class="area" width="205" height="205"
-                            style="background: url('<%=utility.inlineImage(ControllerServlet.AREAS_IMAGE_PATH)%>');">
-                        <img src="<%=request.getAttribute("areaUrl")%>" alt="Area" />
-                    </canvas>
+                <tr class="header">
+                    <td style="position: relative;">
+                        <div id="area-error" style="display: none;"></div>
+                        <% final HistoryNode historyHead = (HistoryNode) request.getSession().getAttribute(ControllerServlet.HISTORY_ATTRIBUTE_NAME);
+                           final CompModel compModel = (CompModel) request.getAttribute("compModel");
+                           if (historyHead != null) { %>
+                            <canvas id="area-canvas" class="area" width="205" height="205"
+                                    style="background: url('<%=utility.inlineImage(ControllerServlet.AREAS_IMAGE_PATH)%>');">
+                                <img src="<%=request.getAttribute("areaUrl")%>" alt="Area" />
+                            </canvas>
 
-                    <script type="text/javascript">
-                        (function() {
-                            const canvas = document.getElementById("area-canvas");
-                            const context = canvas.getContext("2d");
+                            <script type="text/javascript">
+                                (function() {
+                                    const canvas = document.getElementById("area-canvas");
+                                    const context = canvas.getContext("2d");
 
-                            <% final AreaRenderer.Calculator areaCalc = new AreaRenderer.Calculator(205, 205, compModel.getR()); %>
+                                    <% final Map<BigDecimal, AreaRenderer.Calculator> areaCalcs = new HashMap<>();
+                                       HistoryNode historyNode = historyHead;
+                                       while (historyNode != null) {
+                                       final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r)); %>
+                                        context.fillStyle = "#ff0000";
+                                        context.beginPath();
+                                        context.arc(<%=areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5))%>, <%=areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5))%>, 2, 0, 360);
+                                        context.fill();
+                                        <% historyNode = historyNode.next;
+                                       } %>
+                                })();
+                            </script>
+                        <% } else { %><img src="<%=request.getAttribute("areaUrl")%>" alt="Area" class="area" /><% } %>
 
-                            context.fillStyle = "#ff0000";
-                            context.beginPath();
-                            context.arc(<%=areaCalc.translateX(compModel.getX()).add(BigDecimal.valueOf(0.5))%>, <%=areaCalc.translateY(compModel.getY()).add(BigDecimal.valueOf(0.5))%>, 2, 0, 360);
-                            context.fill();
-                        })();
-                    </script>
-                <% } else { %><img src="<%=request.getAttribute("areaUrl")%>" alt="Area" class="area" /><% } %>
-
-                <h3 style="margin-right: -46px; transform: rotate(1deg); position: absolute; right: 0;" data-oaoaoa="ib align-right">
-                    Доморацкого&nbsp;&nbsp;<br />
-                    Эридана <span data-oaoaoa="ib drop">А</span>лексеевича&nbsp;<br />
-                    Группа: P3<span style="font-size: 22pt; line-height: 32pt; vertical-align: middle;">2</span>11
-                </h3>
-            </td>
-        </tr>
+                        <h3 style="margin-right: -46px; transform: rotate(1deg); position: absolute; right: 0;" data-oaoaoa="ib align-right">
+                            Доморацкого&nbsp;&nbsp;<br />
+                            Эридана <span data-oaoaoa="ib drop">А</span>лексеевича&nbsp;<br />
+                            Группа: P3<span style="font-size: 22pt; line-height: 32pt; vertical-align: middle;">2</span>11
+                        </h3>
+                    </td>
+                </tr>

@@ -8,40 +8,67 @@
 --%><%@ page import="java.util.stream.Collectors" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><% if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return; %>
-            <tr>
-                <td>
-                    <div class="fancy-box" data-oaoaoa="small-text">
-                        <table>
-                            <tr>
-                                <td>Current time:</td>
-                                <td data-oaoaoa="align-justify" id="current-time">
-                                    <% final MainModel mainModel = (MainModel) request.getAttribute("mainModel");
-                                       final ZonedDateTime currentTime = mainModel.getCurrentTime(); %>
-                                    <%=currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))%>
-                                    <%=currentTime.getZone().getDisplayName(TextStyle.FULL, Locale.getDefault())%>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Elapsed time:</td>
-                                <td data-oaoaoa="align-justify"><%=String.format("%.15f", mainModel.getElapsedTime())%> ms.</td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
+                    <tr>
+                        <td>
+                            <div class="fancy-box" data-oaoaoa="small-text">
+                                <table>
+                                    <tr>
+                                        <td>Current time:</td>
+                                        <td data-oaoaoa="align-justify" id="current-time">
+                                            <% final MainModel mainModel = (MainModel) request.getAttribute("mainModel");
+                                               final ZonedDateTime currentTime = mainModel.getCurrentTime(); %>
+                                            <%=currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))%>
+                                            <%=currentTime.getZone().getDisplayName(TextStyle.FULL, Locale.getDefault())%>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Elapsed time:</td>
+                                        <td data-oaoaoa="align-justify"><%=String.format("%.15f", mainModel.getElapsedTime())%> ms.</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
 
-            <tr><td><br />&nbsp;&nbsp;&nbsp;<a href="http://ifmo.ru/" target="_blank"><img src="<%=utility.inlineImage("/assets/images/itmo-logo.png")%>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></a></td></tr>
-        </table>
+        <% if (historyHead != null) { %>
+        <tr><td>
 
-        <div id="jepa">
-            <!--suppress CheckImageSize -->
-            <img src="<%=request.getContextPath()%>/assets/images/1-12676-512.png"
-                 style="display: inline-block; background: url('<%=utility.inlineImage("/assets/images/1-12676-128.png")%>');"
-                 width="128" height="128" alt="" />
-        </div>
+            <table class="fancy-box bordered" style="padding-top: 0;">
+                <tr><th colspan="6">Results history</th></tr>
+                <tr>
+                    <th colspan="1">X</th>
+                    <th>Y</th>
+                    <th>R</th>
+                    <th>Result</th>
+                </tr>
+                <% HistoryNode historyNode = historyHead;
+                    while (historyNode != null) { %>
+                <tr>
+                    <td><%=historyNode.x%></td>
+                    <td><%=historyNode.y%></td>
+                    <td><%=historyNode.r%></td>
+                    <td><%=historyNode.result ? "" : "not"%> included</td>
+                </tr>
+                <% historyNode = historyNode.next;
+                } %>
+            </table>
+        </td></tr>
+        <% } %>
 
-        <div id="rocket"></div>
-    </div>
+        <tr><td><br />&nbsp;&nbsp;&nbsp;<a href="http://ifmo.ru/" target="_blank"><img src="<%=utility.inlineImage("/assets/images/itmo-logo.png")%>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></a></td></tr>
+                </table>
+
+                <div id="jepa">
+                    <!--suppress CheckImageSize -->
+                    <img src="<%=request.getContextPath()%>/assets/images/1-12676-512.png"
+                         style="display: inline-block; background: url('<%=utility.inlineImage("/assets/images/1-12676-128.png")%>');"
+                         width="128" height="128" alt="" />
+                </div>
+
+                <div id="rocket"></div>
+            </td>
+        </tr>
+    </table>
 
     <script type="text/javascript">
         "use strict";
@@ -135,7 +162,7 @@
 
             sendForm("GET", "<%=request.getContextPath()%>/", {
                 x: findNearest((x - centerX) / zoomX, [<%=Arrays.stream(CompModelImpl.ALLOWED_XES).mapToObj(Integer::toString).collect(Collectors.joining(", "))%>]),
-                y: Math.min(Math.max((centerY - y) / zoomY, <%=CompModelImpl.ALLOWED_YS_RANGE[0] - 0.00000001%>), <%=CompModelImpl.ALLOWED_YS_RANGE[1] - 0.00000001%>),
+                y: Math.min(Math.max((centerY - y) / zoomY, <%=CompModelImpl.ALLOWED_YS_RANGE[0] + 0.00000001%>), <%=CompModelImpl.ALLOWED_YS_RANGE[1] - 0.00000001%>),
                 r: r
             });
         });
