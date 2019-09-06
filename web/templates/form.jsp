@@ -49,24 +49,24 @@
     <script type="text/javascript">
         "use strict";
 
+        function displayFormError(error, element) {
+            Array.prototype.forEach.call(document.querySelectorAll(".form-error-container"), node => node.classList.add("shown-form-error-container"));
+            document.getElementById("form-error-container").innerText = error;
+
+            if (element !== undefined) {
+                element.classList.add("bad-content");
+            }
+        }
+
+        function hideFormError(element) {
+            Array.prototype.forEach.call(document.querySelectorAll(".form-error-container"), node => node.classList.remove("shown-form-error-container"));
+
+            if (element !== undefined) {
+                element.classList.remove("bad-content");
+            }
+        }
+
         (function() {
-            function displayFormError(error, element) {
-                Array.prototype.forEach.call(document.querySelectorAll(".form-error-container"), node => node.classList.add("shown-form-error-container"));
-                document.getElementById("form-error-container").innerText = error;
-
-                if (element !== undefined) {
-                    element.classList.add("bad-content");
-                }
-            }
-
-            function hideFormError(element) {
-                Array.prototype.forEach.call(document.querySelectorAll(".form-error-container"), node => node.classList.remove("shown-form-error-container"));
-
-                if (element !== undefined) {
-                    element.classList.remove("bad-content");
-                }
-            }
-
             function validateChecked(submit, elements, name, filter) {
                 if (Array.prototype.slice.call(elements).filter(filter).length > 0) {
                     hideFormError();

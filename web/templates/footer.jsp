@@ -55,7 +55,7 @@
                 const rInput = document.getElementById("r-input");
 
                 if (rInput == null) {
-                    alert("WTF");
+                    displayFormError("WTF");
                     return null;
                 }
 
@@ -63,12 +63,12 @@
                 const r = parseInt(rValue);
 
                 if (isNaN(r) || rValue !== r.toString()) {
-                    alert("Cannot determine area zoom without specified R");
+                    displayFormError("Cannot determine area zoom without specified R");
                     return null;
                 }
 
                 if (<%=Arrays.stream(CompModelImpl.ALLOWED_RS).mapToObj(r1-> "r !== " + r1).collect(Collectors.joining(" && "))%>) {
-                    alert("Bad R specified");
+                    displayFormError("Bad R specified");
                     return null;
                 }
 

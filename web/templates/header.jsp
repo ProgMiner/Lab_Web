@@ -327,6 +327,7 @@
 
         <tr class="header">
             <td style="position: relative;">
+                <div id="area-error" style="display: none;"></div>
                 <% final CompModel compModel = (CompModel) request.getAttribute("compModel");
                    if (compModel.isResultAvailable()) { %>
                     <canvas id="area-canvas" class="area" width="205" height="205"
