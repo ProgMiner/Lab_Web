@@ -7,6 +7,7 @@ import ru.byprogminer.Lab2_Web.model.MainModelImpl;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -58,14 +59,14 @@ public class Factory {
         return makeCompModel(null, null, null);
     }
 
-    public CompModel makeCompModel(Integer x, Double y, Integer r) {
+    public CompModel makeCompModel(BigDecimal x, BigDecimal y, BigDecimal r) {
         if (x == null) {
             try {
-                Integer newX = null;
+                BigDecimal newX = null;
 
                 final String param = request.getParameter("x");
                 if (param != null) {
-                    newX = Integer.parseInt(param);
+                    newX = new BigDecimal(param);
                 }
 
                 x = newX;
@@ -76,11 +77,11 @@ public class Factory {
 
         if (y == null) {
             try {
-                Double newY = null;
+                BigDecimal newY = null;
 
                 final String param = request.getParameter("y");
                 if (param != null) {
-                    newY = Double.parseDouble(param);
+                    newY = new BigDecimal(param);
                 }
 
                 y = newY;
@@ -91,11 +92,11 @@ public class Factory {
 
         if (r == null) {
             try {
-                Integer newR = null;
+                BigDecimal newR = null;
 
                 final String param = request.getParameter("r");
                 if (param != null) {
-                    newR = Integer.parseInt(param);
+                    newR = new BigDecimal(param);
                 }
 
                 r = newR;

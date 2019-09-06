@@ -3,6 +3,7 @@
 --%><%@ page import="ru.byprogminer.Lab2_Web.model.CompModel" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.AreaRenderer" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.JspUtility" %><%--
+--%><%@ page import="java.math.BigDecimal" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><%
     if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return;
@@ -338,11 +339,11 @@
                             const canvas = document.getElementById("area-canvas");
                             const context = canvas.getContext("2d");
 
-                            <% final AreaRenderer.Calculator areaCalc = new AreaRenderer.Calculator(205, 205, compModel.getR().doubleValue()); %>
+                            <% final AreaRenderer.Calculator areaCalc = new AreaRenderer.Calculator(205, 205, compModel.getR()); %>
 
                             context.fillStyle = "#ff0000";
                             context.beginPath();
-                            context.arc(<%=areaCalc.translateX(compModel.getX().doubleValue()) + 0.5%>, <%=areaCalc.translateY(compModel.getY().doubleValue()) + 0.5%>, 2, 0, 360);
+                            context.arc(<%=areaCalc.translateX(compModel.getX()).add(BigDecimal.valueOf(0.5))%>, <%=areaCalc.translateY(compModel.getY()).add(BigDecimal.valueOf(0.5))%>, 2, 0, 360);
                             context.fill();
                         })();
                     </script>

@@ -1,5 +1,7 @@
 package ru.byprogminer.Lab2_Web.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 public class CompModelImpl implements CompModel {
@@ -8,24 +10,25 @@ public class CompModelImpl implements CompModel {
     public static final double[] ALLOWED_YS_RANGE = new double[] {-3, 3};
     public static final int[] ALLOWED_RS = new int[] {1, 2, 3, 4, 5};
 
-    private final Integer x;
-    private final Double y;
-    private final Integer r;
+    private final BigDecimal x;
+    private final BigDecimal y;
+    private final BigDecimal r;
 
-    public CompModelImpl(Integer x, Double y, Integer r) {
-        if (x != null && Arrays.stream(ALLOWED_XES).anyMatch(x::equals)) {
+    public CompModelImpl(BigDecimal x, BigDecimal y, BigDecimal r) {
+        if (x != null && Arrays.stream(ALLOWED_XES).anyMatch(value -> BigDecimal.valueOf(value).equals(x))) {
             this.x = x;
         } else {
             this.x = null;
         }
 
-        if (y != null && y >= ALLOWED_YS_RANGE[0] && y <= ALLOWED_YS_RANGE[1]) {
+        if (y != null && y.compareTo(BigDecimal.valueOf(ALLOWED_YS_RANGE[0])) > 0 &&
+                y.compareTo(BigDecimal.valueOf(ALLOWED_YS_RANGE[1])) < 0) {
             this.y = y;
         } else {
             this.y = null;
         }
 
-        if (r != null && Arrays.stream(ALLOWED_RS).anyMatch(r::equals)) {
+        if (r != null && Arrays.stream(ALLOWED_RS).anyMatch(value -> BigDecimal.valueOf(value).equals(r))) {
             this.r = r;
         } else {
             this.r = null;
@@ -38,26 +41,29 @@ public class CompModelImpl implements CompModel {
     }
 
     @Override
-    public Number getX() {
+    public BigDecimal getX() {
         return x;
     }
 
     @Override
-    public Number getY() {
+    public BigDecimal getY() {
         return y;
     }
 
     @Override
-    public Number getR() {
+    public BigDecimal getR() {
         return r;
     }
 
     @Override
-    public boolean getResult(double x, double y, double r) {
-        double halfR = r / 2;
+    public boolean getResult(BigDecimal x, BigDecimal y, BigDecimal r) {
+        BigDecimal halfR = r.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
 
-        return (x >= 0 && y >= 0 && x * x + y * y < halfR * halfR) ||
-               (x >= 0 && y <= 0 && y > x - halfR) ||
-               (x <= 0 && y >= 0 && x >= -r && y <= r);
+        return (x.compareTo(BigDecimal.ZERO) >= 0 && y.compareTo(BigDecimal.ZERO) >= 0 &&
+                x.multiply(x).add(y.multiply(y)).compareTo(halfR.multiply(halfR)) < 0) ||
+               (x.compareTo(BigDecimal.ZERO) >= 0 && y.compareTo(BigDecimal.ZERO) <= 0 &&
+                       y.compareTo(x.subtract(halfR)) > 0) ||
+               (x.compareTo(BigDecimal.ZERO) <= 0 && y.compareTo(BigDecimal.ZERO) >= 0 &&
+                       x.compareTo(BigDecimal.ZERO.subtract(r)) >= 0 && y.compareTo(r) <= 0);
     }
 }

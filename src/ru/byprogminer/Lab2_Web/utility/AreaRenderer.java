@@ -7,29 +7,41 @@ import javax.servlet.ServletContext;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedList;
 
 public class AreaRenderer {
 
     public static class Calculator {
 
-        private final int centerX, centerY;
-        private final double zoomX, zoomY;
+        private final BigDecimal centerX, centerY;
+        private final BigDecimal zoomX, zoomY;
 
-        public Calculator(int width, int height, double r) {
-            centerX = (int) Math.round(width / 2D) - 1;
-            centerY = (int) Math.round(height / 2D) - 1;
+        public Calculator(int width, int height, BigDecimal r) {
+            centerX = BigDecimal.valueOf(width)
+                    .divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP)
+                    .subtract(BigDecimal.ONE);
+            centerY = BigDecimal.valueOf(height)
+                    .divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP)
+                    .subtract(BigDecimal.ONE);
 
-            zoomX = 80D * width / 205D / r;
-            zoomY = 80D * height / 205D / r;
+            zoomX = BigDecimal.valueOf(80)
+                    .multiply(BigDecimal.valueOf(width))
+                    .divide(BigDecimal.valueOf(205), RoundingMode.HALF_UP)
+                    .divide(r, RoundingMode.HALF_UP);
+            zoomY = BigDecimal.valueOf(80)
+                    .multiply(BigDecimal.valueOf(height))
+                    .divide(BigDecimal.valueOf(205), RoundingMode.HALF_UP)
+                    .divide(r, RoundingMode.HALF_UP);
         }
 
-        public double translateX(double x) {
-            return centerX + x * zoomX;
+        public BigDecimal translateX(BigDecimal x) {
+            return centerX.add(x.multiply(zoomX));
         }
 
-        public double translateY(double y) {
-            return centerY - y * zoomY;
+        public BigDecimal translateY(BigDecimal y) {
+            return centerY.subtract(y.multiply(zoomY));
         }
     }
 
@@ -53,10 +65,16 @@ public class AreaRenderer {
             graphics.drawImage(image, 0, 0, null);
             graphics.setColor(Color.RED);
 
-            final Calculator calc = new Calculator(image.getWidth(), image.getHeight(), compModel.getR().doubleValue());
+            final Calculator calc = new Calculator(image.getWidth(), image.getHeight(), compModel.getR());
             graphics.fillArc(
-                    (int) Math.round(calc.translateX(compModel.getX().doubleValue())) - 2,
-                    (int) Math.round(calc.translateY(compModel.getY().doubleValue())) - 2,
+                    calc.translateX(compModel.getX())
+                            .subtract(BigDecimal.valueOf(2))
+                            .setScale(0, RoundingMode.HALF_UP)
+                            .intValue(),
+                    calc.translateY(compModel.getY())
+                            .subtract(BigDecimal.valueOf(2))
+                            .setScale(0, RoundingMode.HALF_UP)
+                            .intValue(),
                     5, 5, 0, 360
             );
 

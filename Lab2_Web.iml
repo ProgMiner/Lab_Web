@@ -20,6 +20,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.1.0" level="application_server_libraries" />
+    <orderEntry type="library" name="JBoss 17.0.2.Final" level="application_server_libraries" />
   </component>
 </module>

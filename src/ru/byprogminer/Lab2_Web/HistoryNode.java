@@ -1,15 +1,17 @@
 package ru.byprogminer.Lab2_Web;
 
+import java.math.BigDecimal;
+
 public class HistoryNode {
 
-    public final double x;
-    public final double y;
-    public final double r;
+    public final BigDecimal x;
+    public final BigDecimal y;
+    public final BigDecimal r;
     public final boolean result;
 
     public final HistoryNode next;
 
-    public HistoryNode(double x, double y, double r, boolean result, HistoryNode next) {
+    public HistoryNode(BigDecimal x, BigDecimal y, BigDecimal r, boolean result, HistoryNode next) {
         this.x = x;
         this.y = y;
         this.r = r;

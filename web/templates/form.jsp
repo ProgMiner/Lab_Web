@@ -13,16 +13,16 @@
                 <td>
                     <table style="width: 100%;" class="framework">
                         <tr>
-                            <% final Number x = compModel.getX();
+                            <% final BigDecimal x = compModel.getX();
                                for (int currentX : CompModelImpl.ALLOWED_XES) { %>
-                                <td><label><input type="radio" name="x" value="<%=currentX%>" <%=Integer.valueOf(currentX).equals(x) ? "checked" : ""%>/><%=currentX%> </label></td>
+                                <td><label><input type="radio" name="x" value="<%=currentX%>" <%=BigDecimal.valueOf(currentX).equals(x) ? "checked" : ""%>/><%=currentX%> </label></td>
                             <% } %>
                         </tr>
                     </table>
                 </td>
             </tr>
             <tr>
-                <% final Number y = compModel.getY(); %>
+                <% final BigDecimal y = compModel.getY(); %>
                 <td><label for="y-input">Y: </label></td>
                 <td><input type="text" name="y" id="y-input" <%=y != null ? "value=\"" + y + '"' : ""%> /></td>
             </tr>
@@ -31,9 +31,9 @@
                 <td>
                     <table style="width: 100%;" class="framework">
                         <tr>
-                            <% final Number r = compModel.getR();
+                            <% final BigDecimal r = compModel.getR();
                                for (int currentR : CompModelImpl.ALLOWED_RS) { %>
-                                <td><button name="r" value="<%=currentR%>" <%=Integer.valueOf(currentR).equals(r) ? "class=\"selected-button\"" : ""%>><%=currentR%></button></td>
+                                <td><button name="r" value="<%=currentR%>" <%=BigDecimal.valueOf(currentR).equals(r) ? "class=\"selected-button\"" : ""%>><%=currentR%></button></td>
                             <% } %>
                         </tr>
                     </table>
@@ -100,8 +100,8 @@
                     return false;
                 }
 
-                if (floatValue < min || floatValue > max) {
-                    displayFormError(name + " must be in [" + min + ", " + max + "]!", element);
+                if (floatValue <= min || floatValue >= max) {
+                    displayFormError(name + " must be in (" + min + ", " + max + ")!", element);
                     return false;
                 }
 
@@ -164,9 +164,9 @@
             <% HistoryNode historyNode = historyHead;
                while (historyNode != null) { %>
                 <tr>
-                    <td><%=(int) historyNode.x%></td>
+                    <td><%=historyNode.x.intValue()%></td>
                     <td><%=historyNode.y%></td>
-                    <td><%=(int) historyNode.r%></td>
+                    <td><%=historyNode.r.intValue()%></td>
                     <td><%=historyNode.result ? "" : "not"%> included</td>
                 </tr>
                 <% historyNode = historyNode.next;
