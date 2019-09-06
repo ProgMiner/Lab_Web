@@ -96,7 +96,7 @@
                 value = value.substring(0, 15);
                 const floatValue = parseFloat(value);
 
-                if (floatValue.toString() !== value || isNaN(floatValue)) {
+                if (isNaN(floatValue)) {
                     displayFormError(name + " is not a number!", element);
                     return false;
                 }
