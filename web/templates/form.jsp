@@ -93,6 +93,7 @@
                     return false;
                 }
 
+                value = value.substring(0, 15);
                 const floatValue = parseFloat(value);
 
                 if (floatValue.toString() !== value || isNaN(floatValue)) {
