@@ -1,5 +1,7 @@
 package ru.byprogminer.Lab2_Web.utility;
 
+import java.awt.*;
+
 public final class Utility {
 
     private Utility() {
@@ -24,5 +26,9 @@ public final class Utility {
         }
 
         return defaultValue;
+    }
+
+    public static String colorToHex(Color color) {
+        return String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
     }
 }

@@ -4,6 +4,7 @@
 --%><%@ page import="ru.byprogminer.Lab2_Web.model.CompModel" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.AreaRenderer" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.JspUtility" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.utility.Utility" %><%--
 --%><%@ page import="java.math.BigDecimal" %><%--
 --%><%@ page import="java.util.HashMap" %><%--
 --%><%@ page import="java.util.Map" %><%--
@@ -94,6 +95,10 @@
 
             margin-inline-start: 0.25ch;
             margin-inline-end: 0.25ch;
+        }
+
+        table.fancy-box th, table.fancy-box td {
+            vertical-align: baseline;
         }
 
         table.framework {
@@ -350,10 +355,17 @@
                                     <% final Map<BigDecimal, AreaRenderer.Calculator> areaCalcs = new HashMap<>();
                                        HistoryNode historyNode = historyHead;
                                        while (historyNode != null) {
-                                       final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r)); %>
-                                        context.fillStyle = "#ff0000";
+                                       final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r));
+                                       final BigDecimal x = areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5));
+                                       final BigDecimal y = areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5)); %>
+                                        context.fillStyle = "<%=Utility.colorToHex(AreaRenderer.BORDER_COLOR)%>";
                                         context.beginPath();
-                                        context.arc(<%=areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5))%>, <%=areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5))%>, 2, 0, 360);
+                                        context.arc(<%=x%>, <%=y%>, 3, 0, 360);
+                                        context.fill();
+
+                                        context.fillStyle = "<%=Utility.colorToHex(historyNode.result ? AreaRenderer.INCLUDED_COLOR : AreaRenderer.NOT_INCLUDED_COLOR)%>";
+                                        context.beginPath();
+                                        context.arc(<%=x%>, <%=y%>, 2, 0, 360);
                                         context.fill();
                                         <% historyNode = historyNode.next;
                                        } %>

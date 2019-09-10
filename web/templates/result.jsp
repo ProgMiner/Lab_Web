@@ -7,19 +7,19 @@
 --%><tr><td>
     <table class="fancy-box">
         <tr>
-            <td>X: </td>
+            <th>X: </th>
             <td><%=x%></td>
         </tr>
         <tr>
-            <td>Y: </td>
-            <td><%=y%></td>
+            <th>Y: </th>
+            <td style="word-break: break-all;"><%=y%></td>
         </tr>
         <tr>
-            <td>R: </td>
+            <th>R: </th>
             <td><%=r%></td>
         </tr>
         <tr>
-            <td>Result: </td>
+            <th>Result: </th>
             <td data-oaoaoa="align-justify">point is<%=compModel.getResult(x, y, r) ? "" : "n't"%> included in the area</td>
         </tr>
     </table>

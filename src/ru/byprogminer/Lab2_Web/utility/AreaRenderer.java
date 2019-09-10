@@ -47,6 +47,10 @@ public class AreaRenderer {
         }
     }
 
+    public static final Color INCLUDED_COLOR = Color.GREEN;
+    public static final Color NOT_INCLUDED_COLOR = Color.RED;
+    public static final Color BORDER_COLOR = Color.BLACK;
+
     private final ServletContext context;
 
     public AreaRenderer(ServletContext context) {
@@ -65,24 +69,27 @@ public class AreaRenderer {
 
             final Graphics graphics = canvas.getGraphics();
             graphics.drawImage(image, 0, 0, null);
-            graphics.setColor(Color.RED);
 
             final Map<BigDecimal, Calculator> calcs = new HashMap<>();
             while (historyNode != null) {
                 final Calculator calc = calcs.computeIfAbsent(historyNode.r, r ->
                         new Calculator(image.getWidth(), image.getHeight(), r));
 
-                graphics.fillArc(
-                        calc.translateX(historyNode.x)
-                                .subtract(BigDecimal.valueOf(2))
-                                .setScale(0, RoundingMode.HALF_UP)
-                                .intValue(),
-                        calc.translateY(historyNode.y)
-                                .subtract(BigDecimal.valueOf(2))
-                                .setScale(0, RoundingMode.HALF_UP)
-                                .intValue(),
-                        5, 5, 0, 360
-                );
+                final int x = calc.translateX(historyNode.x)
+                        .subtract(BigDecimal.valueOf(2))
+                        .setScale(0, RoundingMode.HALF_UP)
+                        .intValue();
+
+                final int y = calc.translateY(historyNode.y)
+                        .subtract(BigDecimal.valueOf(2))
+                        .setScale(0, RoundingMode.HALF_UP)
+                        .intValue();
+
+                graphics.setColor(BORDER_COLOR);
+                graphics.fillArc(x - 1, y - 1, 7, 7, 0, 360);
+
+                graphics.setColor(historyNode.result ? INCLUDED_COLOR : NOT_INCLUDED_COLOR);
+                graphics.fillArc(x, y, 5, 5, 0, 360);
 
                 historyNode = historyNode.next;
             }

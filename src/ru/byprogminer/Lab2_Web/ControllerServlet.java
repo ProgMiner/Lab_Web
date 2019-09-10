@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-@WebServlet("/")
+@WebServlet(ControllerServlet.URL)
 public class ControllerServlet extends HttpServlet {
 
     public static final String APP_NAME = "Lab2_Web";
@@ -22,6 +22,9 @@ public class ControllerServlet extends HttpServlet {
     public static final String SECURITY_ATTRIBUTE_NAME = "LAB2_WEB";
     public static final String HISTORY_ATTRIBUTE_NAME = "history";
     public static final String AREAS_IMAGE_PATH = "/assets/images/areas.png";
+    public static final String URL = "";
+
+    private static final String FORM_JSP_URL = "templates/form.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,9 +45,9 @@ public class ControllerServlet extends HttpServlet {
                         (HistoryNode) request.getSession().getAttribute(HISTORY_ATTRIBUTE_NAME)));
 
         if (compModel.isResultAvailable()) {
-            request.getRequestDispatcher("templates/result.jsp").forward(request, response);
+            request.getRequestDispatcher(AreaCheckServlet.URL).forward(request, response);
         } else {
-            request.getRequestDispatcher("templates/form.jsp").forward(request, response);
+            request.getRequestDispatcher(FORM_JSP_URL).forward(request, response);
         }
     }
 
