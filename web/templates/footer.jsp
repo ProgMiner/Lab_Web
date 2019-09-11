@@ -6,9 +6,8 @@
 --%><%@ page import="java.util.Arrays" %><%--
 --%><%@ page import="java.util.Locale" %><%--
 --%><%@ page import="java.util.stream.Collectors" %><%--
---%><%@ page contentType="text/html;charset=UTF-8" %><%--
---%><% if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return; %>
-        <% if (historyHead != null) { %>
+--%><%@ page contentType="text/html;charset=UTF-8" %>
+        <% if (!history.isEmpty()) { %>
             <tr><td>
 
                 <table class="fancy-box bordered" style="padding-top: 0;">
@@ -19,16 +18,14 @@
                         <th>R</th>
                         <th>Result</th>
                     </tr>
-                    <% HistoryNode historyNode = historyHead;
-                        while (historyNode != null) { %>
-                    <tr>
-                        <td><%=historyNode.x%></td>
-                        <td style="word-break: break-all;"><%=historyNode.y%></td>
-                        <td><%=historyNode.r%></td>
-                        <td style="white-space: nowrap;"><%=historyNode.result ? "" : "not"%> included</td>
-                    </tr>
-                    <% historyNode = historyNode.next;
-                    } %>
+                    <% for (HistoryNode historyNode : history) { %>
+                        <tr>
+                            <td><%=historyNode.x%></td>
+                            <td style="word-break: break-all;"><%=historyNode.y%></td>
+                            <td><%=historyNode.r%></td>
+                            <td style="white-space: nowrap;"><%=historyNode.result ? "" : "not"%> included</td>
+                        </tr>
+                    <% } %>
                 </table>
             </td></tr>
         <% } %>
@@ -41,7 +38,7 @@
                             <td>Current time:</td>
                             <td data-oaoaoa="align-justify" id="current-time">
                                 <% final MainModel mainModel = (MainModel) request.getAttribute("mainModel");
-                                    final ZonedDateTime currentTime = mainModel.getCurrentTime(); %>
+                                   final ZonedDateTime currentTime = mainModel.getCurrentTime(); %>
                                 <%=currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))%>
                                 <%=currentTime.getZone().getDisplayName(TextStyle.FULL, Locale.getDefault())%>
                             </td>

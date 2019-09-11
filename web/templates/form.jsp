@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" %><%--
---%><% if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return; %><%--
 --%><%@ include file="header.jsp" %><%--
 --%><tr><td>
     <form action="<%=request.getContextPath()%>/" method="get" id="form" class="fancy-box">

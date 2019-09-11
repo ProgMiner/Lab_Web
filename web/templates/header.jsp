@@ -6,11 +6,11 @@
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.JspUtility" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.Utility" %><%--
 --%><%@ page import="java.math.BigDecimal" %><%--
+--%><%@ page import="java.util.Deque" %><%--
 --%><%@ page import="java.util.HashMap" %><%--
---%><%@ page import="java.util.Map" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><%
-    if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return;
+    if (!ControllerServlet.isSecurityAttributeSet(request)) return;
     final JspUtility utility = new JspUtility(request);
 %><%--
 --%><!DOCTYPE html>
@@ -339,9 +339,9 @@
                 <tr class="header">
                     <td style="position: relative;">
                         <div id="area-error" style="display: none;"></div>
-                        <% final HistoryNode historyHead = (HistoryNode) request.getSession().getAttribute(ControllerServlet.HISTORY_ATTRIBUTE_NAME);
+                        <% final Deque<HistoryNode> history = ControllerServlet.getHistory(session);
                            final CompModel compModel = (CompModel) request.getAttribute("compModel");
-                           if (historyHead != null) { %>
+                           if (!history.isEmpty()) { %>
                             <canvas id="area-canvas" class="area" width="205" height="205"
                                     style="background: url('<%=utility.inlineImage(ControllerServlet.AREAS_IMAGE_PATH)%>');">
                                 <img src="<%=request.getAttribute("areaUrl")%>" alt="Area" />
@@ -352,12 +352,11 @@
                                     const canvas = document.getElementById("area-canvas");
                                     const context = canvas.getContext("2d");
 
-                                    <% final Map<BigDecimal, AreaRenderer.Calculator> areaCalcs = new HashMap<>();
-                                       HistoryNode historyNode = historyHead;
-                                       while (historyNode != null) {
-                                       final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r));
-                                       final BigDecimal x = areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5));
-                                       final BigDecimal y = areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5)); %>
+                                    <% final HashMap<BigDecimal, AreaRenderer.Calculator> areaCalcs = new HashMap<>();
+                                       for (HistoryNode historyNode : history) {
+                                           final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r));
+                                           final BigDecimal x = areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5));
+                                           final BigDecimal y = areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5)); %>
                                         context.fillStyle = "<%=Utility.colorToHex(AreaRenderer.BORDER_COLOR)%>";
                                         context.beginPath();
                                         context.arc(<%=x%>, <%=y%>, 3, 0, 360);
@@ -367,8 +366,7 @@
                                         context.beginPath();
                                         context.arc(<%=x%>, <%=y%>, 2, 0, 360);
                                         context.fill();
-                                        <% historyNode = historyNode.next;
-                                       } %>
+                                    <% } %>
                                 })();
                             </script>
                         <% } else { %><img src="<%=request.getAttribute("areaUrl")%>" alt="Area" class="area" /><% } %>

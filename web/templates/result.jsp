@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" %><%--
---%><% if (request.getAttribute(ControllerServlet.SECURITY_ATTRIBUTE_NAME) == null) return; %><%--
 --%><%@ include file="header.jsp" %><%--
 --%><% final BigDecimal x = compModel.getX();
        final BigDecimal y = compModel.getY();

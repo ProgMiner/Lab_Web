@@ -9,9 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class AreaRenderer {
 
@@ -57,8 +55,8 @@ public class AreaRenderer {
         this.context = context;
     }
 
-    public String renderArea(String areaPath, String areaUrl, HistoryNode historyNode) {
-        if (historyNode == null) {
+    public String renderArea(String areaPath, String areaUrl, Deque<HistoryNode> history) {
+        if (Objects.requireNonNull(history).isEmpty()) {
             return areaUrl;
         }
 
@@ -75,7 +73,7 @@ public class AreaRenderer {
             }
 
             final Map<BigDecimal, Calculator> calcs = new HashMap<>();
-            while (historyNode != null) {
+            for (final HistoryNode historyNode : history) {
                 final Calculator calc = calcs.computeIfAbsent(historyNode.r, r ->
                         new Calculator(image.getWidth(), image.getHeight(), r));
 
@@ -94,8 +92,6 @@ public class AreaRenderer {
 
                 graphics.setColor(historyNode.result ? INCLUDED_COLOR : NOT_INCLUDED_COLOR);
                 graphics.fillArc(x, y, 5, 5, 0, 360);
-
-                historyNode = historyNode.next;
             }
 
             final ByteArrayOutputStream os = new ByteArrayOutputStream();

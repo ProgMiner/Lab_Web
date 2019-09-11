@@ -1,6 +1,7 @@
 package ru.byprogminer.Lab2_Web;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class HistoryNode {
 
@@ -9,13 +10,10 @@ public class HistoryNode {
     public final BigDecimal r;
     public final boolean result;
 
-    public final HistoryNode next;
-
-    public HistoryNode(BigDecimal x, BigDecimal y, BigDecimal r, boolean result, HistoryNode next) {
-        this.x = x;
-        this.y = y;
-        this.r = r;
+    public HistoryNode(BigDecimal x, BigDecimal y, BigDecimal r, boolean result) {
+        this.x = Objects.requireNonNull(x);
+        this.y = Objects.requireNonNull(y);
+        this.r = Objects.requireNonNull(r);
         this.result = result;
-        this.next = next;
     }
 }
