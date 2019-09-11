@@ -25,7 +25,7 @@
                         <td><%=historyNode.x%></td>
                         <td style="word-break: break-all;"><%=historyNode.y%></td>
                         <td><%=historyNode.r%></td>
-                        <td><%=historyNode.result ? "" : "not"%> included</td>
+                        <td style="white-space: nowrap;"><%=historyNode.result ? "" : "not"%> included</td>
                     </tr>
                     <% historyNode = historyNode.next;
                     } %>

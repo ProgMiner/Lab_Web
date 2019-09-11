@@ -70,6 +70,10 @@ public class AreaRenderer {
             final Graphics graphics = canvas.getGraphics();
             graphics.drawImage(image, 0, 0, null);
 
+            if (graphics instanceof Graphics2D) {
+                ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            }
+
             final Map<BigDecimal, Calculator> calcs = new HashMap<>();
             while (historyNode != null) {
                 final Calculator calc = calcs.computeIfAbsent(historyNode.r, r ->
