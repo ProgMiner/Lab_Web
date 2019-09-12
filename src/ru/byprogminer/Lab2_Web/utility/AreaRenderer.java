@@ -71,7 +71,7 @@ public class AreaRenderer {
             }
 
             final Map<BigDecimal, Calculator> calcs = new HashMap<>();
-            for (final HistoryNode historyNode : history) {
+            for (final HistoryNode historyNode : new ReversedDequeIterable<>(history)) {
                 final Calculator calc = calcs.computeIfAbsent(historyNode.r, r ->
                         new Calculator(image.getWidth(), image.getHeight(), r));
 

@@ -8,6 +8,7 @@
 --%><%@ page import="java.math.BigDecimal" %><%--
 --%><%@ page import="java.util.Deque" %><%--
 --%><%@ page import="java.util.HashMap" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.utility.ReversedDequeIterable" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><%
     if (ControllerServlet.isSecurityAttributeNotSet(request)) return;
@@ -345,7 +346,7 @@
                          const context = canvas.getContext("2d");
 
                          <% final HashMap<BigDecimal, AreaRenderer.Calculator> areaCalcs = new HashMap<>();
-                            for (HistoryNode historyNode : history) {
+                            for (HistoryNode historyNode : new ReversedDequeIterable<>(history)) {
                                 final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r));
                                 final BigDecimal x = areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5));
                                 final BigDecimal y = areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5)); %>
