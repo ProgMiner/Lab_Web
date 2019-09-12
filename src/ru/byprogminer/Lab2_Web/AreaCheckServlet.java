@@ -16,7 +16,7 @@ public class AreaCheckServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!ControllerServlet.isSecurityAttributeSet(request)) {
+        if (ControllerServlet.isSecurityAttributeNotSet(request)) {
             request.getRequestDispatcher(ControllerServlet.URL).forward(request, response);
             return;
         }

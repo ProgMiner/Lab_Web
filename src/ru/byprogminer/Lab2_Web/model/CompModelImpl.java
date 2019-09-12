@@ -1,8 +1,9 @@
 package ru.byprogminer.Lab2_Web.model;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Arrays;
+
+import static ru.byprogminer.Lab2_Web.utility.Utility.divide;
 
 public class CompModelImpl implements CompModel {
 
@@ -57,7 +58,7 @@ public class CompModelImpl implements CompModel {
 
     @Override
     public boolean getResult(BigDecimal x, BigDecimal y, BigDecimal r) {
-        BigDecimal halfR = r.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
+        BigDecimal halfR = divide(r, BigDecimal.valueOf(2));
 
         return (x.compareTo(BigDecimal.ZERO) >= 0 && y.compareTo(BigDecimal.ZERO) >= 0 &&
                 x.multiply(x).add(y.multiply(y)).compareTo(halfR.multiply(halfR)) < 0) ||

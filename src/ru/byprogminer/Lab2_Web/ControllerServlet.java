@@ -71,8 +71,8 @@ public class ControllerServlet extends HttpServlet {
         }
     }
 
-    public static boolean isSecurityAttributeSet(ServletRequest request) {
-        return request.getAttribute(SECURITY_ATTRIBUTE_NAME) != null;
+    public static boolean isSecurityAttributeNotSet(ServletRequest request) {
+        return request.getAttribute(SECURITY_ATTRIBUTE_NAME) == null;
     }
 
     public static Deque<HistoryNode> getHistory(HttpSession session) {

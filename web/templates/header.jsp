@@ -10,7 +10,7 @@
 --%><%@ page import="java.util.HashMap" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><%
-    if (!ControllerServlet.isSecurityAttributeSet(request)) return;
+    if (ControllerServlet.isSecurityAttributeNotSet(request)) return;
     final JspUtility utility = new JspUtility(request);
 %><%--
 --%><!DOCTYPE html>

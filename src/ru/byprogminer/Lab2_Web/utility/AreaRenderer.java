@@ -11,29 +11,27 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
+import static ru.byprogminer.Lab2_Web.utility.Utility.divide;
+
 public class AreaRenderer {
 
     public static class Calculator {
 
         private final BigDecimal centerX, centerY;
-        private final BigDecimal zoomX, zoomY;
+        protected final BigDecimal zoomX, zoomY;
 
         public Calculator(int width, int height, BigDecimal r) {
-            centerX = BigDecimal.valueOf(width)
-                    .divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP)
+            centerX = divide(BigDecimal.valueOf(width), BigDecimal.valueOf(2))
                     .subtract(BigDecimal.ONE);
-            centerY = BigDecimal.valueOf(height)
-                    .divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP)
+            centerY = divide(BigDecimal.valueOf(height), BigDecimal.valueOf(2))
                     .subtract(BigDecimal.ONE);
 
-            zoomX = BigDecimal.valueOf(80)
-                    .multiply(BigDecimal.valueOf(width))
-                    .divide(BigDecimal.valueOf(205), RoundingMode.HALF_UP)
-                    .divide(r, RoundingMode.HALF_UP);
-            zoomY = BigDecimal.valueOf(80)
-                    .multiply(BigDecimal.valueOf(height))
-                    .divide(BigDecimal.valueOf(205), RoundingMode.HALF_UP)
-                    .divide(r, RoundingMode.HALF_UP);
+            zoomX = divide(divide(BigDecimal.valueOf(80)
+                    .multiply(BigDecimal.valueOf(width)),
+                    BigDecimal.valueOf(205)), r);
+            zoomY = divide(divide(BigDecimal.valueOf(80)
+                    .multiply(BigDecimal.valueOf(height)),
+                    BigDecimal.valueOf(205)), r);
         }
 
         public BigDecimal translateX(BigDecimal x) {
