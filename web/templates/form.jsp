@@ -13,7 +13,7 @@
                         <tr>
                             <% final BigDecimal x = compModel.getX();
                                for (int currentX : CompModelImpl.ALLOWED_XES) { %>
-                                <td><label><input type="radio" name="x" value="<%=currentX%>" <%=BigDecimal.valueOf(currentX).equals(x) ? "checked" : ""%>/><%=currentX%> </label></td>
+                                <td><label><input type="radio" name="x" value="<%=currentX%>" <%=BigDecimal.valueOf(currentX).equals(x) ? "checked" : ""%>><%=currentX%> </label></td>
                             <% } %>
                         </tr>
                     </table>
@@ -22,7 +22,7 @@
             <tr>
                 <% final BigDecimal y = compModel.getY(); %>
                 <td><label for="y-input">Y: </label></td>
-                <td><input type="text" name="y" id="y-input" <%=y != null ? "value=\"" + y + '"' : ""%> /></td>
+                <td><input type="text" name="y" id="y-input" <%=y != null ? "value=\"" + y + '"' : ""%>></td>
             </tr>
             <tr>
                 <td>R: </td>
@@ -35,7 +35,7 @@
                             <% } %>
                         </tr>
                     </table>
-                    <input type="hidden" name="r" id="r-input" <%=r != null ? "value=\"" + r + '"' : ""%> />
+                    <input type="hidden" name="r" id="r-input" <%=r != null ? "value=\"" + r + '"' : ""%>>
                 </td>
             </tr>
             <tr>

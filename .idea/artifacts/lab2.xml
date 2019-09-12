@@ -7,6 +7,9 @@
         <element id="directory" name="classes">
           <element id="module-output" name="Lab2_Web" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="application_server_libraries" name="JBoss 17.0.2.Final" />
+        </element>
       </element>
     </root>
   </artifact>

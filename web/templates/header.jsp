@@ -38,6 +38,7 @@
             height: 100%;
             background: linear-gradient(32deg, #234523, #e0df3a, #f43458, #d0f89e) fixed;
             position: relative;
+            z-index: 0;
             color: #111;
             cursor: wait;
             font-size: 16pt;
@@ -235,13 +236,6 @@
             right: -8%;
         }
 
-        #body {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            z-index: 1;
-        }
-
         #main {
             width: 60%;
             margin: 0 auto;
@@ -282,18 +276,18 @@
             z-index: 1000;
             bottom: 0;
             left: 0;
-            top: -100%;
+            top: 100%;
             right: -25%;
             background-image: url("<%=request.getContextPath()%>/assets/images/25568165.png");
-            background-position: 100% 0;
-            background-size: cover;
-            transform: scale(0);
+            background-repeat: no-repeat;
+            background-position: 0 100%;
+            background-size: auto 100%;
             transform-origin: 0 100%;
         }
 
         #rocket.flying-rocket {
             transition: 2s cubic-bezier(1, 0, 1, 1);
-            transform: scale(1);
+            top: -100%;
         }
 
         @media(max-width: 920px) {
@@ -309,72 +303,70 @@
     </style>
 </head>
 <body>
-<table id="body">
-    <tr>
-        <td style="vertical-align: top;">
-            <div id="background"></div>
+<table id="main">
+     <tr class="header">
+         <td>
+             <h1>
+                 <a href="<%=request.getContextPath()%>/" data-oaoaoa="invisible">Лабораторная работа №II</a><br>
+                 <span class="black-bg" data-oaoaoa="ib skew" style="font-family: Impact, serif;">
+                     по <span class="horizontal-rainbow" data-oaoaoa="bg-text">Веб-программированию</span>
+                 </span>
+                 <br>
+                 <span style="opacity: 0.1; margin-right: 273px;">Программированию Интернет Приложений</span>
+             </h1>
+         </td>
+     </tr>
 
-            <table id="main">
-                <tr class="header">
-                    <td>
-                        <h1>
-                            <a href="<%=request.getContextPath()%>/" data-oaoaoa="invisible">Лабораторная работа №II</a><br />
-                            <span class="black-bg" data-oaoaoa="ib skew" style="font-family: Impact, serif;">по <span class="horizontal-rainbow" data-oaoaoa="bg-text">Веб-программированию</span></span><br />
-                            <span style="opacity: 0.1; margin-right: 273px;">Программированию Интернет Приложений</span>
-                        </h1>
-                    </td>
-                </tr>
+     <tr class="header">
+         <td>
+             <h2>
+                 Вариант
+                 <span data-oaoaoa="ib" style="transform: scaleX(-1);">№</span><!--
+              --><span data-oaoaoa="ib" style="transform: rotate(-4deg);">211</span><!--
+              --><span data-oaoaoa="ib" style="transform: rotate(4deg);">025</span>
+             </h2>
+         </td>
+     </tr>
 
-                <tr class="header">
-                    <td>
-                        <h2>
-                            Вариант
-                            <span data-oaoaoa="ib" style="transform: scaleX(-1);">№</span><!--
-                         --><span data-oaoaoa="ib" style="transform: rotate(-4deg);">211</span><!--
-                         --><span data-oaoaoa="ib" style="transform: rotate(4deg);">025</span>
-                        </h2>
-                    </td>
-                </tr>
+     <tr class="header">
+         <td style="position: relative;">
+             <div id="area-error" style="display: none;"></div>
+             <% final Deque<HistoryNode> history = ControllerServlet.getHistory(session);
+                final CompModel compModel = (CompModel) request.getAttribute("compModel");
+                if (!history.isEmpty()) { %>
+                 <canvas id="area-canvas" class="area" width="205" height="205"
+                         style="background: url('<%=utility.inlineImage(ControllerServlet.AREAS_IMAGE_PATH)%>');">
+                     <img src="<%=request.getAttribute("areaUrl")%>" alt="Area">
+                 </canvas>
 
-                <tr class="header">
-                    <td style="position: relative;">
-                        <div id="area-error" style="display: none;"></div>
-                        <% final Deque<HistoryNode> history = ControllerServlet.getHistory(session);
-                           final CompModel compModel = (CompModel) request.getAttribute("compModel");
-                           if (!history.isEmpty()) { %>
-                            <canvas id="area-canvas" class="area" width="205" height="205"
-                                    style="background: url('<%=utility.inlineImage(ControllerServlet.AREAS_IMAGE_PATH)%>');">
-                                <img src="<%=request.getAttribute("areaUrl")%>" alt="Area" />
-                            </canvas>
+                 <script type="text/javascript">
+                     (function() {
+                         const canvas = document.getElementById("area-canvas");
+                         const context = canvas.getContext("2d");
 
-                            <script type="text/javascript">
-                                (function() {
-                                    const canvas = document.getElementById("area-canvas");
-                                    const context = canvas.getContext("2d");
+                         <% final HashMap<BigDecimal, AreaRenderer.Calculator> areaCalcs = new HashMap<>();
+                            for (HistoryNode historyNode : history) {
+                                final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r));
+                                final BigDecimal x = areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5));
+                                final BigDecimal y = areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5)); %>
+                             context.fillStyle = "<%=Utility.colorToHex(AreaRenderer.BORDER_COLOR)%>";
+                             context.beginPath();
+                             context.arc(<%=x%>, <%=y%>, 3, 0, 360);
+                             context.fill();
 
-                                    <% final HashMap<BigDecimal, AreaRenderer.Calculator> areaCalcs = new HashMap<>();
-                                       for (HistoryNode historyNode : history) {
-                                           final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r));
-                                           final BigDecimal x = areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5));
-                                           final BigDecimal y = areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5)); %>
-                                        context.fillStyle = "<%=Utility.colorToHex(AreaRenderer.BORDER_COLOR)%>";
-                                        context.beginPath();
-                                        context.arc(<%=x%>, <%=y%>, 3, 0, 360);
-                                        context.fill();
+                             context.fillStyle = "<%=Utility.colorToHex(historyNode.result ? AreaRenderer.INCLUDED_COLOR : AreaRenderer.NOT_INCLUDED_COLOR)%>";
+                             context.beginPath();
+                             context.arc(<%=x%>, <%=y%>, 2, 0, 360);
+                             context.fill();
+                         <% } %>
+                     })();
+                 </script>
+             <% } else { %><img src="<%=request.getAttribute("areaUrl")%>" alt="Area" class="area"><% } %>
 
-                                        context.fillStyle = "<%=Utility.colorToHex(historyNode.result ? AreaRenderer.INCLUDED_COLOR : AreaRenderer.NOT_INCLUDED_COLOR)%>";
-                                        context.beginPath();
-                                        context.arc(<%=x%>, <%=y%>, 2, 0, 360);
-                                        context.fill();
-                                    <% } %>
-                                })();
-                            </script>
-                        <% } else { %><img src="<%=request.getAttribute("areaUrl")%>" alt="Area" class="area" /><% } %>
-
-                        <h3 style="margin-right: -46px; transform: rotate(1deg); position: absolute; right: 0;" data-oaoaoa="ib align-right">
-                            Доморацкого&nbsp;&nbsp;<br />
-                            Эридана <span data-oaoaoa="ib drop">А</span>лексеевича&nbsp;<br />
-                            Группа: P3<span style="font-size: 22pt; line-height: 32pt; vertical-align: middle;">2</span>11
-                        </h3>
-                    </td>
-                </tr>
+             <h3 style="margin-right: -46px; transform: rotate(1deg); position: absolute; right: 0;" data-oaoaoa="ib align-right">
+                 Доморацкого&nbsp;&nbsp;<br>
+                 Эридана <span data-oaoaoa="ib drop">А</span>лексеевича&nbsp;<br>
+                 Группа: P3<span style="font-size: 22pt; line-height: 32pt; vertical-align: middle;">2</span>11
+             </h3>
+         </td>
+     </tr>

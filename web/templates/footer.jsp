@@ -7,65 +7,71 @@
 --%><%@ page import="java.util.Locale" %><%--
 --%><%@ page import="java.util.stream.Collectors" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %>
-        <% if (!history.isEmpty()) { %>
-            <tr><td>
+    <% if (!history.isEmpty()) { %>
+        <tr><td>
 
-                <table class="fancy-box bordered" style="padding-top: 0;">
-                    <tr><th colspan="6">Results history</th></tr>
+            <table class="fancy-box bordered" style="padding-top: 0;">
+                <tr><th colspan="6">Results history</th></tr>
+                <tr>
+                    <th colspan="1">X</th>
+                    <th>Y</th>
+                    <th>R</th>
+                    <th>Result</th>
+                </tr>
+                <% for (HistoryNode historyNode : history) { %>
                     <tr>
-                        <th colspan="1">X</th>
-                        <th>Y</th>
-                        <th>R</th>
-                        <th>Result</th>
+                        <td><%=historyNode.x%></td>
+                        <td style="word-break: break-all;"><%=historyNode.y%></td>
+                        <td><%=historyNode.r%></td>
+                        <td style="white-space: nowrap;"><%=historyNode.result ? "" : "not"%> included</td>
                     </tr>
-                    <% for (HistoryNode historyNode : history) { %>
-                        <tr>
-                            <td><%=historyNode.x%></td>
-                            <td style="word-break: break-all;"><%=historyNode.y%></td>
-                            <td><%=historyNode.r%></td>
-                            <td style="white-space: nowrap;"><%=historyNode.result ? "" : "not"%> included</td>
-                        </tr>
-                    <% } %>
-                </table>
-            </td></tr>
-        <% } %>
-
-        <tr>
-            <td>
-                <div class="fancy-box" data-oaoaoa="small-text">
-                    <table>
-                        <tr>
-                            <td>Current time:</td>
-                            <td data-oaoaoa="align-justify" id="current-time">
-                                <% final MainModel mainModel = (MainModel) request.getAttribute("mainModel");
-                                   final ZonedDateTime currentTime = mainModel.getCurrentTime(); %>
-                                <%=currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))%>
-                                <%=currentTime.getZone().getDisplayName(TextStyle.FULL, Locale.getDefault())%>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Elapsed time:</td>
-                            <td data-oaoaoa="align-justify"><%=String.format("%.15f", mainModel.getElapsedTime())%> ms.</td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-        </tr>
-
-        <tr><td><br />&nbsp;&nbsp;&nbsp;<a href="http://ifmo.ru/" target="_blank"><img src="<%=utility.inlineImage("/assets/images/itmo-logo.png")%>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);" /></a></td></tr>
+                <% } %>
             </table>
+        </td></tr>
+    <% } %>
 
-            <div id="jepa">
-                <!--suppress CheckImageSize -->
-                <img src="<%=request.getContextPath()%>/assets/images/1-12676-512.png"
-                         style="display: inline-block; background: url('<%=utility.inlineImage("/assets/images/1-12676-128.png")%>');"
-                         width="128" height="128" alt="" />
-                </div>
+    <tr>
+        <td>
+            <div class="fancy-box" data-oaoaoa="small-text">
+                <table>
+                    <tr>
+                        <td>Current time:</td>
+                        <td data-oaoaoa="align-justify" id="current-time">
+                            <% final MainModel mainModel = (MainModel) request.getAttribute("mainModel");
+                               final ZonedDateTime currentTime = mainModel.getCurrentTime(); %>
+                            <%=currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))%>
+                            <%=currentTime.getZone().getDisplayName(TextStyle.FULL, Locale.getDefault())%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Elapsed time:</td>
+                        <td data-oaoaoa="align-justify"><%=String.format("%.15f", mainModel.getElapsedTime())%> ms.</td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
 
-                <div id="rocket"></div>
-            </td>
-        </tr>
-    </table>
+    <tr>
+        <td>
+            <br>
+            &nbsp;&nbsp;&nbsp;
+            <a href="http://ifmo.ru/" target="_blank">
+                <img src="<%=utility.inlineImage("/assets/images/itmo-logo.png")%>" alt="IT's More Than a University!" style="display: inline-block; transform: rotate(2deg);">
+            </a>
+        </td>
+    </tr>
+</table>
+
+<div id="jepa">
+    <!--suppress CheckImageSize -->
+    <img src="<%=request.getContextPath()%>/assets/images/1-12676-512.png"
+         style="display: inline-block; background: url('<%=utility.inlineImage("/assets/images/1-12676-128.png")%>');"
+         width="128" height="128" alt="">
+</div>
+
+<div id="rocket"></div>
+<div id="background"></div>
 
     <script type="text/javascript">
         "use strict";
