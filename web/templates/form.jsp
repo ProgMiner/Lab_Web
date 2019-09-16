@@ -122,9 +122,13 @@
 
             Array.prototype.forEach.call(rButtons, node => node.onclick = function () {
                 Array.prototype.forEach.call(rButtons, node => node.classList.remove("selected-button"));
-                node.classList.add("selected-button");
 
-                validateR(rInput.value = node.value, false);
+                const newValue = node.value === rInput.value ? null : node.value;
+                if (newValue !== null) {
+                    node.classList.add("selected-button");
+                }
+
+                validateR(rInput.value = newValue, false);
                 return false;
             });
 
