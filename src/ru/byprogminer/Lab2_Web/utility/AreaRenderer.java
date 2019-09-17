@@ -53,7 +53,7 @@ public class AreaRenderer {
         this.context = context;
     }
 
-    public String renderArea(String areaPath, String areaUrl, Deque<HistoryNode> history) {
+    public String renderArea(String areaPath, String areaUrl, Deque<HistoryNode> history, BigDecimal r) {
         if (Objects.requireNonNull(history).isEmpty()) {
             return areaUrl;
         }
@@ -70,27 +70,22 @@ public class AreaRenderer {
                 ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             }
 
-            final Map<BigDecimal, Calculator> calcs = new HashMap<>();
-            for (final HistoryNode historyNode : new ReversedDequeIterable<>(history)) {
-                final Calculator calc = calcs.computeIfAbsent(historyNode.r, r ->
-                        new Calculator(image.getWidth(), image.getHeight(), r));
+            final Iterable<HistoryNode> localHistory;
+            if (r == null) {
+                localHistory = new ReversedDequeIterable<>(history);
+            } else {
+                final LinkedList<HistoryNode> historyNodes = new LinkedList<>();
 
-                final int x = calc.translateX(historyNode.x)
-                        .subtract(BigDecimal.valueOf(2))
-                        .setScale(0, RoundingMode.HALF_UP)
-                        .intValue();
+                for (HistoryNode historyNode : history) {
+                    if (historyNode.r.equals(r)) {
+                        historyNodes.addFirst(historyNode);
+                    }
+                }
 
-                final int y = calc.translateY(historyNode.y)
-                        .subtract(BigDecimal.valueOf(2))
-                        .setScale(0, RoundingMode.HALF_UP)
-                        .intValue();
-
-                graphics.setColor(BORDER_COLOR);
-                graphics.fillArc(x - 1, y - 1, 7, 7, 0, 360);
-
-                graphics.setColor(historyNode.result ? INCLUDED_COLOR : NOT_INCLUDED_COLOR);
-                graphics.fillArc(x, y, 5, 5, 0, 360);
+                localHistory = historyNodes;
             }
+
+            renderHistory(localHistory, graphics, image.getWidth(), image.getHeight());
 
             final ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write(canvas, "PNG", os);
@@ -99,6 +94,30 @@ public class AreaRenderer {
         } catch (Throwable e) {
             e.printStackTrace();
             return areaUrl;
+        }
+    }
+
+    private static void renderHistory(Iterable<HistoryNode> history, Graphics graphics, int width, int height) {
+        final Map<BigDecimal, Calculator> calcs = new HashMap<>();
+
+        for (final HistoryNode historyNode : history) {
+            final Calculator calc = calcs.computeIfAbsent(historyNode.r, r -> new Calculator(width, height, r));
+
+            final int x = calc.translateX(historyNode.x)
+                    .subtract(BigDecimal.valueOf(2))
+                    .setScale(0, RoundingMode.HALF_UP)
+                    .intValue();
+
+            final int y = calc.translateY(historyNode.y)
+                    .subtract(BigDecimal.valueOf(2))
+                    .setScale(0, RoundingMode.HALF_UP)
+                    .intValue();
+
+            graphics.setColor(BORDER_COLOR);
+            graphics.fillArc(x - 1, y - 1, 7, 7, 0, 360);
+
+            graphics.setColor(historyNode.result ? INCLUDED_COLOR : NOT_INCLUDED_COLOR);
+            graphics.fillArc(x, y, 5, 5, 0, 360);
         }
     }
 }

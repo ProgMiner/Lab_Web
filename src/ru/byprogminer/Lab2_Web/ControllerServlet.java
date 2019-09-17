@@ -45,7 +45,7 @@ public class ControllerServlet extends HttpServlet {
 
         request.setAttribute("areaUrl", new AreaRenderer(request.getServletContext())
                 .renderArea(AREAS_IMAGE_PATH, new JspUtility(request).inlineImage(AREAS_IMAGE_PATH),
-                        getHistory(request.getSession())));
+                        getHistory(request.getSession()), compModel.getR()));
 
         if (compModel.isResultAvailable()) {
             request.getRequestDispatcher(AreaCheckServlet.URL).forward(request, response);
