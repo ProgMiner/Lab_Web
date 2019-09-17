@@ -157,6 +157,15 @@
             border-right: none;
         }
 
+        table.bordered tr.highlighted,
+        table[data-r="1"] tr[data-r="1"],
+        table[data-r="2"] tr[data-r="2"],
+        table[data-r="3"] tr[data-r="3"],
+        table[data-r="4"] tr[data-r="4"],
+        table[data-r="5"] tr[data-r="5"] {
+            background-color: rgba(122, 217, 215, 0.4);
+        }
+
         .form-error-container:not(.shown-form-error-container) {
             display: none;
         }

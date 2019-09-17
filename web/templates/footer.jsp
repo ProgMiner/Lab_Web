@@ -10,7 +10,7 @@
         <% if (!history.isEmpty()) { %>
             <tr><td>
 
-                <table class="fancy-box bordered" style="padding-top: 0;">
+                <table class="fancy-box bordered" style="padding-top: 0;" id="history-table">
                     <tr><th colspan="6">Results history</th></tr>
                     <tr>
                         <th colspan="1">X</th>
@@ -19,7 +19,7 @@
                         <th>Result</th>
                     </tr>
                     <% for (HistoryNode historyNode : history) { %>
-                        <tr>
+                        <tr data-r="<%=historyNode.r%>">
                             <td><%=historyNode.x%></td>
                             <td style="word-break: break-all;"><%=historyNode.y%></td>
                             <td><%=historyNode.r%></td>
@@ -27,7 +27,15 @@
                         </tr>
                     <% } %>
                 </table>
+
+                <script type="text/javascript">
+                    function updateHistoryTableR(r) {
+                        document.getElementById("history-table").setAttribute("data-r", r);
+                    }
+                </script>
             </td></tr>
+        <% } else { %>
+            <script type="text/javascript">function updateHistoryTableR() {}</script>
         <% } %>
 
         <tr>
@@ -107,7 +115,11 @@
             }
         <% } %>
 
-        repaintArea(getR(false));
+        (function(r) {
+            repaintArea(r);
+            updateHistoryTableR(r);
+        })(getR(false));
+
         Array.prototype.forEach.call(document.querySelectorAll(".area"), node => node.onclick = function(event) {
             const r = getR();
 

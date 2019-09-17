@@ -129,6 +129,7 @@
                 }
 
                 repaintArea(newValue);
+                updateHistoryTableR(newValue);
                 validateR(rInput.value = newValue, false);
                 return false;
             });
