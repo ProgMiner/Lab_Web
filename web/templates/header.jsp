@@ -4,11 +4,12 @@
 --%><%@ page import="ru.byprogminer.Lab2_Web.model.CompModel" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.AreaRenderer" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.JspUtility" %><%--
+--%><%@ page import="ru.byprogminer.Lab2_Web.utility.ReversedDequeIterable" %><%--
 --%><%@ page import="ru.byprogminer.Lab2_Web.utility.Utility" %><%--
 --%><%@ page import="java.math.BigDecimal" %><%--
 --%><%@ page import="java.util.Deque" %><%--
 --%><%@ page import="java.util.HashMap" %><%--
---%><%@ page import="ru.byprogminer.Lab2_Web.utility.ReversedDequeIterable" %><%--
+--%><%@ page import="java.util.LinkedList" %><%--
 --%><%@ page contentType="text/html;charset=UTF-8" %><%--
 --%><%
     if (ControllerServlet.isSecurityAttributeNotSet(request)) return;
@@ -341,28 +342,69 @@
                  </canvas>
 
                  <script type="text/javascript">
-                     (function() {
+                     const repaintArea = (function() {
                          const canvas = document.getElementById("area-canvas");
                          const context = canvas.getContext("2d");
 
-                         <% final HashMap<BigDecimal, AreaRenderer.Calculator> areaCalcs = new HashMap<>();
-                            for (HistoryNode historyNode : new ReversedDequeIterable<>(history)) {
-                                final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r));
-                                final BigDecimal x = areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5));
-                                final BigDecimal y = areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5)); %>
-                             context.fillStyle = "<%=Utility.colorToHex(AreaRenderer.BORDER_COLOR)%>";
-                             context.beginPath();
-                             context.arc(<%=x%>, <%=y%>, 3, 0, 360);
-                             context.fill();
+                         <% final HashMap<BigDecimal, LinkedList<HistoryNode>> historyByR = new HashMap<>();
+                            for (HistoryNode historyNode : history) {
+                                historyByR.computeIfAbsent(historyNode.r, bigDecimal -> new LinkedList<>())
+                                    .addFirst(historyNode);
+                            } %>
 
-                             context.fillStyle = "<%=Utility.colorToHex(historyNode.result ? AreaRenderer.INCLUDED_COLOR : AreaRenderer.NOT_INCLUDED_COLOR)%>";
-                             context.beginPath();
-                             context.arc(<%=x%>, <%=y%>, 2, 0, 360);
-                             context.fill();
-                         <% } %>
+                         return function (r) {
+                             context.clearRect(0, 0, canvas.width, canvas.height);
+
+                             if (isNaN(r)) {
+                                 r = null;
+                             }
+
+                             switch (typeof r === 'string' ? parseInt(r) : r) {
+                                 <% final HashMap<BigDecimal, AreaRenderer.Calculator> areaCalcs = new HashMap<>();
+                                    for (HashMap.Entry<BigDecimal, LinkedList<HistoryNode>> entry : historyByR.entrySet()) { %>
+                                    case <%=entry.getKey()%>:
+                                     <% for (HistoryNode historyNode : entry.getValue()) {
+                                            final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r));
+                                            final BigDecimal x = areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5));
+                                            final BigDecimal y = areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5)); %>
+                                         context.fillStyle = "<%=Utility.colorToCss(AreaRenderer.BORDER_COLOR)%>";
+                                         context.beginPath();
+                                         context.arc(<%=x%>, <%=y%>, 3, 0, 360);
+                                         context.fill();
+
+                                         context.fillStyle = "<%=Utility.colorToCss(historyNode.result ? AreaRenderer.INCLUDED_COLOR : AreaRenderer.NOT_INCLUDED_COLOR)%>";
+                                         context.beginPath();
+                                         context.arc(<%=x%>, <%=y%>, 2, 0, 360);
+                                         context.fill();
+                                     <% } %>
+                                     break;
+                                 <% } %>
+
+                                 case null:
+                                 case undefined:
+                                 <% for (HistoryNode historyNode : new ReversedDequeIterable<>(history)) {
+                                        final AreaRenderer.Calculator areaCalc = areaCalcs.computeIfAbsent(historyNode.r, r -> new AreaRenderer.Calculator(205, 205, r));
+                                        final BigDecimal x = areaCalc.translateX(historyNode.x).add(BigDecimal.valueOf(0.5));
+                                        final BigDecimal y = areaCalc.translateY(historyNode.y).add(BigDecimal.valueOf(0.5)); %>
+                                     context.fillStyle = "<%=Utility.colorToCss(AreaRenderer.BORDER_COLOR)%>";
+                                     context.beginPath();
+                                     context.arc(<%=x%>, <%=y%>, 3, 0, 360);
+                                     context.fill();
+
+                                     context.fillStyle = "<%=Utility.colorToCss(historyNode.result ? AreaRenderer.INCLUDED_COLOR : AreaRenderer.NOT_INCLUDED_COLOR)%>";
+                                     context.beginPath();
+                                     context.arc(<%=x%>, <%=y%>, 2, 0, 360);
+                                     context.fill();
+                                 <% } %>
+                             }
+                         };
                      })();
                  </script>
-             <% } else { %><img src="<%=request.getAttribute("areaUrl")%>" alt="Area" class="area"><% } %>
+             <% } else { %>
+                 <img src="<%=request.getAttribute("areaUrl")%>" alt="Area" class="area">
+
+                 <script type="text/javascript">const repaintArea = () => {};</script>
+             <% } %>
 
              <h3 style="margin-right: -46px; transform: rotate(1deg); position: absolute; right: 0;" data-oaoaoa="ib align-right">
                  Доморацкого&nbsp;&nbsp;<br>

@@ -128,6 +128,7 @@
                     node.classList.add("selected-button");
                 }
 
+                repaintArea(newValue);
                 validateR(rInput.value = newValue, false);
                 return false;
             });

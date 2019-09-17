@@ -32,8 +32,8 @@ public final class Utility {
         return defaultValue;
     }
 
-    public static String colorToHex(Color color) {
-        return String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
+    public static String colorToCss(Color color) {
+        return String.format("rgba(%d, %d, %d, %d)", color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     }
 
     public static BigDecimal divide(BigDecimal a, BigDecimal b) {
