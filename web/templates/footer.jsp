@@ -80,6 +80,7 @@
 
     <div id="rocket"></div>
     <div id="background"></div>
+    <div id="valera"></div>
 
     <script type="text/javascript">
         "use strict";

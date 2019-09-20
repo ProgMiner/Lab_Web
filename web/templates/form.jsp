@@ -54,6 +54,21 @@
             if (element !== undefined) {
                 element.classList.add("bad-content");
             }
+
+            const valera = document.getElementById("valera");
+            valera.style.display = "block";
+
+            const valeraAnim = (next) => {
+                valera.style.opacity = next;
+
+                if (next >= 0) {
+                    setTimeout(() => valeraAnim(next - 0.01))
+                } else {
+                    valera.style.display = "none";
+                }
+            };
+
+            valeraAnim(1);
         }
 
         function hideFormError(element) {

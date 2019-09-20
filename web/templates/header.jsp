@@ -301,6 +301,17 @@
             top: -100%;
         }
 
+        #valera {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            background: url("<%=request.getContextPath()%>/assets/images/valera.jpg") 50% 35% / cover no-repeat;
+        }
+
         @media(max-width: 920px) {
             #background {
                 left: 10%;
