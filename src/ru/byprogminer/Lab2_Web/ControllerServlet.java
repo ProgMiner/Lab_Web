@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.Deque;
 import java.util.LinkedList;
 
-@WebServlet(ControllerServlet.URL)
+@WebServlet("/" + ControllerServlet.URL)
 public class ControllerServlet extends HttpServlet {
 
     public static final String APP_NAME = "Lab2_Web";

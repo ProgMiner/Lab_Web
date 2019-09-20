@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(AreaCheckServlet.URL)
+@WebServlet("/" + AreaCheckServlet.URL)
 public class AreaCheckServlet extends HttpServlet {
 
     public static final String URL = "area-check";
