@@ -1,0 +1,55 @@
+body {
+    margin: 5px;
+    color: #F0F0F0;
+    background: #090909;
+}
+
+a {
+    color: #A8A8A8;
+}
+
+a:visited {
+    color: #8080C0;
+}
+
+a:active {
+    color: #C08080;
+}
+
+a:hover {
+    color: #FF0000;
+}
+
+hr {
+    width: 100%;
+    border: 1px solid #8080C0;
+}
+
+input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.title {
+    display: block;
+    padding: 5px;
+    font-weight: bold;
+    background: #8080C0;
+}
+
+.topmenu {
+    display: block;
+    text-align: center;
+}
+
+.homepage {
+    display: block;
+    font-size: small;
+    text-align: right;
+}
+
+#areaCanvas {
+    display: block;
+    margin: 5px auto;
+    border: 1px solid #F0F0F0;
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:include src="templates/head.xhtml" />
+
+<h:body>
+    <div class="topmenu">
+        <h:link value="Стартовая страница" outcome="index" />
+        <![CDATA[ ]]>
+        <h:link value="Основная страница" outcome="main" />
+    </div>
+
+    <h1>Доморацкий Эридан Алексеевич</h1>
+    <strong>Группа</strong>: P3211<br />
+    <strong>Вариант</strong>: 44<br />
+    <br />
+
+    <strong>Текущее время</strong>: <span id="currentTime" />
+
+    <h:outputScript library="js" name="time.js" />
+</h:body>
+</html>

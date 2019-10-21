@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+
+<ui:include src="templates/head.xhtml">
+    <ui:param name="pageTitle" value="Основная страница" />
+</ui:include>
+
+<h:body>
+    <div class="title">Основная страница</div>
+
+    <canvas id="areaCanvas" width="400" height="400">
+        <h:graphicImage /><!--TODO-->
+    </canvas>
+
+    <h:form>
+        <table>
+            <tr>
+                <td><h:outputLabel value="X: " /></td>
+                <td>
+                    <h:selectOneRadio id="xField" value="#{queryBean.x}" required="true" label="X"
+                                      converter="Lab3_Web.BigDecimal" validator="#{queryBean.validateX}">
+                        <c:forEach items="#{queryBean.availableX}" var="item">
+                            <f:selectItem itemValue="#{item}" itemLabel="#{item}" />
+                        </c:forEach>
+                    </h:selectOneRadio>
+                </td>
+            </tr>
+
+            <tr>
+                <td><h:outputLabel value="Y: " for="yField" /></td>
+                <td>
+                    <h:inputText id="yField" value="#{queryBean.y}" required="true" label="Y"
+                                 converter="Lab3_Web.BigDecimal" validator="#{queryBean.validateY}" />
+                </td>
+            </tr>
+
+            <tr>
+                <td><h:outputLabel value="R: " /></td>
+                <td>
+                    <h:inputText id="rField" value="#{queryBean.r}" required="true" label="R" styleClass="rField"
+                                 converter="Lab3_Web.BigDecimal" validator="#{queryBean.validateR}" />
+                </td>
+            </tr>
+
+            <tr>
+                <td />
+                <td>
+                    <p:slider for="rField" minValue="#{queryBean.availableR[0]}" step="0.25"
+                              maxValue="#{queryBean.availableR[fn:length(queryBean.availableR) - 1]}"
+                              onSlide="area.onRChanged(ui.value);" />
+                </td>
+            </tr>
+        </table>
+
+        <h:messages />
+        <h:commandButton action="main" value="Проверить" />
+    </h:form>
+
+    <div class="homepage">
+        <h:link value="Homepage" outcome="index" />
+    </div>
+
+    <h:outputScript library="js" name="area.js" />
+
+    <script type="text/javascript">
+        Array.prototype.forEach.call(document.querySelectorAll(".rField"), (input) => {
+            area.onRChanged(input.value);
+            input.readOnly = true;
+        });
+    </script>
+</h:body>
+</html>

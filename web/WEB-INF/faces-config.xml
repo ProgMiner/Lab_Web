@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+    http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+    <managed-bean>
+        <managed-bean-name>queryBean</managed-bean-name>
+        <managed-bean-class>ru.byprogminer.Lab3_Web.ee.QueryBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+    <converter>
+        <converter-id>Lab3_Web.BigDecimal</converter-id>
+        <converter-class>ru.byprogminer.Lab3_Web.ee.BigDecimalConverter</converter-class>
+    </converter>
+  
+</faces-config>
