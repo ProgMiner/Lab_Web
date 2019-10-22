@@ -163,7 +163,11 @@ const area = new (function () {
 
         // Graph
 
-        //
+        // TODO
+
+        // History
+
+        // TODO
 
         // Clip
         context.beginPath();
