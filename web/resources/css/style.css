@@ -1,6 +1,6 @@
 body {
     margin: 5px;
-    color: #F0F0F0;
+    color: #F9F9F9;
     background: #090909;
 }
 
@@ -51,5 +51,5 @@ input[type="text"] {
 #areaCanvas {
     display: block;
     margin: 5px auto;
-    border: 1px solid #F0F0F0;
+    border: 1px solid #F9F9F9;
 }
