@@ -14,9 +14,10 @@
 <h:body>
     <div class="title">Основная страница</div>
 
-    <canvas id="areaCanvas" width="400" height="400">
-        <h:graphicImage /><!--TODO-->
-    </canvas>
+    <h:graphicImage library="images" name="batman.png" id="batmanImage" class="scriptImage" />
+    <h:graphicImage library="images" name="bullet-hole-green.png" id="bulletHoleGreenImage" class="scriptImage" />
+    <h:graphicImage library="images" name="bullet-hole-red.png" id="bulletHoleRedImage" class="scriptImage" />
+    <canvas id="areaCanvas" width="400" height="400" />
 
     <h:form>
         <table>
@@ -59,7 +60,7 @@
         </table>
 
         <h:messages />
-        <h:commandButton action="main" value="Проверить" />
+        <h:commandButton action="#{queryBean.action}" value="Проверить" />
     </h:form>
 
     <div class="homepage">

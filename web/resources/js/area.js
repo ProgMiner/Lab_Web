@@ -8,12 +8,13 @@ const area = new (function () {
     const canvasStep = canvasHeight / 2 / 12;
 
     const canvasColorPrimary = '#090909';
-    const canvasColorSecondary = '#606060';
+    const canvasColorSecondary = '#C0C0C0';
     const canvasColorBackground = '#F9F9F9';
 
     const self = this;
 
     this.r = null;
+    this.history = [];
     this.onRChanged = function (r) {
         r = +r;
 
@@ -26,9 +27,16 @@ const area = new (function () {
         setTimeout(self.repaint, 1);
     };
 
+    this.setHistory = function(history) {
+        if (history instanceof Array) {
+            this.history = history;
+            self.repaint();
+        }
+    };
+
     this.repaint = function () {
-        const canvas = document.getElementById("areaCanvas");
-        const context = canvas.getContext("2d");
+        const canvas = document.getElementById('areaCanvas');
+        const context = canvas.getContext('2d');
 
         const actualCanvasSize = {
             width: parseInt(getCurrentStyle(canvas, 'width'), 10),
@@ -63,15 +71,16 @@ const area = new (function () {
 
         context.beginPath();
         for (let i = 1; i < 24; ++i) {
-            context.moveTo(canvasStep * 0.25, i * canvasStep);
-            context.lineTo(canvasWidth - canvasStep * 0.25, i * canvasStep);
+            context.moveTo(canvasStep / 4, i * canvasStep);
+            context.lineTo(canvasWidth - canvasStep / 4, i * canvasStep);
 
-            context.moveTo(i * canvasStep, canvasStep * 0.25);
-            context.lineTo(i * canvasStep, canvasHeight - canvasStep * 0.25);
+            context.moveTo(i * canvasStep,canvasStep / 4);
+            context.lineTo(i * canvasStep, canvasHeight - canvasStep / 4);
         }
         context.stroke();
 
         context.strokeStyle = canvasColorPrimary;
+        context.fillStyle = canvasColorBackground;
 
         // Circles
         context.beginPath();
@@ -161,13 +170,43 @@ const area = new (function () {
         context.fillText(pictogrammsLabelText2, canvasStep * 2, whereMeDrawText(context, canvasStep * 2.75));
         context.fillStyle = canvasColorBackground;
 
-        // Graph
-
-        // TODO
+        // Batman
+        context.globalCompositeOperation = 'difference';
+        context.drawImage(document.getElementById('batmanImage'), 0, 0, canvasWidth, canvasHeight);
+        context.globalCompositeOperation = 'source-over';
 
         // History
 
-        // TODO
+        const bulletHoleGreen = document.getElementById('bulletHoleGreenImage');
+        const bulletHoleRed = document.getElementById('bulletHoleRedImage');
+
+        const centerX = canvasWidth / 2;
+        const centerY = canvasHeight / 2;
+        const zoomX = canvasWidth * 10 / 24 / self.r;
+        const zoomY = canvasHeight * 10 / 24 / self.r;
+        for (const pointKey in self.history) {
+            if (!self.history.hasOwnProperty(pointKey)) {
+                continue;
+            }
+
+            const point = self.history[pointKey];
+            if (self.r != null && point.r !== self.r) {
+                continue;
+            }
+
+            let actualZoomX = zoomX, actualZoomY = zoomY;
+            if (self.r == null) {
+                actualZoomX = canvasWidth * 10 / 24 / point.r;
+                actualZoomY = canvasHeight * 10 / 24 / point.r;
+            }
+
+            context.drawImage(
+                point.result ? bulletHoleGreen : bulletHoleRed,
+                centerX + point.x * actualZoomY - 15,
+                centerY - point.y * actualZoomY - 15,
+                30, 30
+            );
+        }
 
         // Clip
         context.beginPath();
@@ -188,5 +227,3 @@ const area = new (function () {
         return (height + context.measureText('M').width) / 2 + topY
     }
 })();
-
-area.repaint();

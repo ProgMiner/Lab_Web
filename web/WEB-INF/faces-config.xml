@@ -10,9 +10,23 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
+    <managed-bean>
+        <managed-bean-name>historyBean</managed-bean-name>
+        <managed-bean-class>ru.byprogminer.Lab3_Web.ee.HistoryBean</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+
     <converter>
         <converter-id>Lab3_Web.BigDecimal</converter-id>
         <converter-class>ru.byprogminer.Lab3_Web.ee.BigDecimalConverter</converter-class>
     </converter>
+
+    <navigation-rule>
+        <from-view-id>main</from-view-id>
+
+        <navigation-case>
+            <to-view-id>main</to-view-id>
+        </navigation-case>
+    </navigation-rule>
   
 </faces-config>

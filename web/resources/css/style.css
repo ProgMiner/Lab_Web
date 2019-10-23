@@ -48,6 +48,13 @@ input[type="text"] {
     text-align: right;
 }
 
+.scriptImage {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    visibility: hidden;
+}
+
 #areaCanvas {
     display: block;
     margin: 5px auto;
