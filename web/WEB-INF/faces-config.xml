@@ -8,6 +8,11 @@
         <managed-bean-name>queryBean</managed-bean-name>
         <managed-bean-class>ru.byprogminer.Lab3_Web.ee.QueryBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
+
+        <managed-property>
+            <property-name>historyBean</property-name>
+            <value>#{historyBean}</value>
+        </managed-property>
     </managed-bean>
 
     <managed-bean>

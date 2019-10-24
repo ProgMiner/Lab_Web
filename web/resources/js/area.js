@@ -202,9 +202,9 @@ const area = new (function () {
 
             context.drawImage(
                 point.result ? bulletHoleGreen : bulletHoleRed,
-                centerX + point.x * actualZoomY - 15,
-                centerY - point.y * actualZoomY - 15,
-                30, 30
+                centerX + point.x * actualZoomY - 5,
+                centerY - point.y * actualZoomY - 5,
+                10, 10
             );
         }
 

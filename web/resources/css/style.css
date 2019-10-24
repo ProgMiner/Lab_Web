@@ -55,6 +55,26 @@ input[type="text"] {
     visibility: hidden;
 }
 
+.historyTable {
+    max-width: 70%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    font-family: "Courier New", monospace;
+    position: relative;
+}
+
+.historyTable > thead {
+    position: sticky;
+    top: 0;
+}
+
+.historyTable > tbody > tr > td {
+    border: 10px solid transparent;
+    border-top: 0;
+    border-bottom: 0;
+    text-align: center;
+}
+
 #areaCanvas {
     display: block;
     margin: 5px auto;

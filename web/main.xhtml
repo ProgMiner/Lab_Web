@@ -63,17 +63,49 @@
         <h:commandButton action="#{queryBean.action}" value="Проверить" />
     </h:form>
 
-    <div class="homepage">
-        <h:link value="Homepage" outcome="index" />
-    </div>
+    <ui:include src="templates/homepage.xhtml" />
+
+    <c:if test="#{not empty historyBean.queries}">
+        <table class="historyTable">
+            <thead>
+                <tr>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>R</th>
+                    <th>результат</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ui:repeat value="#{historyBean.queries}" var="query">
+                    <tr>
+                        <td style="white-space: nowrap;">#{query.x}</td>
+                        <td style="word-break: break-all;">#{query.y}</td>
+                        <td style="white-space: nowrap;">#{query.r}</td>
+                        <td style="white-space: nowrap;">#{query.result ? 'есть пробитие' : 'промазал'}</td>
+                    </tr>
+                </ui:repeat>
+            </tbody>
+        </table>
+
+        <ui:include src="templates/homepage.xhtml" />
+    </c:if>
 
     <h:outputScript library="js" name="area.js" />
 
     <script type="text/javascript">
-        Array.prototype.forEach.call(document.querySelectorAll(".rField"), (input) => {
-            area.onRChanged(input.value);
-            input.readOnly = true;
-        });
+        document.body.onload = () => {
+            Array.prototype.forEach.call(document.querySelectorAll(".rField"), (input) => {
+                area.onRChanged(input.value);
+                input.readOnly = true;
+            });
+
+            area.setHistory([
+                <ui:repeat value="#{historyBean.reversedQueries}" var="query">
+                    { x: #{query.x}, y: #{query.y}, r: #{query.r}, result: #{query.result} },
+                </ui:repeat>
+            ]);
+        };
     </script>
 </h:body>
 </html>
