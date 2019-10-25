@@ -79,4 +79,5 @@ input[type="text"] {
     display: block;
     margin: 5px auto;
     border: 1px solid #F9F9F9;
+    cursor: url('#{resource["images/gun.cur"]}'), crosshair;
 }

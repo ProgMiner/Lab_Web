@@ -5,7 +5,8 @@ const area = new (function () {
 
     const canvasWidth = 400;
     const canvasHeight = 400;
-    const canvasStep = canvasHeight / 2 / 12;
+    const canvasStepX = canvasWidth / 2 / 12;
+    const canvasStepY = canvasHeight / 2 / 12;
 
     const canvasColorPrimary = '#090909';
     const canvasColorSecondary = '#C0C0C0';
@@ -34,6 +35,41 @@ const area = new (function () {
         }
     };
 
+    this.onClickOnCanvas = function(canvas, canvasScale, canvasTranslate, r) {
+        if (r == null) {
+            return () => {};
+        }
+
+        return function(event) {
+            const offsetLeft = parseInt(getCurrentStyle(canvas, 'border-left-width'), 10);
+            const offsetTop = parseInt(getCurrentStyle(canvas, 'border-top-width'), 10);
+
+            const rect = event.target.getBoundingClientRect();
+            const x = Math.ceil(event.clientX - rect.left - offsetLeft) / canvasScale - canvasTranslate.x;
+            const y = (event.clientY - rect.top - offsetTop) / canvasScale - canvasTranslate.y;
+
+            if (x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) {
+                return;
+            }
+
+            const centerX = canvasWidth / 2;
+            const centerY = canvasHeight / 2;
+
+            const zoomX = canvasWidth * 10 / 24 / r;
+            const zoomY = canvasHeight * 10 / 24 / r;
+
+            sendForm((x - centerX) / zoomX, (centerY - y) / zoomY, r);
+
+            function sendForm(x, y, r) {
+                document.getElementById('areaXField').value = x;
+                document.getElementById('areaYField').value = y;
+                document.getElementById('areaRField').value = r;
+
+                document.getElementById('areaFormButton').click();
+            }
+        }
+    };
+
     this.repaint = function () {
         const canvas = document.getElementById('areaCanvas');
         const context = canvas.getContext('2d');
@@ -43,39 +79,48 @@ const area = new (function () {
             height: parseInt(getCurrentStyle(canvas, 'height'), 10)
         };
 
+        // Init canvas
         context.resetTransform();
-        const scale = Math.min(
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        const canvasScale = Math.min(
             actualCanvasSize.width / canvasWidth,
             actualCanvasSize.height / canvasHeight
         );
 
-        context.scale(scale, scale);
-        context.translate(
-            (actualCanvasSize.width / scale - canvasWidth) / 2,
-            (actualCanvasSize.height / scale - canvasHeight) / 2
-        );
+        context.scale(canvasScale, canvasScale);
 
+        const canvasTranslate = {
+            x: (actualCanvasSize.width / canvasScale - canvasWidth) / 2,
+            y: (actualCanvasSize.height / canvasScale - canvasHeight) / 2
+        };
+
+        context.translate(canvasTranslate.x, canvasTranslate.y);
         context.globalCompositeOperation = 'source-over';
-        context.clearRect(0, 0, canvasWidth, canvasHeight);
 
         const R = self.r == null ? 'R' : self.r;
         const halfR = self.r == null ? 'R/2' : (self.r / 2);
 
         context.strokeStyle = canvasColorPrimary;
         context.fillStyle = canvasColorBackground;
-        context.font = `bold ${canvasStep - 2}px 'Courier New', monospace`;
+        context.font = `bold ${canvasStepX - 2}px 'Courier New', monospace`;
         context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        // Clip
+        context.beginPath();
+        context.rect(0, 0, canvasWidth, canvasHeight);
+        context.clip();
 
         // Grid
         context.strokeStyle = canvasColorSecondary;
 
         context.beginPath();
         for (let i = 1; i < 24; ++i) {
-            context.moveTo(canvasStep / 4, i * canvasStep);
-            context.lineTo(canvasWidth - canvasStep / 4, i * canvasStep);
+            context.moveTo(canvasStepX / 4, i * canvasStepY);
+            context.lineTo(canvasWidth - canvasStepX / 4, i * canvasStepY);
 
-            context.moveTo(i * canvasStep,canvasStep / 4);
-            context.lineTo(i * canvasStep, canvasHeight - canvasStep / 4);
+            context.moveTo(i * canvasStepX,canvasStepY / 4);
+            context.lineTo(i * canvasStepX, canvasHeight - canvasStepY / 4);
         }
         context.stroke();
 
@@ -84,15 +129,15 @@ const area = new (function () {
 
         // Circles
         context.beginPath();
-        context.fillStyle = canvasColorPrimary;
-        context.arc(canvasWidth / 2, canvasHeight / 2, canvasStep * 5, 0, 2 * Math.PI);
+        context.globalCompositeOperation = 'difference';
+        context.ellipse(canvasWidth / 2, canvasHeight / 2, canvasStepX * 5, canvasStepY * 5, 0, 0, 2 * Math.PI);
         context.fill();
 
-        context.fillStyle = canvasColorBackground;
+        context.globalCompositeOperation = 'source-over';
 
         const drawCircle = (i) => {
             context.beginPath();
-            context.arc(canvasWidth / 2, canvasHeight / 2, canvasStep * i, 0, 2 * Math.PI);
+            context.ellipse(canvasWidth / 2, canvasHeight / 2, canvasStepX * i, canvasStepY * i, 0, 0, 2 * Math.PI);
             context.stroke();
         };
 
@@ -107,17 +152,17 @@ const area = new (function () {
         context.lineWidth = 2;
         context.strokeStyle = canvasColorBackground;
         context.globalCompositeOperation = 'difference';
-        context.moveTo(canvasStep / 2, canvasHeight / 2);
-        context.lineTo(canvasWidth - canvasStep / 2, canvasHeight / 2);
-        context.lineTo(canvasWidth - canvasStep, canvasHeight / 2 - canvasStep / 2);
-        context.moveTo(canvasWidth - canvasStep, canvasHeight / 2 + canvasStep / 2);
-        context.lineTo(canvasWidth - canvasStep / 2, canvasHeight / 2);
+        context.moveTo(canvasStepX / 2, canvasHeight / 2);
+        context.lineTo(canvasWidth - canvasStepX / 2, canvasHeight / 2);
+        context.lineTo(canvasWidth - canvasStepX, canvasHeight / 2 - canvasStepY / 2);
+        context.moveTo(canvasWidth - canvasStepX, canvasHeight / 2 + canvasStepY / 2);
+        context.lineTo(canvasWidth - canvasStepX / 2, canvasHeight / 2);
 
-        context.moveTo(canvasWidth / 2, canvasHeight - canvasStep / 2);
-        context.lineTo(canvasWidth / 2, canvasStep / 2);
-        context.lineTo(canvasWidth / 2 - canvasStep / 2, canvasStep);
-        context.moveTo(canvasWidth / 2 + canvasStep / 2, canvasStep);
-        context.lineTo(canvasWidth / 2, canvasStep / 2);
+        context.moveTo(canvasWidth / 2, canvasHeight - canvasStepY / 2);
+        context.lineTo(canvasWidth / 2, canvasStepX / 2);
+        context.lineTo(canvasWidth / 2 - canvasStepX / 2, canvasStepY);
+        context.moveTo(canvasWidth / 2 + canvasStepX / 2, canvasStepY);
+        context.lineTo(canvasWidth / 2, canvasStepY / 2);
         context.stroke();
 
         context.lineWidth = 1;
@@ -134,40 +179,40 @@ const area = new (function () {
         );
 
         const pictogrammsRightSide = Math.max(
-            (Math.ceil((canvasStep * 1.5 + pictogrammsLabelsWidth) / canvasStep) + 0.5) * canvasStep,
-            canvasStep * 5.5
+            (Math.ceil((canvasStepX * 1.5 + pictogrammsLabelsWidth) / canvasStepX) + 0.5) * canvasStepX,
+            canvasStepX * 5.5
         );
 
         context.beginPath();
-        context.moveTo(canvasStep / 2, canvasStep * 0.75);
-        context.lineTo(pictogrammsRightSide, canvasStep * 0.75);
-        context.lineTo(pictogrammsRightSide, canvasStep * 4.25);
-        context.lineTo(canvasStep / 2, canvasStep * 4.25);
-        context.lineTo(canvasStep / 2, canvasStep * 0.75);
+        context.moveTo(canvasStepX / 2, canvasStepY * 0.75);
+        context.lineTo(pictogrammsRightSide, canvasStepY * 0.75);
+        context.lineTo(pictogrammsRightSide, canvasStepY * 4.25);
+        context.lineTo(canvasStepX / 2, canvasStepY * 4.25);
+        context.lineTo(canvasStepX / 2, canvasStepY * 0.75);
         context.fill();
         context.stroke();
 
         context.beginPath();
-        context.moveTo(canvasStep, canvasStep * 1.25);
-        context.lineTo(canvasStep * 2, canvasStep * 1.25);
-        context.lineTo(canvasStep * 2, canvasStep * 2.25);
-        context.lineTo(canvasStep, canvasStep * 2.25);
-        context.lineTo(canvasStep, canvasStep * 1.25);
+        context.moveTo(canvasStepX, canvasStepY * 1.25);
+        context.lineTo(canvasStepX * 2, canvasStepY * 1.25);
+        context.lineTo(canvasStepX * 2, canvasStepY * 2.25);
+        context.lineTo(canvasStepX, canvasStepY * 2.25);
+        context.lineTo(canvasStepX, canvasStepY * 1.25);
         context.fill();
         context.stroke();
 
         context.beginPath();
         context.fillStyle = canvasColorPrimary;
-        context.moveTo(canvasStep, canvasStep * 2.75);
-        context.lineTo(canvasStep * 2, canvasStep * 2.75);
-        context.lineTo(canvasStep * 2, canvasStep * 3.75);
-        context.lineTo(canvasStep, canvasStep * 3.75);
-        context.lineTo(canvasStep, canvasStep * 2.75);
+        context.moveTo(canvasStepX, canvasStepY * 2.75);
+        context.lineTo(canvasStepX * 2, canvasStepY * 2.75);
+        context.lineTo(canvasStepX * 2, canvasStepY * 3.75);
+        context.lineTo(canvasStepX, canvasStepY * 3.75);
+        context.lineTo(canvasStepX, canvasStepY * 2.75);
         context.fill();
         context.stroke();
 
-        context.fillText(pictogrammsLabelText1, canvasStep * 2, whereMeDrawText(context, canvasStep * 1.25));
-        context.fillText(pictogrammsLabelText2, canvasStep * 2, whereMeDrawText(context, canvasStep * 2.75));
+        context.fillText(pictogrammsLabelText1, canvasStepX * 2, whereMeDrawText(context, canvasStepY * 1.25));
+        context.fillText(pictogrammsLabelText2, canvasStepX * 2, whereMeDrawText(context, canvasStepY * 2.75));
         context.fillStyle = canvasColorBackground;
 
         // Batman
@@ -176,7 +221,6 @@ const area = new (function () {
         context.globalCompositeOperation = 'source-over';
 
         // History
-
         const bulletHoleGreen = document.getElementById('bulletHoleGreenImage');
         const bulletHoleRed = document.getElementById('bulletHoleRedImage');
 
@@ -202,16 +246,13 @@ const area = new (function () {
 
             context.drawImage(
                 point.result ? bulletHoleGreen : bulletHoleRed,
-                centerX + point.x * actualZoomY - 5,
+                centerX + point.x * actualZoomX - 5,
                 centerY - point.y * actualZoomY - 5,
                 10, 10
             );
         }
 
-        // Clip
-        context.beginPath();
-        context.rect(0, 0, canvasWidth, canvasHeight);
-        context.clip();
+        canvas.onclick = self.onClickOnCanvas(canvas, canvasScale, canvasTranslate, self.r);
     };
 
     function getCurrentStyle(element, style) {
@@ -223,7 +264,7 @@ const area = new (function () {
         }
     }
 
-    function whereMeDrawText(context, topY, height = canvasStep) {
+    function whereMeDrawText(context, topY, height = canvasStepY) {
         return (height + context.measureText('M').width) / 2 + topY
     }
 })();

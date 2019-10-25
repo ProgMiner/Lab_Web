@@ -17,6 +17,10 @@ public class HistoryBean {
     }
 
     void updateHistory(Query query) {
+        if (query.getResult() == null) {
+            return;
+        }
+
         final Query latest = queries.peekFirst();
 
         if (latest != null &&
