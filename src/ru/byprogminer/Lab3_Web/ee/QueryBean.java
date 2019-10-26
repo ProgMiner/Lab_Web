@@ -5,9 +5,13 @@ import ru.byprogminer.Lab3_Web.Query;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseEvent;
+import javax.faces.event.PhaseId;
 import javax.faces.validator.ValidatorException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class QueryBean {
 
@@ -22,6 +26,7 @@ public class QueryBean {
 
     private final Query query;
     private HistoryBean historyBean;
+    private ErrorBean errorBean;
 
     public QueryBean() {
         query = new Query();
@@ -35,6 +40,22 @@ public class QueryBean {
         historyBean.updateHistory(query);
 
         return null;
+    }
+
+    public void afterPhase(PhaseEvent event) throws IOException {
+        if (event.getPhaseId() != PhaseId.PROCESS_VALIDATIONS) {
+            return;
+        }
+
+        final Iterator<FacesMessage> messages = event.getFacesContext().getMessages();
+        if (!messages.hasNext()) {
+            return;
+        }
+
+        errorBean.setMessage(messages.next().getSummary());
+        errorBean.error();
+
+        event.getFacesContext().getExternalContext().redirect("/error.xhtml");
     }
 
     public Boolean getResult() {
@@ -106,12 +127,12 @@ public class QueryBean {
         query.setR(r);
     }
 
-    public HistoryBean getHistoryBean() {
-        return historyBean;
-    }
-
     public void setHistoryBean(HistoryBean historyBean) {
         this.historyBean = historyBean;
+    }
+
+    public void setErrorBean(ErrorBean errorBean) {
+        this.errorBean = errorBean;
     }
 
     public String[] getAvailableX() {

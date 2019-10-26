@@ -7,6 +7,8 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
 
+<f:view afterPhase="#{queryBean.afterPhase}" />
+
 <ui:include src="templates/head.xhtml">
     <ui:param name="pageTitle" value="Основная страница" />
 </ui:include>
@@ -19,11 +21,15 @@
     <h:graphicImage library="images" name="bullet-hole-red.png" id="bulletHoleRedImage" class="scriptImage" />
     <canvas id="areaCanvas" width="400" height="400" />
 
-    <h:form id="areaForm" prependId="false" style="display: none;">
+    <h:form id="areaForm" prependId="false">
         <h:inputText id="areaXField" value="#{queryBean.x}" required="true" converter="Lab3_Web.BigDecimal" />
         <h:inputText id="areaYField" value="#{queryBean.y}" required="true" converter="Lab3_Web.BigDecimal" />
         <h:inputText id="areaRField" value="#{queryBean.r}" required="true" converter="Lab3_Web.BigDecimal" />
         <h:commandButton id="areaFormButton" action="#{queryBean.action}" />
+
+        <h:message for="areaXField" />
+        <h:message for="areaYField" />
+        <h:message for="areaRField" />
     </h:form>
 
     <h:form id="mainForm" prependId="false">
@@ -66,7 +72,7 @@
             </tr>
         </table>
 
-        <h:messages for="mainForm" />
+        <h:messages />
         <h:commandButton action="#{queryBean.action}" value="Проверить" />
     </h:form>
 
@@ -98,6 +104,11 @@
         <ui:include src="templates/homepage.xhtml" />
     </c:if>
 
+    <h:form id="errorForm" prependId="false">
+        <h:inputText id="errorMessageField" value="#{errorBean.message}" />
+        <h:commandButton id="errorFormButton" action="#{errorBean.error}" />
+    </h:form>
+
     <h:outputScript library="js" name="area.js" />
 
     <script type="text/javascript">
@@ -113,6 +124,11 @@
                 </ui:repeat>
             ]);
         };
+
+        function errorPage(message) {
+            document.getElementById('errorMessageField').value = message;
+            document.getElementById('errorFormButton').click();
+        }
     </script>
 </h:body>
 </html>

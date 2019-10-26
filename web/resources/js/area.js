@@ -37,7 +37,7 @@ const area = new (function () {
 
     this.onClickOnCanvas = function(canvas, canvasScale, canvasTranslate, r) {
         if (r == null) {
-            return () => {};
+            return () => { errorPage('Вы не выбрали R.'); };
         }
 
         return function(event) {
