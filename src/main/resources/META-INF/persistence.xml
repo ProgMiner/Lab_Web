@@ -7,6 +7,7 @@
 
     <persistence-unit name="default">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>ru.byprogminer.Lab3_Web.entities.QueryEntity</class>
 
         <properties>
             <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:orbis" />
