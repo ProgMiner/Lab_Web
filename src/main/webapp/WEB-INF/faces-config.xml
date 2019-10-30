@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+    http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+    <managed-bean>
+        <managed-bean-name>queryBean</managed-bean-name>
+        <managed-bean-class>ru.byprogminer.Lab3_Web.beans.QueryBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+
+        <managed-property>
+            <property-name>historyBean</property-name>
+            <value>#{historyBean}</value>
+        </managed-property>
+
+        <managed-property>
+            <property-name>errorBean</property-name>
+            <value>#{errorBean}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>historyBean</managed-bean-name>
+        <managed-bean-class>ru.byprogminer.Lab3_Web.beans.HistoryBean</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+
+        <managed-property>
+            <property-name>historyService</property-name>
+            <value>#{historyService}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>errorBean</managed-bean-name>
+        <managed-bean-class>ru.byprogminer.Lab3_Web.beans.ErrorBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>historyService</managed-bean-name>
+        <managed-bean-class>ru.byprogminer.Lab3_Web.services.HistoryService</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+
+    <converter>
+        <converter-id>Lab3_Web.BigDecimal</converter-id>
+        <converter-class>ru.byprogminer.Lab3_Web.converters.BigDecimalConverter</converter-class>
+    </converter>
+
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+
+        <navigation-case>
+            <from-outcome>error</from-outcome>
+
+            <to-view-id>error</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>main</from-view-id>
+
+        <navigation-case>
+            <to-view-id>main</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+  
+</faces-config>
