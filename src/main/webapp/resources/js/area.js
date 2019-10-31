@@ -36,8 +36,16 @@ const area = new (function () {
     };
 
     self.onClickOnCanvas = function(canvas, canvasScale, canvasTranslate, r) {
+        function sendForm(x, y, r) {
+            document.getElementById('areaXField').value = x;
+            document.getElementById('areaYField').value = y;
+            document.getElementById('areaRField').value = r;
+
+            document.getElementById('areaFormButton').click();
+        }
+
         if (r == null) {
-            return () => { errorPage('Вы не выбрали R.'); };
+            return () => { sendForm(0, 0, ''); };
         }
 
         return function(event) {
@@ -59,15 +67,7 @@ const area = new (function () {
             const zoomY = canvasHeight * 10 / 24 / r;
 
             sendForm((x - centerX) / zoomX, (centerY - y) / zoomY, r);
-
-            function sendForm(x, y, r) {
-                document.getElementById('areaXField').value = x;
-                document.getElementById('areaYField').value = y;
-                document.getElementById('areaRField').value = r;
-
-                document.getElementById('areaFormButton').click();
-            }
-        }
+        };
     };
 
     self.repaint = function () {
@@ -126,6 +126,12 @@ const area = new (function () {
 
         context.strokeStyle = canvasColorPrimary;
         context.fillStyle = canvasColorBackground;
+
+        if (typeof context.ellipse !== "function") {
+            context.ellipse = function (x, y, rX, rY, rot, sA, eA) {
+                context.arc(x, y, (rX + rY) / 2, sA + rot, eA + rot);
+            }
+        }
 
         // Circles
         context.beginPath();
@@ -228,14 +234,9 @@ const area = new (function () {
         const centerY = canvasHeight / 2;
         const zoomX = canvasWidth * 10 / 24 / self.r;
         const zoomY = canvasHeight * 10 / 24 / self.r;
-        for (const pointKey in self.history) {
-            if (!self.history.hasOwnProperty(pointKey)) {
-                continue;
-            }
-
-            const point = self.history[pointKey];
+        self.history.forEach((point) => {
             if (self.r != null && point.r !== self.r) {
-                continue;
+                return;
             }
 
             let actualZoomX = zoomX, actualZoomY = zoomY;
@@ -250,7 +251,7 @@ const area = new (function () {
                 centerY - point.y * actualZoomY - 5,
                 10, 10
             );
-        }
+        });
 
         canvas.onclick = self.onClickOnCanvas(canvas, canvasScale, canvasTranslate, self.r);
     };

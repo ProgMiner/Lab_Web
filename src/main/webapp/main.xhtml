@@ -22,9 +22,19 @@
     <canvas id="areaCanvas" width="400" height="400"/>
 
     <h:form id="areaForm" prependId="false">
-        <h:inputText id="areaXField" value="#{queryBean.x}" required="true" converter="Lab3_Web.BigDecimal"/>
-        <h:inputText id="areaYField" value="#{queryBean.y}" required="true" converter="Lab3_Web.BigDecimal"/>
-        <h:inputText id="areaRField" value="#{queryBean.r}" required="true" converter="Lab3_Web.BigDecimal"/>
+        <h:inputText id="areaXField" value="#{queryBean.x}"
+                     required="true" requiredMessage="Вы не выбрали X."
+                     converter="Lab3_Web.BigDecimal" converterMessage="X должен быть числом." />
+
+        <h:inputText id="areaYField" value="#{queryBean.y}"
+                     required="true" requiredMessage="Вы не выбрали Y."
+                     converter="Lab3_Web.BigDecimal" converterMessage="Y должен быть числом." />
+
+        <h:inputText id="areaRField" value="#{queryBean.r}"
+                     required="true" requiredMessage="Вы не выбрали R."
+                     converter="Lab3_Web.BigDecimal" converterMessage="R должен быть числом."
+                     validator="#{queryBean.validateR}" validatorMessage="Вы выбрали недопустимый R." />
+
         <h:commandButton id="areaFormButton" action="#{queryBean.action}"/>
 
         <h:message for="areaXField"/>
@@ -109,11 +119,6 @@
         <ui:include src="templates/homepage.xhtml"/>
     </c:if>
 
-    <h:form id="errorForm" prependId="false">
-        <h:inputText id="errorMessageField" value="#{errorBean.message}"/>
-        <h:commandButton id="errorFormButton" action="#{errorBean.error}"/>
-    </h:form>
-
     <h:outputScript library="js" name="area.js"/>
 
     <script type="text/javascript">
@@ -129,11 +134,6 @@
                 </ui:repeat>
             ]);
         };
-
-        function errorPage(message) {
-            document.getElementById('errorMessageField').value = message;
-            document.getElementById('errorFormButton').click();
-        }
     </script>
 </h:body>
 </html>
