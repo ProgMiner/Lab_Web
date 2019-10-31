@@ -66,5 +66,4 @@
             <to-view-id>main</to-view-id>
         </navigation-case>
     </navigation-rule>
-  
 </faces-config>

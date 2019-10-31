@@ -2,7 +2,7 @@
   <configuration default="false" name="JBoss 18.0.0.Final" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss 18.0.0.Final" ALTERNATIVE_JRE_ENABLED="false">
     <option name="UPDATING_POLICY" value="redeploy-artifacts" />
     <deployment>
-      <file path="$PROJECT_DIR$/target/Lab3_Web-1.0-SNAPSHOT.war">
+      <file path="$PROJECT_DIR$/target/Lab_Web-3.0-SNAPSHOT.war">
         <settings />
       </file>
     </deployment>

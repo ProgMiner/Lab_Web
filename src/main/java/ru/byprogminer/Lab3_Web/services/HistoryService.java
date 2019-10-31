@@ -1,43 +1,39 @@
 package ru.byprogminer.Lab3_Web.services;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import ru.byprogminer.Lab3_Web.entities.QueryEntity;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.util.List;
 
 public class HistoryService {
 
-    private static final String PERSISTENCE_UNIT_NAME = "default";
-
-    private final EntityManagerFactory entityManagerFactory;
+    private final SessionFactory sessionFactory;
 
     public HistoryService() {
-        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
     public List<QueryEntity> getHistory() {
-        final EntityManager manager = entityManagerFactory.createEntityManager();
+        final Session session = sessionFactory.openSession();
 
-        manager.getTransaction().begin();
-        final List<QueryEntity> ret = manager.createQuery("from history", QueryEntity.class).getResultList();
+        session.beginTransaction();
+        final List<QueryEntity> ret = session.createQuery("from history", QueryEntity.class).list();
 
-        manager.getTransaction().commit();
-        manager.close();
+        session.getTransaction().commit();
+        session.close();
 
         return ret;
     }
 
-    public QueryEntity addQuery(QueryEntity entity) {
-        final EntityManager manager = entityManagerFactory.createEntityManager();
+    public void addQuery(QueryEntity entity) {
+        final Session session = sessionFactory.openSession();
 
-        manager.getTransaction().begin();
-        manager.persist(entity);
+        session.getTransaction().begin();
+        session.persist(entity);
 
-        manager.getTransaction().commit();
-        manager.close();
-
-        return entity;
+        session.getTransaction().commit();
+        session.close();
     }
 }

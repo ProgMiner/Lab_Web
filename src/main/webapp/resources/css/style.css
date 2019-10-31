@@ -63,9 +63,8 @@ input[type="text"] {
     position: relative;
 }
 
-.historyTable > thead {
-    position: sticky;
-    top: 0;
+.historyTable > thead > tr > th {
+    text-transform: uppercase;
 }
 
 .historyTable > tbody > tr > td {

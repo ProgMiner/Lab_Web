@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
 
-<f:view afterPhase="#{queryBean.afterPhase}" />
+<!--<f:view afterPhase="#{queryBean.afterPhase}" />-->
 
 <ui:include src="templates/head.xhtml">
     <ui:param name="pageTitle" value="Основная страница" />
@@ -57,7 +57,8 @@
             <tr>
                 <td><h:outputLabel value="R: " /></td>
                 <td>
-                    <h:inputText id="rField" value="#{queryBean.r}" required="true" label="R"
+                    <h:outputText id="rText" value="#{queryBean.r}" />
+                    <h:inputHidden id="rField" value="#{queryBean.r}" required="true" label="R"
                                  converter="Lab3_Web.BigDecimal" validator="#{queryBean.validateR}" />
                 </td>
             </tr>
@@ -67,7 +68,7 @@
                 <td>
                     <p:slider for="rField" minValue="#{queryBean.availableR[0]}" step="0.25"
                               maxValue="#{queryBean.availableR[fn:length(queryBean.availableR) - 1]}"
-                              onSlide="area.onRChanged(ui.value);" />
+                              display="rText" onSlide="area.onRChanged(ui.value);" />
                 </td>
             </tr>
         </table>
