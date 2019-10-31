@@ -14,13 +14,13 @@ const area = new (function () {
 
     const self = this;
 
-    this.r = null;
-    this.history = [];
-    this.onRChanged = function (r) {
+    self.r = null;
+    self.history = [];
+    self.onRChanged = function (r) {
         r = +r;
 
         if (isNaN(r) || !availableR.includes(r)) {
-            this.r = null;
+            self.r = null;
         } else {
             self.r = r;
         }
@@ -28,14 +28,14 @@ const area = new (function () {
         setTimeout(self.repaint, 1);
     };
 
-    this.setHistory = function(history) {
+    self.setHistory = function(history) {
         if (history instanceof Array) {
-            this.history = history;
+            self.history = history;
             self.repaint();
         }
     };
 
-    this.onClickOnCanvas = function(canvas, canvasScale, canvasTranslate, r) {
+    self.onClickOnCanvas = function(canvas, canvasScale, canvasTranslate, r) {
         if (r == null) {
             return () => { errorPage('Вы не выбрали R.'); };
         }
@@ -70,7 +70,7 @@ const area = new (function () {
         }
     };
 
-    this.repaint = function () {
+    self.repaint = function () {
         const canvas = document.getElementById('areaCanvas');
         const context = canvas.getContext('2d');
 
@@ -175,7 +175,7 @@ const area = new (function () {
 
         const pictogrammsLabelsWidth = Math.max(
             context.measureText(pictogrammsLabelText1).width,
-            context.measureText(pictogrammsLabelText2).width,
+            context.measureText(pictogrammsLabelText2).width
         );
 
         const pictogrammsRightSide = Math.max(
