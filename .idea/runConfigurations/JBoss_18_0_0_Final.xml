@@ -1,10 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="JBoss 18.0.0.Final" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss 18.0.0.Final" ALTERNATIVE_JRE_ENABLED="false">
-    <option name="UPDATING_POLICY" value="redeploy-artifacts" />
     <deployment>
-      <file path="$PROJECT_DIR$/target/Lab_Web-3.0-SNAPSHOT.war">
+      <artifact name="Lab3_Web:war exploded">
         <settings />
-      </file>
+      </artifact>
     </deployment>
     <server-settings>
       <option name="SERVER" />
@@ -64,7 +63,9 @@
       </SHUTDOWN>
     </ConfigurationWrapper>
     <method v="2">
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean package" />
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="Lab3_Web:war exploded" />
+      </option>
     </method>
   </configuration>
 </component>

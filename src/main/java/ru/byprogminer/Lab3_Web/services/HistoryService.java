@@ -19,7 +19,7 @@ public class HistoryService {
         final Session session = sessionFactory.openSession();
 
         session.beginTransaction();
-        final List<QueryEntity> ret = session.createQuery("from history", QueryEntity.class).list();
+        final List<QueryEntity> ret = session.createQuery("from history order by id", QueryEntity.class).list();
 
         session.getTransaction().commit();
         session.close();
@@ -30,7 +30,7 @@ public class HistoryService {
     public void addQuery(QueryEntity entity) {
         final Session session = sessionFactory.openSession();
 
-        session.getTransaction().begin();
+        session.beginTransaction();
         session.persist(entity);
 
         session.getTransaction().commit();

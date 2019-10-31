@@ -7,91 +7,94 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
 
-<!--<f:view afterPhase="#{queryBean.afterPhase}" />-->
+<f:view afterPhase="#{queryBean.afterPhase}">
+    <ui:include src="templates/head.xhtml">
+        <ui:param name="pageTitle" value="Основная страница"/>
+    </ui:include>
 
-<ui:include src="templates/head.xhtml">
-    <ui:param name="pageTitle" value="Основная страница" />
-</ui:include>
+    <h:body>
+        <div class="title">Основная страница</div>
 
-<h:body>
-    <div class="title">Основная страница</div>
+        <h:graphicImage library="images" name="batman.png" id="batmanImage" class="scriptImage"/>
+        <h:graphicImage library="images" name="bullet-hole-green.png" id="bulletHoleGreenImage" class="scriptImage"/>
+        <h:graphicImage library="images" name="bullet-hole-red.png" id="bulletHoleRedImage" class="scriptImage"/>
+        <canvas id="areaCanvas" width="400" height="400"/>
 
-    <h:graphicImage library="images" name="batman.png" id="batmanImage" class="scriptImage" />
-    <h:graphicImage library="images" name="bullet-hole-green.png" id="bulletHoleGreenImage" class="scriptImage" />
-    <h:graphicImage library="images" name="bullet-hole-red.png" id="bulletHoleRedImage" class="scriptImage" />
-    <canvas id="areaCanvas" width="400" height="400" />
+        <h:form id="areaForm" prependId="false">
+            <h:inputText id="areaXField" value="#{queryBean.x}" required="true" converter="Lab3_Web.BigDecimal"/>
+            <h:inputText id="areaYField" value="#{queryBean.y}" required="true" converter="Lab3_Web.BigDecimal"/>
+            <h:inputText id="areaRField" value="#{queryBean.r}" required="true" converter="Lab3_Web.BigDecimal"/>
+            <h:commandButton id="areaFormButton" action="#{queryBean.action}"/>
 
-    <h:form id="areaForm" prependId="false">
-        <h:inputText id="areaXField" value="#{queryBean.x}" required="true" converter="Lab3_Web.BigDecimal" />
-        <h:inputText id="areaYField" value="#{queryBean.y}" required="true" converter="Lab3_Web.BigDecimal" />
-        <h:inputText id="areaRField" value="#{queryBean.r}" required="true" converter="Lab3_Web.BigDecimal" />
-        <h:commandButton id="areaFormButton" action="#{queryBean.action}" />
+            <h:message for="areaXField"/>
+            <h:message for="areaYField"/>
+            <h:message for="areaRField"/>
+        </h:form>
 
-        <h:message for="areaXField" />
-        <h:message for="areaYField" />
-        <h:message for="areaRField" />
-    </h:form>
+        <h:form id="mainForm" prependId="false">
+            <table>
+                <tr>
+                    <td><h:outputLabel value="X: "/></td>
+                    <td>
+                        <h:selectOneRadio id="xField" value="#{queryBean.x}" label="X"
+                                          required="true" requiredMessage="Вы не выбрали X."
+                                          converter="Lab3_Web.BigDecimal" converterMessage="X должен быть числом."
+                                          validator="#{queryBean.validateX}" validatorMessage="Вы выбрали недопустимый X.">
+                            <c:forEach items="#{queryBean.availableX}" var="item">
+                                <f:selectItem itemValue="#{item}" itemLabel="#{item}"/>
+                            </c:forEach>
+                        </h:selectOneRadio>
+                    </td>
+                </tr>
 
-    <h:form id="mainForm" prependId="false">
-        <table>
-            <tr>
-                <td><h:outputLabel value="X: " /></td>
-                <td>
-                    <h:selectOneRadio id="xField" value="#{queryBean.x}" required="true" label="X"
-                                      converter="Lab3_Web.BigDecimal" validator="#{queryBean.validateX}">
-                        <c:forEach items="#{queryBean.availableX}" var="item">
-                            <f:selectItem itemValue="#{item}" itemLabel="#{item}" />
-                        </c:forEach>
-                    </h:selectOneRadio>
-                </td>
-            </tr>
+                <tr>
+                    <td><h:outputLabel value="Y: " for="yField"/></td>
+                    <td>
+                        <h:inputText id="yField" value="#{queryBean.y}" label="Y"
+                                     required="true" requiredMessage="Вы не ввели Y."
+                                     converter="Lab3_Web.BigDecimal" converterMessage="Y должен быть числом."
+                                     validator="#{queryBean.validateY}" validatorMessage="Y должен входить в интервал (-3, 5)." />
+                    </td>
+                </tr>
 
-            <tr>
-                <td><h:outputLabel value="Y: " for="yField" /></td>
-                <td>
-                    <h:inputText id="yField" value="#{queryBean.y}" required="true" label="Y"
-                                 converter="Lab3_Web.BigDecimal" validator="#{queryBean.validateY}" />
-                </td>
-            </tr>
+                <tr>
+                    <td><h:outputLabel value="R: "/></td>
+                    <td>
+                        <h:inputText id="rField" value="#{queryBean.r}" label="R"
+                                     required="true" requiredMessage="Вы не выбрали R."
+                                     converter="Lab3_Web.BigDecimal" converterMessage="R должен быть числом."
+                                     validator="#{queryBean.validateR}" validatorMessage="Вы выбрали недопустимый R." />
+                    </td>
+                </tr>
 
-            <tr>
-                <td><h:outputLabel value="R: " /></td>
-                <td>
-                    <h:outputText id="rText" value="#{queryBean.r}" />
-                    <h:inputHidden id="rField" value="#{queryBean.r}" required="true" label="R"
-                                 converter="Lab3_Web.BigDecimal" validator="#{queryBean.validateR}" />
-                </td>
-            </tr>
+                <tr>
+                    <td/>
+                    <td>
+                        <p:slider for="rField" minValue="#{queryBean.availableR[0]}" step="0.25"
+                                  maxValue="#{queryBean.availableR[fn:length(queryBean.availableR) - 1]}"
+                                  onSlide="area.onRChanged(ui.value);" />
+                    </td>
+                </tr>
+            </table>
 
-            <tr>
-                <td />
-                <td>
-                    <p:slider for="rField" minValue="#{queryBean.availableR[0]}" step="0.25"
-                              maxValue="#{queryBean.availableR[fn:length(queryBean.availableR) - 1]}"
-                              display="rText" onSlide="area.onRChanged(ui.value);" />
-                </td>
-            </tr>
-        </table>
+            <h:commandButton action="#{queryBean.action}" value="Проверить" />
+        </h:form>
 
-        <h:messages />
-        <h:commandButton action="#{queryBean.action}" value="Проверить" />
-    </h:form>
+        <ui:include src="templates/homepage.xhtml" />
 
-    <ui:include src="templates/homepage.xhtml" />
-
-    <c:if test="#{not empty historyBean.reversedQueries}">
-        <table class="historyTable">
-            <thead>
+        <c:if test="#{not empty historyBean.reversedQueries}">
+            <table class="historyTable">
+                <thead>
                 <tr>
                     <th>X</th>
                     <th>Y</th>
                     <th>R</th>
                     <th>результат</th>
                 </tr>
-            </thead>
+                </thead>
 
-            <tbody>
-                <ui:repeat value="#{historyBean.queries}" var="query">
+                <tbody>
+                <ui:repeat value="#{historyBean.reversedQueries}" var="query">
                     <tr>
                         <td style="white-space: nowrap;">#{query.x}</td>
                         <td style="word-break: break-all;">#{query.y}</td>
@@ -99,37 +102,38 @@
                         <td style="white-space: nowrap;">#{query.result ? 'есть пробитие' : 'промазал'}</td>
                     </tr>
                 </ui:repeat>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-        <ui:include src="templates/homepage.xhtml" />
-    </c:if>
+            <ui:include src="templates/homepage.xhtml"/>
+        </c:if>
 
-    <h:form id="errorForm" prependId="false">
-        <h:inputText id="errorMessageField" value="#{errorBean.message}" />
-        <h:commandButton id="errorFormButton" action="#{errorBean.error}" />
-    </h:form>
+        <h:form id="errorForm" prependId="false">
+            <h:inputText id="errorMessageField" value="#{errorBean.message}"/>
+            <h:commandButton id="errorFormButton" action="#{errorBean.error}"/>
+        </h:form>
 
-    <h:outputScript library="js" name="area.js" />
+        <h:outputScript library="js" name="area.js"/>
 
-    <script type="text/javascript">
-        document.body.onload = () => {
-            (function (input) {
-                area.onRChanged(input.value);
-                input.readOnly = true;
-            })(document.getElementById('rField'));
+        <script type="text/javascript">
+            document.body.onload = () => {
+                (function (input) {
+                    area.onRChanged(input.value);
+                    input.readOnly = true;
+                })(document.getElementById('rField'));
 
-            area.setHistory([
-                <ui:repeat value="#{historyBean.queries}" var="query">
-                    { x: #{query.x}, y: #{query.y}, r: #{query.r}, result: #{query.result} },
-                </ui:repeat>
-            ]);
-        };
+                area.setHistory([
+                    <ui:repeat value="#{historyBean.queries}" var="query">
+                        {x: #{query.x}, y: #{query.y}, r: #{query.r}, result: #{query.result}},
+                    </ui:repeat>
+                ]);
+            };
 
-        function errorPage(message) {
-            document.getElementById('errorMessageField').value = message;
-            document.getElementById('errorFormButton').click();
-        }
-    </script>
-</h:body>
+            function errorPage(message) {
+                document.getElementById('errorMessageField').value = message;
+                document.getElementById('errorFormButton').click();
+            }
+        </script>
+    </h:body>
+</f:view>
 </html>

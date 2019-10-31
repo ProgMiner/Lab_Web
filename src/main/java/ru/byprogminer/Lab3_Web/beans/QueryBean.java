@@ -17,12 +17,8 @@ public class QueryBean {
 
     public static final String[] AVAILABLE_X = new String[] { "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4" };
     public static final double[] AVAILABLE_Y = new double[] { -3, 5 };
-    public static final String[] AVAILABLE_R = new String[] {
-            "1", "1.25", "1.5", "1.75",
-            "2", "2.25", "2.5", "2.75",
-            "3", "3.25", "3.5", "3.75",
-            "4"
-    };
+    public static final String[] AVAILABLE_R = new String[] { "1", "1.25", "1.5", "1.75",
+            "2", "2.25", "2.5", "2.75", "3", "3.25", "3.5", "3.75", "4" };
 
     private final Query query;
     private HistoryBean historyBean;
@@ -68,8 +64,8 @@ public class QueryBean {
         }
 
         if (!Arrays.asList(AVAILABLE_X).contains(value.toString())) {
-            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "X must be one of following: " + String.join(", ", AVAILABLE_X), null));
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, (String) component.getAttributes()
+                    .getOrDefault("validatorMessage", "X must be one of following: " + String.join(", ", AVAILABLE_X)), null));
         }
     }
 
@@ -84,11 +80,12 @@ public class QueryBean {
             if (val.compareTo(BigDecimal.valueOf(AVAILABLE_Y[0])) <= 0 ||
                     val.compareTo(BigDecimal.valueOf(AVAILABLE_Y[1])) >= 0)
             {
-                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Y must be in (" + AVAILABLE_Y[0] + ", " + AVAILABLE_Y[1] + ")", null));
+                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, (String) component.getAttributes()
+                        .getOrDefault("validatorMessage", "Y must be in (" + AVAILABLE_Y[0] + ", " + AVAILABLE_Y[1] + ")"), null));
             }
         } catch (NumberFormatException e) {
-            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Y must be a number", null), e);
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, (String) component
+                    .getAttributes().getOrDefault("converterMessage", "Y must be a number"), null), e);
         }
     }
 
@@ -98,8 +95,8 @@ public class QueryBean {
         }
 
         if (!Arrays.asList(AVAILABLE_R).contains(value.toString())) {
-            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "R must be one of following: " + String.join(", ", AVAILABLE_R), null));
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, (String) component.getAttributes()
+                    .getOrDefault("validatorMessage", "R must be one of following: " + String.join(", ", AVAILABLE_R)), null));
         }
     }
 
@@ -137,10 +134,6 @@ public class QueryBean {
 
     public String[] getAvailableX() {
         return AVAILABLE_X;
-    }
-
-    public double[] getAvailableY() {
-        return AVAILABLE_Y;
     }
 
     public String[] getAvailableR() {
