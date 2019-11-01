@@ -3,11 +3,9 @@ package ru.byprogminer.Lab3_Web.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity(name = "history")
-@Table(name = "history")
 public class QueryEntity {
 
     @Id @GeneratedValue private long id;
