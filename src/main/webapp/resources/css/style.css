@@ -63,11 +63,11 @@ input[type="text"] {
     position: relative;
 }
 
-.historyTable > thead > tr > th {
+.historyTable table > thead > tr > th {
     text-transform: uppercase;
 }
 
-.historyTable > tbody > tr > td {
+.historyTable table > tbody > tr > td {
     border: 10px solid transparent;
     border-top: 0;
     border-bottom: 0;

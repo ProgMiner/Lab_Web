@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 public class QueryBean {
 
@@ -56,6 +57,13 @@ public class QueryBean {
 
     public Boolean getResult() {
         return query.getResult();
+    }
+
+    public String getPointsJson() {
+        return '[' + historyBean.getQueries().parallelStream()
+                .map(q -> String.format("{\"x\": %s, \"y\": %s, \"r\": %s, \"result\": %s}",
+                        q.getX(), q.getY(), q.getR(), q.getResult()))
+                .collect(Collectors.joining(", ")) + ']';
     }
 
     public void validateX(FacesContext context, UIComponent component, Object value) {
