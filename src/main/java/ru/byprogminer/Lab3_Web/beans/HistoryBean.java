@@ -4,7 +4,6 @@ import ru.byprogminer.Lab3_Web.Query;
 import ru.byprogminer.Lab3_Web.entities.QueryEntity;
 import ru.byprogminer.Lab3_Web.services.HistoryService;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,21 +28,13 @@ public class HistoryBean {
             return;
         }
 
-        historyService.addQuery(new QueryEntity(
-                query.getX().toPlainString(),
-                query.getY().toPlainString(),
-                query.getR().toPlainString(),
-                query.getResult()
-        ));
+        historyService.addQuery(new QueryEntity(query.getX(), query.getY(), query.getR(), query.getResult()));
     }
 
     public LinkedList<Query> getQueries() {
-        return historyService.getHistory().parallelStream().map(e -> new Query(
-                new BigDecimal(e.getX()),
-                new BigDecimal(e.getY()),
-                new BigDecimal(e.getR()),
-                e.isResult()
-        )).collect(Collectors.toCollection(LinkedList::new));
+        return historyService.getHistory().parallelStream()
+                .map(e -> new Query(e.getX(), e.getY(), e.getR(), e.isResult()))
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     public Collection<Query> getReversedQueries() {

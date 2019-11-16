@@ -1,21 +1,23 @@
 package ru.byprogminer.Lab3_Web.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 
 @Entity(name = "history")
 public class QueryEntity {
 
     @Id @GeneratedValue private long id;
-    private String x;
-    private String y;
-    private String r;
+    @Column(precision = 25, scale = 20) private BigDecimal x;
+    @Column(precision = 25, scale = 20) private BigDecimal y;
+    @Column(precision = 25, scale = 20) private BigDecimal r;
     private boolean result;
 
     public QueryEntity() {}
 
-    public QueryEntity(String x, String y, String r, boolean result) {
+    public QueryEntity(BigDecimal x, BigDecimal y, BigDecimal r, boolean result) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -30,27 +32,27 @@ public class QueryEntity {
         this.id = id;
     }
 
-    public String getX() {
+    public BigDecimal getX() {
         return x;
     }
 
-    public void setX(String x) {
+    public void setX(BigDecimal x) {
         this.x = x;
     }
 
-    public String getY() {
+    public BigDecimal getY() {
         return y;
     }
 
-    public void setY(String y) {
+    public void setY(BigDecimal y) {
         this.y = y;
     }
 
-    public String getR() {
+    public BigDecimal getR() {
         return r;
     }
 
-    public void setR(String r) {
+    public void setR(BigDecimal r) {
         this.r = r;
     }
 

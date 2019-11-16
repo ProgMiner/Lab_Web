@@ -68,9 +68,6 @@ input[type="text"] {
 }
 
 .historyTable table > tbody > tr > td {
-    border: 10px solid transparent;
-    border-top: 0;
-    border-bottom: 0;
     text-align: center;
 }
 

@@ -97,18 +97,20 @@
 
     <ui:include src="templates/homepage.xhtml" />
 
-    <c:if test="#{not empty historyBean.queries}">
-        <p:dataTable styleClass="historyTable" id="historyTable"
-                     var="query" value="#{historyBean.reversedQueries}"
-                     paginator="true" rows="20" style="overflow: hidden;">
-            <p:column headerText="X" style="white-space: nowrap;">#{query.x}</p:column>
-            <p:column headerText="Y" style="word-break: break-all;">#{query.y}</p:column>
-            <p:column headerText="R" style="white-space: nowrap;">#{query.r}</p:column>
-            <p:column headerText="результат" style="white-space: nowrap;">#{query.result ? 'есть пробитие' : 'промазал'}</p:column>
-        </p:dataTable>
+    <h:panelGroup id="historyTable">
+        <h:panelGroup rendered="#{not empty historyBean.queries}">
+            <p:dataTable styleClass="historyTable" style="overflow: hidden;"
+                         var="query" value="#{historyBean.reversedQueries}"
+                         paginator="true" rows="20">
+                <p:column headerText="X" style="white-space: nowrap;">#{query.x}</p:column>
+                <p:column headerText="Y" style="word-break: break-all;">#{query.y}</p:column>
+                <p:column headerText="R" style="white-space: nowrap;">#{query.r}</p:column>
+                <p:column headerText="результат" style="white-space: nowrap;">#{query.result ? 'есть пробитие' : 'промазал'}</p:column>
+            </p:dataTable>
 
-        <ui:include src="templates/homepage.xhtml"/>
-    </c:if>
+            <ui:include src="templates/homepage.xhtml"/>
+        </h:panelGroup>
+    </h:panelGroup>
 
     <h:outputScript library="js" name="area.js"/>
 
