@@ -38,7 +38,7 @@
                      validator="#{queryBean.validateR}" validatorMessage="Вы выбрали недопустимый R." />
 
         <p:commandButton id="areaFormButton" action="#{queryBean.action}"
-                         update="historyPoints historyTable" oncomplete="reloadHistory();" />
+                         update="historyPoints historyTable" oncomplete="area.queue.next(); reloadHistory();" />
 
         <h:message for="areaXField"/>
         <h:message for="areaYField"/>

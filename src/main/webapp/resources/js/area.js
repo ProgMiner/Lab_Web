@@ -35,17 +35,36 @@ const area = new (function () {
         }
     };
 
-    self.onClickOnCanvas = function(canvas, canvasScale, canvasTranslate, r) {
-        function sendForm(x, y, r) {
-            document.getElementById('areaXField').value = x;
-            document.getElementById('areaYField').value = y;
-            document.getElementById('areaRField').value = r;
+    self.queue = new (function() {
+        const self = this;
+        const queue = [];
 
-            document.getElementById('areaFormButton').click();
+        self.sendForm = (x, y, r) => {
+            queue.push(() => {
+                document.getElementById('areaXField').value = x;
+                document.getElementById('areaYField').value = y;
+                document.getElementById('areaRField').value = r;
+
+                document.getElementById('areaFormButton').click();
+            });
+
+            if (queue.length === 1) {
+                queue[0].call();
+            }
+        };
+
+        self.next = function () {
+            queue.shift();
+
+            if (queue.length > 0) {
+                queue[0].call();
+            }
         }
+    })();
 
+    self.onClickOnCanvas = function(canvas, canvasScale, canvasTranslate, r) {
         if (r == null) {
-            return () => { sendForm(0, 0, ''); };
+            return () => { self.queue.sendForm(0, 0, ''); };
         }
 
         return function(event) {
@@ -66,7 +85,7 @@ const area = new (function () {
             const zoomX = canvasWidth * 10 / 24 / r;
             const zoomY = canvasHeight * 10 / 24 / r;
 
-            sendForm((x - centerX) / zoomX, (centerY - y) / zoomY, r);
+            self.queue.sendForm((x - centerX) / zoomX, (centerY - y) / zoomY, r);
         };
     };
 
