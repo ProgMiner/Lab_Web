@@ -100,8 +100,8 @@
     <h:panelGroup id="historyTable">
         <h:panelGroup rendered="#{not empty historyBean.queries}">
             <p:dataTable styleClass="historyTable" style="overflow: hidden;"
-                         var="query" value="#{historyBean.reversedQueries}"
-                         paginator="true" rows="20">
+                         var="query" value="#{historyBean}" sortOrder="descending"
+                         paginator="true" rows="20" lazy="true">
                 <p:column headerText="X" style="white-space: nowrap;">#{query.x}</p:column>
                 <p:column headerText="Y" style="word-break: break-all;">#{query.y}</p:column>
                 <p:column headerText="R" style="white-space: nowrap;">#{query.r}</p:column>

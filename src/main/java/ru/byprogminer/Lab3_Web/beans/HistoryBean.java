@@ -1,13 +1,19 @@
 package ru.byprogminer.Lab3_Web.beans;
 
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
+import org.primefaces.model.SortOrder;
 import ru.byprogminer.Lab3_Web.Query;
 import ru.byprogminer.Lab3_Web.entities.QueryEntity;
 import ru.byprogminer.Lab3_Web.services.HistoryService;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class HistoryBean {
+public class HistoryBean extends LazyDataModel<Query> {
 
     private HistoryService historyService;
 
@@ -32,26 +38,28 @@ public class HistoryBean {
     }
 
     public LinkedList<Query> getQueries() {
-        return historyService.getHistory().parallelStream()
-                .map(e -> new Query(e.getX(), e.getY(), e.getR(), e.isResult()))
+        return historyService.getHistory().parallelStream().map(HistoryBean::entityToQuery)
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    public Collection<Query> getReversedQueries() {
-        final LinkedList<Query> queries = getQueries();
+    @Override
+    public List<Query> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+        return historyService.getHistoryDesc(first, pageSize).parallelStream()
+                .map(HistoryBean::entityToQuery).collect(Collectors.toList());
+    }
 
-        return new AbstractCollection<Query>() {
+    @Override
+    public List<Query> load(int first, int pageSize, List<SortMeta> multiSortMeta, Map<String, Object> filters) {
+        return load(first, pageSize, null, null, filters);
+    }
 
-            @Override
-            public int size() {
-                return queries.size();
-            }
+    @Override
+    public int getRowCount() {
+        return (int) historyService.getHistoryLength();
+    }
 
-            @Override
-            public Iterator<Query> iterator() {
-                return queries.descendingIterator();
-            }
-        };
+    private static Query entityToQuery(QueryEntity entity) {
+        return new Query(entity.getX(), entity.getY(), entity.getR(), entity.isResult());
     }
 
     public void setHistoryService(HistoryService historyService) {

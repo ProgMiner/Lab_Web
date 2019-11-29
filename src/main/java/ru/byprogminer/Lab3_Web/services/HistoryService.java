@@ -27,6 +27,31 @@ public class HistoryService {
         return ret;
     }
 
+    public List<QueryEntity> getHistoryDesc(int offset, int size) {
+        final Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+        final List<QueryEntity> ret = session.createQuery("from history order by id desc", QueryEntity.class)
+                .setFirstResult(offset).setMaxResults(size).list();
+
+        session.getTransaction().commit();
+        session.close();
+
+        return ret;
+    }
+
+    public long getHistoryLength() {
+        final Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+        final long ret = session.createQuery("select count(id) from history", Long.class).getSingleResult();
+
+        session.getTransaction().commit();
+        session.close();
+
+        return ret;
+    }
+
     public void addQuery(QueryEntity entity) {
         final Session session = sessionFactory.openSession();
 
