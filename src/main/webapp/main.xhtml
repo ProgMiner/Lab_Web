@@ -16,6 +16,50 @@
 <h:body>
     <div class="title">Основная страница</div>
 
+    <p:growl widgetVar="growlWV" />
+    <script type="text/javascript">
+        (function() {
+            function serverErrorHandler() {
+                PF('growlWV').renderMessage({
+                    "summary": "Ошибка сервера",
+                    "detail": "Произошла непредвиденная ошибка сервера, для продолжения работы сохраните введенные данные и перезагрузите страницу",
+                    "severity": "error"
+                });
+            }
+
+            function viewExpiredExceptionHandler() {
+                PF('growlWV').renderMessage({
+                    "summary": "Ошибка отправки данных",
+                    "detail": "Ваша сессия устарела, для продолжения работы сохраните введенные данные и перезагрузите страницу",
+                    "severity": "error"
+                });
+            }
+
+            const originalPrimeFacesAjaxRequestFunction = PrimeFaces.ajax.Request.handle;
+            PrimeFaces.ajax.Request.handle = function(cfg) {
+                const originalCfgOncomplete = cfg.oncomplete;
+
+                cfg.oncomplete = function(xhr, status) {
+                    if (status !== 'success') {
+                        serverErrorHandler();
+                    } else if (typeof xhr === 'object') {
+                        const errorName = $(xhr.responseXML).find("error-name").text();
+
+                        if (errorName.includes('javax.faces.application.ViewExpiredException')) {
+                            viewExpiredExceptionHandler();
+                        }
+                    }
+
+                    if (originalCfgOncomplete) {
+                        return originalCfgOncomplete.apply(this, arguments);
+                    }
+                };
+
+                return originalPrimeFacesAjaxRequestFunction.apply(this, arguments);
+            };
+        })();
+    </script>
+
     <h:graphicImage library="images" name="batman.png" id="batmanImage" class="scriptImage"/>
     <h:graphicImage library="images" name="bullet-hole-green.png" id="bulletHoleGreenImage" class="scriptImage"/>
     <h:graphicImage library="images" name="bullet-hole-red.png" id="bulletHoleRedImage" class="scriptImage"/>
