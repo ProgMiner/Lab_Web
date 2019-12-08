@@ -19,10 +19,10 @@
     <p:growl widgetVar="growlWV" />
     <script type="text/javascript">
         (function() {
-            function serverErrorHandler() {
+            function xhrErrorHandler() {
                 PF('growlWV').renderMessage({
                     "summary": "Ошибка сервера",
-                    "detail": "Произошла непредвиденная ошибка сервера, для продолжения работы сохраните введенные данные и перезагрузите страницу",
+                    "detail": "Произошла непредвиденная ошибка, для продолжения работы сохраните введенные данные и перезагрузите страницу",
                     "severity": "error"
                 });
             }
@@ -41,7 +41,7 @@
 
                 cfg.oncomplete = function(xhr, status) {
                     if (status !== 'success') {
-                        serverErrorHandler();
+                        xhrErrorHandler();
                     } else if (typeof xhr === 'object') {
                         const errorName = $(xhr.responseXML).find("error-name").text();
 
