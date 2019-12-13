@@ -27,10 +27,12 @@
 
     <security-constraint>
         <display-name>Restrict templates</display-name>
+
         <web-resource-collection>
             <web-resource-name>templates</web-resource-name>
             <url-pattern>/templates/*</url-pattern>
         </web-resource-collection>
+
         <auth-constraint />
     </security-constraint>
 
@@ -42,4 +44,8 @@
         <exception-type>javax.faces.application.ViewExpiredException</exception-type>
         <location>/index.xhtml</location>
     </error-page>
+
+    <session-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
 </web-app>
