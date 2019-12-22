@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>ru.byprogminer.Lab4_Web</groupId>
-    <artifactId>backend-web</artifactId>
+    <artifactId>war</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 

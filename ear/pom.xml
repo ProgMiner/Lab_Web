@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>ru.byprogminer.Lab4_Web</groupId>
-    <artifactId>backend-ear</artifactId>
+    <artifactId>ear</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>ear</packaging>
 
@@ -24,7 +24,7 @@
 
         <dependency>
             <groupId>ru.byprogminer.Lab4_Web</groupId>
-            <artifactId>backend-web</artifactId>
+            <artifactId>war</artifactId>
             <type>war</type>
         </dependency>
     </dependencies>
