@@ -4,6 +4,7 @@ import ru.byprogminer.Lab4_Web.users.UserEntity;
 import ru.byprogminer.Lab4_Web.users.UsersService;
 
 import javax.ejb.Stateless;
+import javax.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -33,14 +34,14 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UserEntity findUser(String username) {
+    public UserEntity findUser(@NotNull String username) {
         return users.values().stream()
                 .filter(userEntity -> username.equals(userEntity.getUsername()))
                 .findAny().orElse(null);
     }
 
     @Override
-    public UserEntity createUser(String username, String password) {
+    public UserEntity createUser(@NotNull String username, @NotNull String password) {
         final String salt = generateSalt();
 
         final String hash = hashPassword(password, salt);
@@ -50,7 +51,11 @@ public class UsersServiceImpl implements UsersService {
 
     private UserEntity addUser(UserEntity user) {
         if (user.getId() != null) {
-            throw new IllegalArgumentException();
+            user = new UserEntity(null, user.getUsername(), user.getPasswordHash(), user.getPasswordSalt());
+        }
+
+        if (findUser(user.getUsername()) != null) {
+            return null;
         }
 
         final UserEntity persistedEntity = new UserEntity(
@@ -65,13 +70,13 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public boolean removeUser(UserEntity user) {
+    public boolean removeUser(@NotNull UserEntity user) {
         return users.remove(user.getId()) != null;
     }
 
     @Override
-    public boolean checkPassword(UserEntity user, String password) {
-        return password.equals(hashPassword(password, user.getPasswordSalt()));
+    public boolean checkPassword(@NotNull UserEntity user, @NotNull String password) {
+        return user.getPasswordHash().equals(hashPassword(password, user.getPasswordSalt()));
     }
 
     private String generateSalt() {

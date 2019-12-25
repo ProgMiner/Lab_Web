@@ -1,18 +1,56 @@
 package ru.byprogminer.Lab4_Web.users;
 
 import javax.ejb.Remote;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Remote
 public interface UsersService extends Serializable {
 
+    /**
+     * Returns user by userId or null if it isn't exists
+     *
+     * @param userId user id
+     *
+     * @return user with specified id or null
+     */
     UserEntity getUser(long userId);
-    UserEntity findUser(String username);
 
-    UserEntity createUser(String username, String password);
-    boolean removeUser(UserEntity user);
+    /**
+     * Returns user by username or null if it isn't exists
+     *
+     * @param username username, never null
+     *
+     * @return user with specified username or null
+     */
+    UserEntity findUser(@NotNull String username);
 
-    boolean checkPassword(UserEntity user, String password);
+    /**
+     * Creates new user
+     *
+     * @param username username, never null
+     * @param password password, never null
+     *
+     * @return created user or null if creating failed
+     */
+    UserEntity createUser(@NotNull String username, @NotNull String password);
 
-    // TODO
+    /**
+     * Removes specified user
+     *
+     * @param user user, never null
+     *
+     * @return true if user removed, false otherwise
+     */
+    boolean removeUser(@NotNull UserEntity user);
+
+    /**
+     * Checks is password correct
+     *
+     * @param user user, never null
+     * @param password password, never null
+     *
+     * @return true if specified password matches to real user's password
+     */
+    boolean checkPassword(@NotNull UserEntity user, @NotNull String password);
 }

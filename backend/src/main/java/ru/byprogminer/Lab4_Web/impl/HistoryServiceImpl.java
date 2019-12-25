@@ -4,7 +4,9 @@ import ru.byprogminer.Lab4_Web.history.HistoryService;
 import ru.byprogminer.Lab4_Web.history.QueryEntity;
 
 import javax.ejb.Stateless;
+import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Stateless
 public class HistoryServiceImpl implements HistoryService {
@@ -24,9 +26,21 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public boolean addQuery(QueryEntity query) {
+    public Deque<QueryEntity> getQueries(long userId, long offset, long count) {
+        final Deque<QueryEntity> queries = this.queries.get(userId);
+
+        if (queries == null) {
+            return new LinkedList<>();
+        } else {
+            return queries.parallelStream().skip(offset).limit(count)
+                    .collect(Collectors.toCollection(LinkedList::new));
+        }
+    }
+
+    @Override
+    public boolean addQuery(@NotNull QueryEntity query) {
         if (query.getId() != null) {
-            throw new IllegalArgumentException();
+            query = new QueryEntity(null, query.getUserId(), query.getX(), query.getY(), query.getR(), query.getResult());
         }
 
         final Deque<QueryEntity> queries = this.queries.get(query.getUserId());

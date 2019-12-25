@@ -2,6 +2,7 @@ package ru.byprogminer.Lab4_Web.history;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class QueryEntity implements Serializable {
 
@@ -42,5 +43,24 @@ public class QueryEntity implements Serializable {
 
     public boolean getResult() {
         return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final QueryEntity that = (QueryEntity) o;
+        return userId == that.userId &&
+                result == that.result &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(x, that.x) &&
+                Objects.equals(y, that.y) &&
+                Objects.equals(r, that.r);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userId, x, y, r, result);
     }
 }

@@ -5,6 +5,7 @@ import ru.byprogminer.Lab4_Web.area.AreaService;
 import javax.ejb.Stateless;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Stateless
@@ -15,9 +16,12 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public boolean checkPoint(
-            @DecimalMin(value = "-5", inclusive = false) @DecimalMax(value = "3", inclusive = false) BigDecimal x,
-            @DecimalMin(value = "-5", inclusive = false) @DecimalMax(value = "3", inclusive = false) BigDecimal y,
-            @DecimalMin(value = "-5", inclusive = false) @DecimalMax(value = "3", inclusive = false) BigDecimal r
+            @DecimalMin(value = "-5", inclusive = false) @DecimalMax(value = "3", inclusive = false)
+            @NotNull BigDecimal x,
+            @DecimalMin(value = "-5", inclusive = false) @DecimalMax(value = "3", inclusive = false)
+            @NotNull BigDecimal y,
+            @DecimalMin(value = "-5", inclusive = false) @DecimalMax(value = "3", inclusive = false)
+            @NotNull BigDecimal r
     ) {
         if (r.compareTo(BigDecimal.ZERO) < 0) {
             return doCheckPoint(x.multiply(MINUS_ONE), y.multiply(MINUS_ONE), r.multiply(MINUS_ONE));
