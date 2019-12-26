@@ -23,7 +23,7 @@ export function signIn(session: Session): SignInAction {
     return { type: SIGN_IN, payload: session };
 }
 
-export function singOut(): SignOutAction {
+export function signOut(): SignOutAction {
     return { type: SIGN_OUT };
 }
 

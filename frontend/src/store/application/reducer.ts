@@ -7,10 +7,18 @@ export interface ApplicationState {
     session: Session | null;
 }
 
+let session;
+try {
+    session = JSON.parse(localStorage.getItem('session') ?? 'null');
+} catch (e) {
+    session = null;
+    console.log(e);
+}
+
 export const initialState: ApplicationState = {
 
     locked: false,
-    session: null
+    session: session
 };
 
 export function reducer(state: ApplicationState = initialState, action: ApplicationAction): ApplicationState {

@@ -65,13 +65,15 @@ public class UsersController {
 
     @POST
     @Path("/create")
-    public Long create(
+    public Response create(
             @NotNull @FormParam("username") String username,
             @NotNull @FormParam("password") String password
     ) {
         final UserEntity user = Objects.requireNonNull(service).createUser(username, password);
 
-        return user == null ? null : user.getId();
+        return user == null
+                ? Response.status(Response.Status.BAD_REQUEST).build()
+                : Response.ok(user.getId()).build();
     }
 
     @DELETE

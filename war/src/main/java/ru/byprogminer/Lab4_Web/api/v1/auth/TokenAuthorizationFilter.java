@@ -84,7 +84,7 @@ public class TokenAuthorizationFilter implements ContainerRequestFilter {
         requestContext.setSecurityContext(new SecurityContextImpl(requestContext.getSecurityContext(), user.getUsername()));
 
         // Fire event for CDI
-        Objects.requireNonNull(userAuthenticatedEvent).fire(new AuthenticationEvent(user, token));
+        Objects.requireNonNull(userAuthenticatedEvent).fire(new AuthenticationEvent(user));
 
         return true;
     }

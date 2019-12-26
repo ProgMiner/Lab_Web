@@ -36,7 +36,8 @@ export class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
                                             onInput={htmlInputStateDispatcher(this, 'password', String)} /></label>
 
                     <button type="submit" disabled={locked}>Sign in</button>
-                    <button type="button" disabled={locked} onClick={() => onSignUp(username, password)}>Sign up</button>
+                    <button type="button" disabled={locked} onClick={(event) =>
+                    { onSignUp(username, password); event.preventDefault(); }}>Sign up</button>
                 </form>
             </div>
         );

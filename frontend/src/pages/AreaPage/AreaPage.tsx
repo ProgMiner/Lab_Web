@@ -10,9 +10,12 @@ import { htmlInputStateDispatcher } from '../../utils/htmlInputStateDispatcher';
 import { stateDispatcher } from '../../utils/stateDispatcher';
 import { areaFormConnect } from '../../components/AreaForm/connector';
 import { areaConnect } from '../../components/Area/connector';
+import { forAuthorizedConnect } from '../../components/Guard/forAuthorizedConnect';
+import { Guard } from '../../components/Guard/Guard';
 
 const AreaContainer = areaConnect(Area);
 const AreaFormContainer = areaFormConnect(AreaForm);
+const ForAuthorizedGuard = forAuthorizedConnect(Guard);
 
 export interface AreaPageProps {
 
@@ -36,14 +39,16 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
         const { r, history } = this.state;
 
         return (
-            <div>
-                <AreaContainer r={r} history={history} />
+            <ForAuthorizedGuard redirectUrl="/">
+                <div>
+                    <AreaContainer r={r} history={history} />
 
-                <AreaFormContainer r={r} dispatchR={htmlInputStateDispatcher(this, 'r', Number)}
-                          dispatchHistory={stateDispatcher(this, 'history')} />
+                    <AreaFormContainer r={r} dispatchR={htmlInputStateDispatcher(this, 'r', Number)}
+                              dispatchHistory={stateDispatcher(this, 'history')} />
 
-                <HistoryTable r={r} history={history} />
-            </div>
+                    <HistoryTable r={r} history={history} />
+                </div>
+            </ForAuthorizedGuard>
         );
     }
 }

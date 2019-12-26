@@ -1,8 +1,8 @@
 import React from 'react';
+import { compose } from 'redux';
 
 import { Query } from '../../models/query';
 import { htmlInputStateDispatcher } from '../../utils/htmlInputStateDispatcher';
-import { compose } from 'redux';
 
 const SLIDER_STEP = 1e-10;
 

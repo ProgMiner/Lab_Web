@@ -5,10 +5,8 @@ import ru.byprogminer.Lab4_Web.users.UserEntity;
 public class AuthenticationEvent {
 
     public final UserEntity user;
-    public final String token;
 
-    AuthenticationEvent(UserEntity user, String token) {
+    AuthenticationEvent(UserEntity user) {
         this.user = user;
-        this.token = token;
     }
 }

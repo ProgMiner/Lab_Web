@@ -1,22 +1,29 @@
 import React from 'react';
-import { applyMiddleware, createStore } from 'redux';
-import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { rootReducer } from '../../reducer';
 import { routes } from '../../routes';
+import { Session } from '../../models/session';
 
 import './App.css';
 
-const store = createStore(rootReducer, applyMiddleware(/* TODO */));
+export interface AppProps {
 
-export class App extends React.Component {
+    session: Session | null;
+
+    checkSession(session: Session): void;
+}
+
+export class App extends React.Component<AppProps> {
+
+    componentDidMount(): void {
+        const { session, checkSession } = this.props;
+
+        if (session != null) {
+            checkSession(session);
+        }
+    }
 
     render() {
-        return (
-            <Provider store={store}>
-                <Router>{routes}</Router>
-            </Provider>
-        );
+        return (<Router>{routes}</Router>);
     }
 }

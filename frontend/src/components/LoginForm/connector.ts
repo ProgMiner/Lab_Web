@@ -25,10 +25,9 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
                 if (response.ok) {
                     const json = await response.json();
 
-                    console.log(json);
                     dispatch(signIn(json as Session));
                 } else {
-                    console.log(response);
+                    alert('Unknown user or invalid password');
                 }
             });
         },
@@ -38,12 +37,9 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
                 const response = await backendApi('user/create', 'POST', { username, password });
 
                 if (response.ok) {
-                    const json = await response.json();
-
-                    console.log(json);
-                    dispatch(signIn(json as Session));
+                    alert('Registered successfully. Please, sign in now');
                 } else {
-                    console.log(response);
+                    alert('Registration failed');
                 }
             });
         }

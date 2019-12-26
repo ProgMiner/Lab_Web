@@ -18,7 +18,7 @@ export function backendApi(
         ...init,
 
         method: httpMethod,
-        body: dataArray.join('&'),
+        body: ['GET', 'HEAD'].includes(httpMethod.toUpperCase()) ? undefined : dataArray.join('&'),
         headers: {
             ...headers,
 
@@ -33,7 +33,7 @@ export function authorizedBackendApi(
     session: Session,
     httpMethod: string = 'GET',
     data: { [key: string]: any } = {},
-    headers: { [key: string]: any },
+    headers: { [key: string]: any } = {},
     init: object = {}
 ) {
     return backendApi(method, httpMethod, data, { ...headers,
