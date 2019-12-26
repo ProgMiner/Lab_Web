@@ -6,8 +6,8 @@ export function htmlInputStateDispatcher<T>(component: React.Component, fieldNam
     return (event: React.FormEvent<HTMLInputElement>) => {
         const { target } = event;
 
-        if (target instanceof HTMLInputElement) {
-            dispatchState<T>(component, fieldName, caster(target.value));
+        if (target instanceof HTMLInputElement && target.value) {
+            setTimeout(() => dispatchState<T>(component, fieldName, caster(target.value)), 1);
         }
     }
 }
