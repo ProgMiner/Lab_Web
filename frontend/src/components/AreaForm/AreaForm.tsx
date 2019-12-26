@@ -41,7 +41,7 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
                     <label>X: <input type="range" min={-5 + SLIDER_STEP} max={3 - SLIDER_STEP} step={SLIDER_STEP}
                                      value={x} onChange={htmlInputStateDispatcher(this, 'x', Number)} /> {x}</label>
 
-                    <label>Y: <input type="range" min={-5 + SLIDER_STEP} max={3 - SLIDER_STEP} step={SLIDER_STEP}
+                    <label>Y: <input type="text" min={-5 + SLIDER_STEP} max={3 - SLIDER_STEP} step={SLIDER_STEP}
                                      value={y} onChange={htmlInputStateDispatcher(this, 'y', Number)} /> {y}</label>
 
                     <label>R: <input type="range" min={-5 + SLIDER_STEP} max={3 - SLIDER_STEP} step={SLIDER_STEP}
