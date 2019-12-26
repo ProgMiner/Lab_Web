@@ -4,7 +4,9 @@ import ru.byprogminer.Lab4_Web.users.UserEntity;
 import ru.byprogminer.Lab4_Web.users.UsersService;
 
 import javax.ejb.Stateless;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -41,7 +43,7 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UserEntity createUser(@NotNull String username, @NotNull String password) {
+    public UserEntity createUser(@NotNull @Size(min = 2) @NotBlank String username, @NotNull @NotBlank String password) {
         final String salt = generateSalt();
 
         final String hash = hashPassword(password, salt);

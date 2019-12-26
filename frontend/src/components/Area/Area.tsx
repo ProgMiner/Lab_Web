@@ -2,7 +2,9 @@ import React from 'react';
 
 import { Query } from '../../models/query';
 
-interface AreaProps {
+export interface AreaProps {
+
+    locked: boolean;
 
     width?: number | string;
     height?: number | string;

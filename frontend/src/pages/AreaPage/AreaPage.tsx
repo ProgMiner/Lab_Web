@@ -8,6 +8,11 @@ import { AreaForm } from '../../components/AreaForm/AreaForm';
 import { HistoryTable } from '../../components/HistoryTable/HistoryTable';
 import { htmlInputStateDispatcher } from '../../utils/htmlInputStateDispatcher';
 import { stateDispatcher } from '../../utils/stateDispatcher';
+import { areaFormConnect } from '../../components/AreaForm/connector';
+import { areaConnect } from '../../components/Area/connector';
+
+const AreaContainer = areaConnect(Area);
+const AreaFormContainer = areaFormConnect(AreaForm);
 
 export interface AreaPageProps {
 
@@ -32,9 +37,9 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
 
         return (
             <div>
-                <Area r={r} history={history} />
+                <AreaContainer r={r} history={history} />
 
-                <AreaForm r={r} dispatchR={htmlInputStateDispatcher(this, 'r', Number)}
+                <AreaFormContainer r={r} dispatchR={htmlInputStateDispatcher(this, 'r', Number)}
                           dispatchHistory={stateDispatcher(this, 'history')} />
 
                 <HistoryTable r={r} history={history} />

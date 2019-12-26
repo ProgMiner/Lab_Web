@@ -6,7 +6,9 @@ import { compose } from 'redux';
 
 const SLIDER_STEP = 1e-10;
 
-interface AreaFormProps {
+export interface AreaFormProps {
+
+    locked: boolean;
 
     r: number;
 

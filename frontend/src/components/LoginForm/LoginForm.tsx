@@ -2,36 +2,41 @@ import React from 'react';
 
 import { htmlInputStateDispatcher } from '../../utils/htmlInputStateDispatcher';
 
+export interface LoginFormProps {
+
+    locked: boolean;
+
+    onSignIn(username: string, password: string): void;
+    onSignUp(username: string, password: string): void;
+}
+
 interface LoginFormState {
 
     username: string;
     password: string;
 }
 
-export class LoginForm extends React.Component<{}, LoginFormState> {
+export class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
 
     state: LoginFormState = {
         username: '',
         password: ''
     };
 
-    private onSignIn() {
-        // TODO make sign in action
-    }
-
-    private onSignUp() {
-        // TODO make sign up action
-    }
-
     render() {
+        const { onSignIn, onSignUp, locked } = this.props;
+        const { username, password } = this.state;
+
         return (
             <div>
-                <form>
-                    <label>Username: <input type="text" onInput={htmlInputStateDispatcher(this, 'username', String)} /></label>
-                    <label>Password: <input type="password" onInput={htmlInputStateDispatcher(this, 'password', String)} /></label>
+                <form onSubmit={(event) => { onSignIn(username, password); event.preventDefault()}}>
+                    <label>Username: <input type="text" disabled={locked}
+                                            onInput={htmlInputStateDispatcher(this, 'username', String)} /></label>
+                    <label>Password: <input type="password" disabled={locked}
+                                            onInput={htmlInputStateDispatcher(this, 'password', String)} /></label>
 
-                    <button type="button" onClick={this.onSignIn.bind(this)}>Sign in</button>
-                    <button type="button" onClick={this.onSignUp.bind(this)} disabled>Sign up</button>
+                    <button type="submit" disabled={locked}>Sign in</button>
+                    <button type="button" disabled={locked} onClick={() => onSignUp(username, password)}>Sign up</button>
                 </form>
             </div>
         );

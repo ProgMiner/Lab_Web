@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 
+import { PageProps } from '../Page/Page';
 import { RootState } from '../../reducer';
-import { AreaPageProps } from './AreaPage';
 
-type StateProps = Pick<AreaPageProps, 'session'>;
+type StateProps = Pick<PageProps, 'session'>;
 
 const mapStateToProps = (state: RootState): StateProps => {
     return { session: state.application.session };
 };
 
-export const areaPageConnect = connect(mapStateToProps);
+export const loginPageConnect = connect(mapStateToProps);
