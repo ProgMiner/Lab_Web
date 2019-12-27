@@ -37,15 +37,13 @@ export class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
                 <form onSubmit={this.onSignIn.bind(this)}>
                     <span className="p-float-label">
                         <InputText id="username" className="login-form__username" disabled={locked}
-                                   onChange={htmlInputStateDispatcher(this, 'username', String)} />
-
+                                   onInput={htmlInputStateDispatcher(this, 'username', String)} />
                         <label htmlFor="username">Username</label>
                     </span>
 
                     <span className="p-float-label">
-                        <Password id="password" className="login-form__password" disabled={locked}
-                                  onChange={htmlInputStateDispatcher(this, 'password', String)} />
-
+                        <Password id="password" className="login-form__password" feedback={false} disabled={locked}
+                                  onInput={htmlInputStateDispatcher(this, 'password', String)} />
                         <label htmlFor="password">Password</label>
                     </span>
 

@@ -15,3 +15,7 @@
 .form-group.max-width > input {
     flex: 1;
 }
+
+input[data-invalid] {
+    background-color: #f3626f;
+}

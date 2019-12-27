@@ -5,8 +5,8 @@ import { AreaFormProps } from './AreaForm';
 
 type StateProps = Pick<AreaFormProps, 'locked'>;
 
-const mapStateToProps = (rootState: RootState): StateProps => {
+function mapStateToProps(rootState: RootState): StateProps {
     return { locked: rootState.application.locked }
-};
+}
 
 export const areaFormConnect = connect(mapStateToProps);

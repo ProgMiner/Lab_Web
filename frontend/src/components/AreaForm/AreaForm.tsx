@@ -38,8 +38,13 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
     };
 
     private onCheck(event: React.FormEvent) {
-        console.log(this);
-        // TODO make check action
+        const { submitQuery } = this.props;
+        const { x, y } = this.state;
+
+        if (y != null) {
+            submitQuery(x, y);
+        }
+
         event.preventDefault();
     }
 
@@ -110,7 +115,7 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
     }
 
     render() {
-        const { r } = this.props;
+        const { locked, r } = this.props;
         const { x, y } = this.state;
 
         return (
@@ -118,36 +123,25 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
                 <form onSubmit={this.onCheck.bind(this)}>
                     <div className="form-group">
                         <label>X: {x}</label>
-                        <Slider
-                            min={-5 * SLIDER_ZOOM + 1}
-                            max={3 * SLIDER_ZOOM - 1}
-                            step={1}
-                            value={x * SLIDER_ZOOM}
-                            onChange={valueStateDispatcher(this, 'x', compose(AreaForm.normalizeSlider, Number))}
-                        />
+                        <Slider min={-5 * SLIDER_ZOOM + 1} max={3 * SLIDER_ZOOM - 1} step={1} value={x * SLIDER_ZOOM}
+                                disabled={locked} onChange={valueStateDispatcher(this, 'x',
+                            compose(AreaForm.normalizeSlider, Number))} />
                     </div>
 
                     <div className="form-group max-width">
                         <label>Y:&nbsp;</label>
-                        <InputText
-                            data-invalid={y == null}
-                            onChange={htmlInputStateDispatcher(this, 'y', compose(AreaForm.validateY, AreaForm.verifyY))}
-                            placeholder="(-5, 3)"
-                        />
+                        <InputText data-invalid={y == null} placeholder="(-5, 3)" disabled={locked}
+                                   onChange={htmlInputStateDispatcher(this, 'y',
+                                       compose(AreaForm.validateY, AreaForm.verifyY))} />
                     </div>
 
                     <div className="form-group">
                         <label>R: {r}</label>
-                        <Slider
-                            min={-5 * SLIDER_ZOOM + 1}
-                            max={3 * SLIDER_ZOOM - 1}
-                            step={1}
-                            value={r * SLIDER_ZOOM}
-                            onChange={this.onChangeR.bind(this)}
-                        />
+                        <Slider min={-5 * SLIDER_ZOOM + 1} max={3 * SLIDER_ZOOM - 1} step={1} disabled={locked}
+                                value={r * SLIDER_ZOOM} onChange={this.onChangeR.bind(this)} />
                     </div>
 
-                    <Button type="submit" label="Check" />
+                    <Button type="submit" disabled={y == null} label="Check" />
                 </form>
             </Panel>
         );

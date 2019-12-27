@@ -5,4 +5,5 @@
     border: 1px solid #c8c8c8;
     border-radius: 3px;
     overflow: hidden;
+    user-select: none;
 }

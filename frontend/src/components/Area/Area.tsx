@@ -32,6 +32,7 @@ interface AreaState {
     mouse: null | {
         x: number;
         y: number;
+        hover: boolean;
     };
 }
 
@@ -154,7 +155,7 @@ export class Area extends React.Component<AreaProps, AreaState> {
         context.lineWidth = 1;
 
         // Mouse position
-        if (mouse != null) {
+        if (mouse != null && mouse.hover) {
             const mouseXLabelText = `X: ${+mouse.x.toFixed(5)}`;
             const mouseYLabelText = `Y: ${+mouse.y.toFixed(5)}`;
 
@@ -219,6 +220,15 @@ export class Area extends React.Component<AreaProps, AreaState> {
         this.repaint();
     }
 
+    private onClick() {
+        const { locked, submitQuery } = this.props;
+        const { mouse } = this.state;
+
+        if (!locked && mouse) {
+            submitQuery(mouse.x, mouse.y);
+        }
+    }
+
     private onMouseMove(event: React.MouseEvent) {
         const canvas = this.canvas.current;
 
@@ -248,20 +258,33 @@ export class Area extends React.Component<AreaProps, AreaState> {
 
             mouse: {
                 x: (x - centerX) / zoomX,
-                y: (centerY - y) / zoomY
+                y: (centerY - y) / zoomY,
+                hover: true
             }
         });
     }
 
     private onMouseLeave() {
-        this.setState({ ...this.state, mouse: null });
+        const { mouse } = this.state;
+
+        if (mouse) {
+            this.setState({
+                ...this.state,
+
+                mouse: {
+                    ...mouse,
+
+                    hover: false
+                }
+            });
+        }
     }
 
     render() {
         const { width, height } = this.props;
 
         return (
-            <canvas ref={this.canvas} className="area" width={width} height={height}
+            <canvas ref={this.canvas} className="area" width={width} height={height} onClick={this.onClick.bind(this)}
                     onMouseMove={this.onMouseMove.bind(this)} onMouseLeave={this.onMouseLeave.bind(this)} />
         );
     }
