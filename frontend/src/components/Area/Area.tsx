@@ -91,7 +91,7 @@ export class Area extends React.Component<AreaProps, AreaState> {
 
         context.strokeStyle = CANVAS_COLOR_PRIMARY;
         context.fillStyle = CANVAS_COLOR_BACKGROUND;
-        context.font = `bold ${CANVAS_STEP_X - 2}px 'Courier New', monospace`;
+        context.font = `bold ${CANVAS_STEP_X / 2}px 'Courier New', monospace`;
         context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
         // Clip
@@ -153,8 +153,8 @@ export class Area extends React.Component<AreaProps, AreaState> {
 
         // Mouse position
         if (mouse != null) {
-            const mouseXLabelText = `X: ${mouse.x}`;
-            const mouseYLabelText = `Y: ${mouse.y}`;
+            const mouseXLabelText = `X: ${+mouse.x.toFixed(5)}`;
+            const mouseYLabelText = `Y: ${+mouse.y.toFixed(5)}`;
 
             const mouseLabelsWidth = Math.max(
                 context.measureText(mouseXLabelText).width,
@@ -162,21 +162,22 @@ export class Area extends React.Component<AreaProps, AreaState> {
             );
 
             const mouseRightSide = Math.max(
-                (Math.ceil((CANVAS_STEP_X * 1.5 + mouseLabelsWidth) / CANVAS_STEP_X) + 0.5) * CANVAS_STEP_X,
-                CANVAS_STEP_X * 5.5
+                Math.floor((CANVAS_STEP_X * 1.5 + mouseLabelsWidth) / CANVAS_STEP_X * 2) * CANVAS_STEP_X / 2,
+                CANVAS_STEP_X * 3.5
             );
 
             context.beginPath();
             context.moveTo(CANVAS_STEP_X / 2, CANVAS_STEP_Y * 0.75);
             context.lineTo(mouseRightSide, CANVAS_STEP_Y * 0.75);
-            context.lineTo(mouseRightSide, CANVAS_STEP_Y * 4.25);
-            context.lineTo(CANVAS_STEP_X / 2, CANVAS_STEP_Y * 4.25);
+            context.lineTo(mouseRightSide, CANVAS_STEP_Y * 2.25);
+            context.lineTo(CANVAS_STEP_X / 2, CANVAS_STEP_Y * 2.25);
             context.lineTo(CANVAS_STEP_X / 2, CANVAS_STEP_Y * 0.75);
             context.fill();
             context.stroke();
 
-            context.fillText(mouseXLabelText, CANVAS_STEP_X * 2, whereMeDrawText(context, CANVAS_STEP_Y * 1.25));
-            context.fillText(mouseYLabelText, CANVAS_STEP_X * 2, whereMeDrawText(context, CANVAS_STEP_Y * 2.75));
+            context.fillStyle = CANVAS_COLOR_PRIMARY;
+            context.fillText(mouseXLabelText, CANVAS_STEP_X * 0.75, whereMeDrawText(context, CANVAS_STEP_Y * 0.75));
+            context.fillText(mouseYLabelText, CANVAS_STEP_X * 0.75, whereMeDrawText(context, CANVAS_STEP_Y * 1.25));
             context.fillStyle = CANVAS_COLOR_BACKGROUND;
         }
 
@@ -217,9 +218,8 @@ export class Area extends React.Component<AreaProps, AreaState> {
     }
 
     private onMouseMove(event: React.MouseEvent) {
-        const { r } = this.props;
-
         const canvas = this.canvas.current;
+
         if (canvas == null) {
             return;
         }
@@ -238,8 +238,8 @@ export class Area extends React.Component<AreaProps, AreaState> {
         const centerX = CANVAS_WIDTH / 2;
         const centerY = CANVAS_HEIGHT / 2;
 
-        const zoomX = CANVAS_WIDTH * 10 / 24 / r;
-        const zoomY = CANVAS_HEIGHT * 10 / 24 / r;
+        const zoomX = CANVAS_WIDTH / 14;
+        const zoomY = CANVAS_HEIGHT / 14;
 
         this.setState({
             ...this.state,
@@ -260,7 +260,7 @@ export class Area extends React.Component<AreaProps, AreaState> {
 
         return (
             <canvas ref={this.canvas} className="area" width={width} height={height}
-                    onMouseMove={this.onMouseMove.bind(this)} onMouseLeave={this.onMouseMove.bind(this)} />
+                    onMouseMove={this.onMouseMove.bind(this)} onMouseLeave={this.onMouseLeave.bind(this)} />
         );
     }
 }

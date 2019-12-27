@@ -39,6 +39,8 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
     renderContent() {
         const { r, history } = this.state;
 
+        const historyTable = (<HistoryTable history={this.state.history} />);
+
         return (
             <ForAuthorizedGuard redirectUrl="/">
                 <div className="area-page-main">
@@ -47,45 +49,12 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
                     </div>
 
                     <div className="area-form-container">
-                        <AreaFormContainer
-                            r={r}
-                            dispatchR={stateDispatcher(this, 'r')}
-                            dispatchHistory={stateDispatcher(this, 'history')}
-                        />
+                        <AreaFormContainer r={r} dispatchR={stateDispatcher(this, 'r')}
+                                           dispatchHistory={stateDispatcher(this, 'history')} />
                     </div>
                 </div>
 
-                <HistoryTable history={[
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                    { x: 1, y: 2, r: 3, result: true },
-                ]} />
+                {history.length > 0 ? historyTable : null}
             </ForAuthorizedGuard>
         );
     }

@@ -14,7 +14,7 @@ interface HistoryTableState {
     first: number;
 }
 
-const PER_PAGE = 10;
+const PER_PAGE = 20;
 
 export class HistoryTable extends React.Component<HistoryTableProps> {
 
