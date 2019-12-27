@@ -155,31 +155,26 @@ export class Area extends React.Component<AreaProps, AreaState> {
         context.lineWidth = 1;
 
         // History
-        // const bulletHoleGreen = document.getElementById('bulletHoleGreenImage') as HTMLImageElement;
-        // const bulletHoleRed = document.getElementById('bulletHoleRedImage') as HTMLImageElement;
 
-        // const centerX = CANVAS_WIDTH / 2;
-        // const centerY = CANVAS_HEIGHT / 2;
-        // const zoomX = CANVAS_WIDTH * 10 / 24 / r;
-        // const zoomY = CANVAS_HEIGHT * 10 / 24 / r;
-        // history.forEach((point) => {
-        //     if (r != null && point.r !== r) {
-        //         return;
-        //     }
+        const centerX = CANVAS_WIDTH / 2;
+        const centerY = CANVAS_HEIGHT / 2;
+        history.forEach((point) => {
+            context.fillStyle = point.r !== r
+                ? CANVAS_COLOR_PRIMARY
+                : point.result
+                    ? '#00ff00'
+                    : '#ff0000'
+            ;
 
-        //     let actualZoomX = zoomX, actualZoomY = zoomY;
-        //     if (r == null) {
-        //         actualZoomX = CANVAS_WIDTH * 10 / 24 / point.r;
-        //         actualZoomY = CANVAS_HEIGHT * 10 / 24 / point.r;
-        //     }
-
-        //     context.drawImage(
-        //         point.result ? bulletHoleGreen : bulletHoleRed,
-        //         centerX + point.x * actualZoomX - 5,
-        //         centerY - point.y * actualZoomY - 5,
-        //         10, 10
-        //     );
-        // });
+            context.beginPath();
+            context.arc(
+                centerX + point.x * CANVAS_STEP_X,
+                centerY - point.y * CANVAS_STEP_Y,
+                3, 0, Math.PI * 2
+            );
+            context.fill();
+            context.stroke();
+        });
 
         // Shadow
         context.fillStyle = 'rgba(0, 0, 0, 0.5)';

@@ -67,6 +67,16 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
 
         if (session != null) {
             onSubmitQuery(x, y, r, session, result => {
+                const { history } = this.state;
+
+                if (history.length > 0) {
+                    const lastQuery = history[history.length - 1];
+
+                    if (lastQuery.x === x && lastQuery.y === y && lastQuery.r === r) {
+                        return;
+                    }
+                }
+
                 this.setState({
                     ...this.state,
 
