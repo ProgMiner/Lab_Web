@@ -6,6 +6,7 @@ import { RootState } from '../../reducer';
 import { authorizedBackendApi } from '../../utils/backendApi';
 import { signOut } from '../../store/application/actions';
 import { Session } from '../../models/session';
+import { lockAndDo } from '../../utils/lockAndDo';
 
 type StateProps = Pick<HeaderProps, 'locked' | 'session'>;
 
@@ -21,9 +22,11 @@ type DispatchProps = Pick<HeaderProps, 'onSignOut'>
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     return {
         onSignOut(session: Session) {
-            // noinspection JSIgnoredPromiseFromCall
-            authorizedBackendApi('session/destroy', session, 'DELETE', { token: session.token });
-            dispatch(signOut());
+            lockAndDo(dispatch, () => {
+                // noinspection JSIgnoredPromiseFromCall
+                authorizedBackendApi('session/destroy', session, 'DELETE', { token: session.token });
+                dispatch(signOut());
+            });
         }
     }
 }

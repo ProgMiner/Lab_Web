@@ -13,6 +13,7 @@ import { forAuthorizedConnect } from '../../components/Guard/forAuthorizedConnec
 import { Guard } from '../../components/Guard/Guard';
 
 import './AreaPage.css';
+import { authorizedBackendApi } from '../../utils/backendApi';
 
 const AreaContainer = areaConnect(Area);
 const AreaFormContainer = areaFormConnect(AreaForm);
@@ -21,6 +22,8 @@ const ForAuthorizedGuard = forAuthorizedConnect(Guard);
 export interface AreaPageProps {
 
     session: Session | null;
+
+    onSubmitQuery(x: number, y: number, r: number, session: Session): void;
 }
 
 interface AreaPageState {
@@ -36,8 +39,31 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
         history: []
     };
 
+    componentDidMount(): void {
+        setInterval(async () => {
+            const { session } = this.props;
+
+            if (session == null) {
+                return;
+            }
+
+            const response = await authorizedBackendApi('history/get', session);
+            if (!response.ok) {
+                return;
+            }
+
+            const history = await response.json();
+            this.setState({ ...this.state, history });
+        }, 100);
+    }
+
     private submitQuery(x: number, y: number) {
-        //
+        const { session, onSubmitQuery } = this.props;
+        const { r } = this.state;
+
+        if (session != null) {
+            onSubmitQuery(x, y, r, session);
+        }
     }
 
     renderContent() {
