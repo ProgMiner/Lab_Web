@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
@@ -36,18 +36,23 @@ export class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
             <Panel header="Sign in / Sign up" className="login-form">
                 <form onSubmit={this.onSignIn.bind(this)}>
                     <span className="p-float-label">
-                        <InputText id="username" className="login-form__username" disabled={locked} onChange={htmlInputStateDispatcher(this, 'username', String)} />
+                        <InputText id="username" className="login-form__username" disabled={locked}
+                                   onChange={htmlInputStateDispatcher(this, 'username', String)} />
+
                         <label htmlFor="username">Username</label>
                     </span>
 
                     <span className="p-float-label">
-                        <Password id="password" className="login-form__password" disabled={locked} onChange={htmlInputStateDispatcher(this, 'password', String)} />
+                        <Password id="password" className="login-form__password" disabled={locked}
+                                  onChange={htmlInputStateDispatcher(this, 'password', String)} />
+
                         <label htmlFor="password">Password</label>
                     </span>
 
                     <div className="login-form__buttons">
                         <Button type="submit" disabled={locked} label="Sign in" />
-                        <Button type="button" disabled={locked} label="Sign up" onClick={this.onSignUp.bind(this)} className="p-button-secondary" />
+                        <Button type="button" disabled={locked} label="Sign up"
+                                onClick={this.onSignUp.bind(this)} className="p-button-secondary" />
                     </div>
                 </form>
             </Panel>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Session } from '../../models/session';
 import { headerConnect } from '../../components/Header/connector';
 import { Header } from '../../components/Header/Header';
-import {Layout} from "../../components/Layout/Layout";
+import { Layout } from '../../components/Layout/Layout';
 
 const HeaderContainer = headerConnect(Header);
 

@@ -21,6 +21,8 @@ export interface AreaFormProps {
 
     dispatchR: (value: number) => void;
     dispatchHistory: (history: Query[]) => void;
+
+    submitQuery(x: number, y: number): void;
 }
 
 interface AreaFormState {

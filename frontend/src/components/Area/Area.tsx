@@ -23,6 +23,8 @@ export interface AreaProps {
 
     r: number;
     history: Query[];
+
+    submitQuery(x: number, y: number): void;
 }
 
 interface AreaState {

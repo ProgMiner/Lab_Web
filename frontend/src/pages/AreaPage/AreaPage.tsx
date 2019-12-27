@@ -36,6 +36,10 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
         history: []
     };
 
+    private submitQuery(x: number, y: number) {
+        //
+    }
+
     renderContent() {
         const { r, history } = this.state;
 
@@ -45,12 +49,13 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
             <ForAuthorizedGuard redirectUrl="/">
                 <div className="area-page-main">
                     <div className="area-container">
-                        <AreaContainer r={r} history={history} />
+                        <AreaContainer r={r} history={history} submitQuery={this.submitQuery.bind(this)} />
                     </div>
 
                     <div className="area-form-container">
                         <AreaFormContainer r={r} dispatchR={stateDispatcher(this, 'r')}
-                                           dispatchHistory={stateDispatcher(this, 'history')} />
+                                           dispatchHistory={stateDispatcher(this, 'history')}
+                                           submitQuery={this.submitQuery.bind(this)} />
                     </div>
                 </div>
 
