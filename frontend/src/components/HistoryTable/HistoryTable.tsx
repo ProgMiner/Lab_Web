@@ -19,7 +19,7 @@ const PER_PAGE = 20;
 export class HistoryTable extends React.Component<HistoryTableProps> {
 
     state: HistoryTableState = {
-        first: 0,
+        first: 0
     };
 
     render() {
@@ -31,16 +31,11 @@ export class HistoryTable extends React.Component<HistoryTableProps> {
             y: query.y,
             r: query.r,
             result: query.result ? 'includes' : 'not includes',
-        }));
+        })).reverse();
 
         return (
-            <DataTable
-                value={value}
-                paginator
-                rows={PER_PAGE}
-                first={first}
-                onPage={e => this.setState({ first: e.first })}
-            >
+            <DataTable value={value} paginator rows={PER_PAGE} first={first}
+                       onPage={e => this.setState({ first: e.first })}>
                 <Column field="x" header="X" />
                 <Column field="y" header="Y" />
                 <Column field="r" header="R" />

@@ -7,6 +7,7 @@ import { LoginFormProps } from './LoginForm';
 import { RootState } from '../../reducer';
 import { backendApi } from '../../utils/backendApi';
 import { lockAndDo } from '../../utils/lockAndDo';
+import { growl } from '../../index';
 
 type StateProps = Pick<LoginFormProps, 'locked'>;
 
@@ -27,7 +28,11 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
 
                     dispatch(signIn(json as Session));
                 } else {
-                    alert('Unknown user or invalid password');
+                    growl.current?.show({
+                        severity: 'error',
+                        summary: 'Sign in error',
+                        detail: 'Unknown user or invalid password'
+                    });
                 }
             });
         },
@@ -37,9 +42,17 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
                 const response = await backendApi('user/create', 'POST', { username, password });
 
                 if (response.ok) {
-                    alert('Registered successfully. Please, sign in now');
+                    growl.current?.show({
+                        severity: 'success',
+                        summary: 'Successful',
+                        detail: 'Registered successfully. Please, sign in now'
+                    });
                 } else {
-                    alert('Registration failed');
+                    growl.current?.show({
+                        severity: 'error',
+                        summary: 'Registration error',
+                        detail: 'An unknown error occurred while registration'
+                    });
                 }
             });
         }

@@ -154,6 +154,53 @@ export class Area extends React.Component<AreaProps, AreaState> {
 
         context.lineWidth = 1;
 
+        // History
+        // const bulletHoleGreen = document.getElementById('bulletHoleGreenImage') as HTMLImageElement;
+        // const bulletHoleRed = document.getElementById('bulletHoleRedImage') as HTMLImageElement;
+
+        // const centerX = CANVAS_WIDTH / 2;
+        // const centerY = CANVAS_HEIGHT / 2;
+        // const zoomX = CANVAS_WIDTH * 10 / 24 / r;
+        // const zoomY = CANVAS_HEIGHT * 10 / 24 / r;
+        // history.forEach((point) => {
+        //     if (r != null && point.r !== r) {
+        //         return;
+        //     }
+
+        //     let actualZoomX = zoomX, actualZoomY = zoomY;
+        //     if (r == null) {
+        //         actualZoomX = CANVAS_WIDTH * 10 / 24 / point.r;
+        //         actualZoomY = CANVAS_HEIGHT * 10 / 24 / point.r;
+        //     }
+
+        //     context.drawImage(
+        //         point.result ? bulletHoleGreen : bulletHoleRed,
+        //         centerX + point.x * actualZoomX - 5,
+        //         centerY - point.y * actualZoomY - 5,
+        //         10, 10
+        //     );
+        // });
+
+        // Shadow
+        context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(CANVAS_WIDTH, 0);
+        context.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT);
+        context.lineTo(0, CANVAS_HEIGHT);
+        context.closePath();
+
+        context.moveTo(CANVAS_WIDTH / 2 - CANVAS_STEP_X * 5, CANVAS_HEIGHT / 2 - CANVAS_STEP_Y * 3);
+        context.lineTo(CANVAS_WIDTH / 2 + CANVAS_STEP_X * 3, CANVAS_HEIGHT / 2 - CANVAS_STEP_Y * 3);
+        context.lineTo(CANVAS_WIDTH / 2 + CANVAS_STEP_X * 3, CANVAS_HEIGHT / 2 + CANVAS_STEP_Y * 5);
+        context.lineTo(CANVAS_WIDTH / 2 - CANVAS_STEP_X * 5, CANVAS_HEIGHT / 2 + CANVAS_STEP_Y * 5);
+        context.closePath();
+
+        context.fill('evenodd');
+
+        context.fillStyle = CANVAS_COLOR_BACKGROUND;
+
         // Mouse position
         if (mouse != null && mouse.hover) {
             const mouseXLabelText = `X: ${+mouse.x.toFixed(5)}`;
@@ -183,33 +230,6 @@ export class Area extends React.Component<AreaProps, AreaState> {
             context.fillText(mouseYLabelText, CANVAS_STEP_X * 0.75, whereMeDrawText(context, CANVAS_STEP_Y * 1.25));
             context.fillStyle = CANVAS_COLOR_BACKGROUND;
         }
-
-        // History
-        // const bulletHoleGreen = document.getElementById('bulletHoleGreenImage') as HTMLImageElement;
-        // const bulletHoleRed = document.getElementById('bulletHoleRedImage') as HTMLImageElement;
-
-        // const centerX = CANVAS_WIDTH / 2;
-        // const centerY = CANVAS_HEIGHT / 2;
-        // const zoomX = CANVAS_WIDTH * 10 / 24 / r;
-        // const zoomY = CANVAS_HEIGHT * 10 / 24 / r;
-        // history.forEach((point) => {
-        //     if (r != null && point.r !== r) {
-        //         return;
-        //     }
-
-        //     let actualZoomX = zoomX, actualZoomY = zoomY;
-        //     if (r == null) {
-        //         actualZoomX = CANVAS_WIDTH * 10 / 24 / point.r;
-        //         actualZoomY = CANVAS_HEIGHT * 10 / 24 / point.r;
-        //     }
-
-        //     context.drawImage(
-        //         point.result ? bulletHoleGreen : bulletHoleRed,
-        //         centerX + point.x * actualZoomX - 5,
-        //         centerY - point.y * actualZoomY - 5,
-        //         10, 10
-        //     );
-        // });
     }
 
     componentDidMount(): void {

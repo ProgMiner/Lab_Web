@@ -23,7 +23,7 @@ export interface AreaPageProps {
 
     session: Session | null;
 
-    onSubmitQuery(x: number, y: number, r: number, session: Session): void;
+    onSubmitQuery(x: number, y: number, r: number, session: Session, addPoint: (result: boolean) => void): void;
 }
 
 interface AreaPageState {
@@ -40,7 +40,7 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
     };
 
     componentDidMount(): void {
-        setInterval(async () => {
+        const interval = setInterval(async () => {
             const { session } = this.props;
 
             if (session == null) {
@@ -49,12 +49,16 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
 
             const response = await authorizedBackendApi('history/get', session);
             if (!response.ok) {
+                if (response.status === 401) {
+                    clearInterval(interval);
+                }
+
                 return;
             }
 
             const history = await response.json();
             this.setState({ ...this.state, history });
-        }, 100);
+        }, 1000);
     }
 
     private submitQuery(x: number, y: number) {
@@ -62,7 +66,17 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
         const { r } = this.state;
 
         if (session != null) {
-            onSubmitQuery(x, y, r, session);
+            onSubmitQuery(x, y, r, session, result => {
+                this.setState({
+                    ...this.state,
+
+                    history: [
+                        ...this.state.history,
+
+                        {x, y, r, result}
+                    ]
+                });
+            });
         }
     }
 
