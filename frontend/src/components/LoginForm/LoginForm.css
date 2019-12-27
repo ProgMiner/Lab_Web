@@ -1,0 +1,25 @@
+
+.login-form {
+    width: 400px;
+    min-width: 300px;
+}
+
+.login-form.p-panel .p-panel-content {
+    padding: 25px 15px;
+}
+
+.login-form .p-float-label + .p-float-label {
+    margin-top: 25px;
+}
+
+.login-form.p-panel input {
+    width: 100%;
+}
+
+.login-form__buttons {
+    margin-top: 25px;
+}
+
+.login-form__buttons button + button {
+    margin-left: 15px;
+}

@@ -1,6 +1,12 @@
-import React from 'react';
+import * as React from 'react';
+import { InputText } from 'primereact/inputtext';
+import { Password } from 'primereact/password';
+import { Button } from 'primereact/button';
+import { Panel } from 'primereact/panel';
 
 import { htmlInputStateDispatcher } from '../../utils/htmlInputStateDispatcher';
+
+import './LoginForm.css';
 
 export interface LoginFormProps {
 
@@ -24,22 +30,41 @@ export class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
     };
 
     render() {
-        const { onSignIn, onSignUp, locked } = this.props;
-        const { username, password } = this.state;
+        const { locked } = this.props;
 
         return (
-            <div>
-                <form onSubmit={(event) => { onSignIn(username, password); event.preventDefault()}}>
-                    <label>Username: <input type="text" disabled={locked}
-                                            onInput={htmlInputStateDispatcher(this, 'username', String)} /></label>
-                    <label>Password: <input type="password" disabled={locked}
-                                            onInput={htmlInputStateDispatcher(this, 'password', String)} /></label>
+            <Panel header="Sign in / Sign up" className="login-form">
+                <form onSubmit={this.onSignIn.bind(this)}>
+                    <span className="p-float-label">
+                        <InputText id="username" className="login-form__username" disabled={locked} onChange={htmlInputStateDispatcher(this, 'username', String)} />
+                        <label htmlFor="username">Username</label>
+                    </span>
 
-                    <button type="submit" disabled={locked}>Sign in</button>
-                    <button type="button" disabled={locked} onClick={(event) =>
-                    { onSignUp(username, password); event.preventDefault(); }}>Sign up</button>
+                    <span className="p-float-label">
+                        <Password id="password" className="login-form__password" disabled={locked} onChange={htmlInputStateDispatcher(this, 'password', String)} />
+                        <label htmlFor="password">Password</label>
+                    </span>
+
+                    <div className="login-form__buttons">
+                        <Button type="submit" disabled={locked} label="Sign in" />
+                        <Button type="button" disabled={locked} label="Sign up" onClick={this.onSignUp.bind(this)} className="p-button-secondary" />
+                    </div>
                 </form>
-            </div>
+            </Panel>
         );
+    }
+
+    onSignIn(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        const { username, password } = this.state;
+        this.props.onSignIn(username, password);
+    }
+
+    onSignUp(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        event.preventDefault();
+
+        const { username, password } = this.state;
+        this.props.onSignUp(username, password);
     }
 }

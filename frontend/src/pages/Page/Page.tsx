@@ -1,6 +1,11 @@
 import React from 'react';
 
 import { Session } from '../../models/session';
+import { headerConnect } from '../../components/Header/connector';
+import { Header } from '../../components/Header/Header';
+import {Layout} from "../../components/Layout/Layout";
+
+const HeaderContainer = headerConnect(Header);
 
 export interface PageProps {
 
@@ -13,11 +18,13 @@ export abstract class Page<P = {}, S = {}> extends React.Component<P & PageProps
 
     render() {
         return (
-            <>
-                <header>Lab4_Web</header>
+            <div>
+                <HeaderContainer />
 
-                {this.renderContent()}
-            </>
+                <Layout>
+                    {this.renderContent()}
+                </Layout>
+            </div>
         );
     }
 }

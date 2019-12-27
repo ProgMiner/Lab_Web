@@ -1,10 +1,17 @@
 import React from 'react';
 import { compose } from 'redux';
+import { Slider } from 'primereact/slider';
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { Panel } from 'primereact/panel';
 
 import { Query } from '../../models/query';
 import { htmlInputStateDispatcher } from '../../utils/htmlInputStateDispatcher';
+import { valueStateDispatcher } from '../../utils/valueStateDispatcher';
 
-const SLIDER_STEP = 1e-10;
+import './AreaForm.css';
+
+const SLIDER_ZOOM = 1e10;
 
 export interface AreaFormProps {
 
@@ -12,7 +19,7 @@ export interface AreaFormProps {
 
     r: number;
 
-    dispatchR: (event: React.FormEvent<HTMLInputElement>) => void;
+    dispatchR: (value: number) => void;
     dispatchHistory: (history: Query[]) => void;
 }
 
@@ -88,26 +95,59 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
         return value;
     }
 
+    private static normalizeSlider(value: number) {
+        return value / SLIDER_ZOOM;
+    }
+
+    private onChangeR(event: { value: any }) {
+        const { value } = event as { value: number };
+
+        if (value != null) {
+            this.props.dispatchR(AreaForm.normalizeSlider(value));
+        }
+    }
+
     render() {
-        const { r, dispatchR } = this.props;
+        const { r } = this.props;
         const { x, y } = this.state;
 
         return (
-            <div>
+            <Panel header="Controls" className="area-form">
                 <form onSubmit={this.onCheck.bind(this)}>
-                    <label>X: <input type="range" min={-5 + SLIDER_STEP} max={3 - SLIDER_STEP} step={SLIDER_STEP}
-                                     value={x} onChange={htmlInputStateDispatcher(this, 'x', Number)} /> {x}</label>
+                    <div className="form-group">
+                        <label>X: {x}</label>
+                        <Slider
+                            min={-5 * SLIDER_ZOOM + 1}
+                            max={3 * SLIDER_ZOOM - 1}
+                            step={1}
+                            value={x * SLIDER_ZOOM}
+                            onChange={valueStateDispatcher(this, 'x', compose(AreaForm.normalizeSlider, Number))}
+                        />
+                    </div>
 
-                    <label>Y: <input type="text" onChange={htmlInputStateDispatcher(this, 'y',
-                        compose(AreaForm.validateY, AreaForm.verifyY))} data-invalid={y == null}
-                                     placeholder="(-5, 3)" /></label>
+                    <div className="form-group max-width">
+                        <label>Y:&nbsp;</label>
+                        <InputText
+                            data-invalid={y == null}
+                            onChange={htmlInputStateDispatcher(this, 'y', compose(AreaForm.validateY, AreaForm.verifyY))}
+                            placeholder="(-5, 3)"
+                        />
+                    </div>
 
-                    <label>R: <input type="range" min={-5 + SLIDER_STEP} max={3 - SLIDER_STEP} step={SLIDER_STEP}
-                                     value={r} onChange={dispatchR} /> {r}</label>
+                    <div className="form-group">
+                        <label>R: {r}</label>
+                        <Slider
+                            min={-5 * SLIDER_ZOOM + 1}
+                            max={3 * SLIDER_ZOOM - 1}
+                            step={1}
+                            value={r * SLIDER_ZOOM}
+                            onChange={this.onChangeR.bind(this)}
+                        />
+                    </div>
 
-                    <button type="submit">Check</button>
+                    <Button type="submit" label="Check" />
                 </form>
-            </div>
+            </Panel>
         );
     }
 }

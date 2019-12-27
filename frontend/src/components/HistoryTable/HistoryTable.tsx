@@ -1,56 +1,51 @@
 import React from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 import { Query } from '../../models/query';
 
-interface HistoryTableProps {
+export interface HistoryTableProps {
 
-    pageSize?: number;
-
-    r: number;
     history: Query[];
 }
 
 interface HistoryTableState {
-    pageNumber: number;
+
+    first: number;
 }
 
-export class HistoryTable extends React.Component<HistoryTableProps, HistoryTableState> {
+const PER_PAGE = 10;
 
-    static defaultProps = {
-        pageSize: 20
-    };
+export class HistoryTable extends React.Component<HistoryTableProps> {
 
     state: HistoryTableState = {
-        pageNumber: 0
+        first: 0,
     };
 
     render() {
-        const { pageSize, r, history } = this.props;
-        const { pageNumber } = this.state;
+        const { history } = this.props;
+        const { first } = this.state;
 
-        const offset = pageSize! * pageNumber;
-        const content = history.slice(offset, offset + pageSize!).map(query => (
-            <tr data-r={query.r}>
-                <td>{query.x}</td>
-                <td>{query.y}</td>
-                <td>{query.r}</td>
-                <td>{query.result ? '' : 'not '}includes</td>
-            </tr>
-        ));
+        const value = history.map(query => ({
+            x: query.x,
+            y: query.y,
+            r: query.r,
+            result: query.result ? 'includes' : 'not includes',
+        }));
 
         return (
-            <table data-r={r}>
-                <thead>
-                    <tr>
-                        <th>X</th>
-                        <th>Y</th>
-                        <th>R</th>
-                        <th>Result</th>
-                    </tr>
-                </thead>
-
-                <tbody>{content}</tbody>
-            </table>
+            <DataTable
+                value={value}
+                paginator
+                rows={PER_PAGE}
+                first={first}
+                onPage={e => this.setState({ first: e.first })}
+            >
+                <Column field="x" header="X" />
+                <Column field="y" header="Y" />
+                <Column field="r" header="R" />
+                <Column field="result" header="Result" />
+            </DataTable>
         );
     }
 }

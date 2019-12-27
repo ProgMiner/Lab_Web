@@ -6,10 +6,12 @@ import { applyMiddleware, createStore } from 'redux';
 import { App } from './components/App/App';
 import { rootReducer } from './reducer';
 import { appConnect } from './components/App/connector';
+import { sessionSaver } from './middlewares/sessionSaver';
 import * as serviceWorker from './serviceWorker';
 
-import './index.css';
-import { sessionSaver } from './middlewares/sessionSaver';
+import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 
 const AppContainer = appConnect(App);
 

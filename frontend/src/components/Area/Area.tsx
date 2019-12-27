@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Query } from '../../models/query';
 
+import './Area.css';
+
 export interface AreaProps {
 
     locked: boolean;
@@ -25,6 +27,14 @@ export class Area extends React.Component<AreaProps, {}> {
     }
 
     render() {
-        return (<canvas width={this.props.width} height={this.props.height} />);
+        const { width, height } = this.props;
+
+        return (
+            <canvas
+                className="area"
+                width={width}
+                height={height}
+            />
+        );
     }
 }
