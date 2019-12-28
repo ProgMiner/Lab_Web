@@ -8,6 +8,7 @@ import { RootState } from '../../reducer';
 import { backendApi } from '../../utils/backendApi';
 import { lockAndDo } from '../../utils/lockAndDo';
 import { growl } from '../../index';
+import { backendApiUserNotifyWrapper } from '../../utils/backendApiUserNotifyWrapper';
 
 type StateProps = Pick<LoginFormProps, 'locked'>;
 
@@ -39,7 +40,10 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
 
         onSignUp(username: string, password: string): void {
             lockAndDo(dispatch, async () => {
-                const response = await backendApi('user/create', 'POST', { username, password });
+                const response = await backendApiUserNotifyWrapper(
+                    backendApi('user/create', 'POST', { username, password }),
+                    [401]
+                );
 
                 if (response.ok) {
                     growl.current?.show({

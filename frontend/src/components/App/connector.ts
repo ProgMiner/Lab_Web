@@ -7,6 +7,7 @@ import { authorizedBackendApi } from '../../utils/backendApi';
 import { signOut } from '../../store/application/actions';
 import { Session } from '../../models/session';
 import { RootState } from '../../reducer';
+import { backendApiUserNotifyWrapper } from '../../utils/backendApiUserNotifyWrapper';
 
 type StateProps = Pick<AppProps, 'session'>;
 
@@ -20,7 +21,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     return {
         checkSession(session: Session): void {
             lockAndDo(dispatch, async () => {
-                const response = await authorizedBackendApi('session/check', session);
+                const response = await backendApiUserNotifyWrapper(authorizedBackendApi('session/check', session));
 
                 if (!response.ok) {
                     dispatch(signOut());

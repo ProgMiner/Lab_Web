@@ -14,6 +14,7 @@ import { Guard } from '../../components/Guard/Guard';
 
 import './AreaPage.css';
 import { authorizedBackendApi } from '../../utils/backendApi';
+import { backendApiUserNotifyWrapper } from '../../utils/backendApiUserNotifyWrapper';
 
 const AreaContainer = areaConnect(Area);
 const AreaFormContainer = areaFormConnect(AreaForm);
@@ -24,6 +25,7 @@ export interface AreaPageProps {
     session: Session | null;
 
     onSubmitQuery(x: number, y: number, r: number, session: Session, addPoint: (result: boolean) => void): void;
+    signOut(): void;
 }
 
 interface AreaPageState {
@@ -40,7 +42,7 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
     };
 
     componentDidMount(): void {
-        const interval = setInterval(async () => {
+        setInterval(async () => {
             const { session } = this.props;
 
             if (session == null) {
@@ -50,7 +52,8 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
             const response = await authorizedBackendApi('history/get', session);
             if (!response.ok) {
                 if (response.status === 401) {
-                    clearInterval(interval);
+                    backendApiUserNotifyWrapper(Promise.resolve(response));
+                    this.props.signOut();
                 }
 
                 return;
