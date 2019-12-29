@@ -3,6 +3,9 @@ import React from 'react';
 import { Query } from '../../models/query';
 
 import './Area.css';
+import { backendApiUserNotifyWrapper } from '../../utils/backendApiUserNotifyWrapper';
+import { authorizedBackendApi } from '../../utils/backendApi';
+import { Session } from '../../models/session';
 
 const CANVAS_WIDTH = 400;
 const CANVAS_HEIGHT = 400;
@@ -25,13 +28,24 @@ export interface AreaProps {
     width?: number | string;
     height?: number | string;
 
+    formPoint: {
+        x: string;
+        y: string | null;
+    };
+
     r: string;
     history: Query[];
+    session: Session | null;
 
     submitQuery(x: string, y: string): void;
 }
 
 interface AreaState {
+
+    previousR: AreaProps['r'] | null;
+    previousFormPoint: AreaProps['formPoint'] | null;
+    previousFormPointRequest: number;
+    formPointResult: boolean | null;
 
     mouse: null | {
         x: number;
@@ -48,6 +62,10 @@ export class Area extends React.Component<AreaProps, AreaState> {
     };
 
     state: AreaState = {
+        previousR: null,
+        previousFormPoint: null,
+        previousFormPointRequest: 0,
+        formPointResult: null,
         mouse: null
     };
 
@@ -63,8 +81,8 @@ export class Area extends React.Component<AreaProps, AreaState> {
     }
 
     public repaint() {
-        const { r, history } = this.props;
-        const { mouse } = this.state;
+        const { r, history, formPoint } = this.props;
+        const { mouse, formPointResult } = this.state;
 
         const canvas = this.canvas.current;
         if (!canvas) {
@@ -79,6 +97,7 @@ export class Area extends React.Component<AreaProps, AreaState> {
         };
 
         // Init canvas
+        context.globalAlpha = 1;
         context.resetTransform();
         context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -179,6 +198,65 @@ export class Area extends React.Component<AreaProps, AreaState> {
 
         context.fillStyle = CANVAS_COLOR_BACKGROUND;
 
+        // History
+        context.lineWidth = 0.5;
+
+        const centerX = CANVAS_WIDTH / 2;
+        const centerY = CANVAS_HEIGHT / 2;
+        history.forEach((point) => {
+            context.globalAlpha = 1 - Math.min(point.r !== r ? Math.abs(+r - +point.r) / 3 : 0, 0.9);
+            context.fillStyle = point.r !== r
+                ? CANVAS_COLOR_POINT_OTHER
+                : point.result
+                    ? CANVAS_COLOR_POINT_INCLUDES
+                    : CANVAS_COLOR_POINT_NOT_INCLUDES
+            ;
+
+            context.beginPath();
+            context.arc(
+                centerX + +point.x * CANVAS_STEP_X,
+                centerY - +point.y * CANVAS_STEP_Y,
+                3, 0, Math.PI * 2
+            );
+            context.fill();
+            context.stroke();
+        });
+
+        context.globalAlpha = 1;
+        context.fillStyle = CANVAS_COLOR_BACKGROUND;
+
+        // Form point position
+
+        context.beginPath();
+        context.moveTo(CANVAS_WIDTH / 2 + +formPoint.x * CANVAS_STEP_X, CANVAS_HEIGHT);
+        context.lineTo(CANVAS_WIDTH / 2 + +formPoint.x * CANVAS_STEP_X, 0);
+        context.stroke();
+
+        if (formPoint.y != null) {
+            context.beginPath();
+            context.moveTo(0, CANVAS_HEIGHT / 2 - +formPoint.y * CANVAS_STEP_Y);
+            context.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT / 2 - +formPoint.y * CANVAS_STEP_Y);
+            context.stroke();
+
+            context.fillStyle = formPointResult == null
+                ? CANVAS_COLOR_POINT_OTHER
+                : formPointResult
+                    ? CANVAS_COLOR_POINT_INCLUDES
+                    : CANVAS_COLOR_POINT_NOT_INCLUDES
+            ;
+
+            context.beginPath();
+            context.arc(
+                CANVAS_WIDTH / 2 + +formPoint.x * CANVAS_STEP_X,
+                CANVAS_HEIGHT / 2 - +formPoint.y * CANVAS_STEP_Y,
+                3, 0, Math.PI * 2
+            );
+            context.fill();
+            context.stroke();
+        }
+
+        context.fillStyle = CANVAS_COLOR_BACKGROUND;
+
         // Mouse position
         if (mouse != null && mouse.hover) {
             const mouseXLabelText = `X: ${+mouse.x.toFixed(5)}`;
@@ -208,29 +286,6 @@ export class Area extends React.Component<AreaProps, AreaState> {
             context.fillText(mouseYLabelText, CANVAS_STEP_X * 0.75, whereMeDrawText(context, CANVAS_STEP_Y * 1.25));
             context.fillStyle = CANVAS_COLOR_BACKGROUND;
         }
-
-        // History
-        context.lineWidth = 0.5;
-
-        const centerX = CANVAS_WIDTH / 2;
-        const centerY = CANVAS_HEIGHT / 2;
-        history.forEach((point) => {
-            context.fillStyle = point.r !== r
-                ? CANVAS_COLOR_PRIMARY
-                : point.result
-                    ? CANVAS_COLOR_POINT_INCLUDES
-                    : CANVAS_COLOR_POINT_NOT_INCLUDES
-            ;
-
-            context.beginPath();
-            context.arc(
-                centerX + +point.x * CANVAS_STEP_X,
-                centerY - +point.y * CANVAS_STEP_Y,
-                3, 0, Math.PI * 2
-            );
-            context.fill();
-            context.stroke();
-        });
     }
 
     componentDidMount(): void {
@@ -238,7 +293,37 @@ export class Area extends React.Component<AreaProps, AreaState> {
     }
 
     componentDidUpdate(prevProps: Readonly<AreaProps>, prevState: Readonly<{}>, snapshot?: any): void {
+        const { r, formPoint } = this.props;
+        const { previousR, previousFormPoint, previousFormPointRequest } = this.state;
+
+        if (Date.now() - previousFormPointRequest > 100 && (previousR !== r || previousFormPoint !== formPoint)) {
+            this.checkFormPoint();
+        }
+
         this.repaint();
+    }
+
+    private async checkFormPoint() {
+        const { formPoint, r, session } = this.props;
+
+        this.setState({
+            ...this.state,
+
+            previousR: r,
+            previousFormPoint: formPoint,
+            previousFormPointRequest: Date.now(),
+            formPointResult: null
+        });
+
+        if (formPoint.y != null && formPoint.y.trim().length > 0 && session != null) {
+            const response = await backendApiUserNotifyWrapper(
+                authorizedBackendApi(`area/check/r/${r}/x/${formPoint.x}/y/${formPoint.y}`, session)
+            );
+
+            if (response.ok && this.state.previousFormPoint === formPoint) {
+                this.setState({ ...this.state, formPointResult: await response.json() });
+            }
+        }
     }
 
     private onClick() {

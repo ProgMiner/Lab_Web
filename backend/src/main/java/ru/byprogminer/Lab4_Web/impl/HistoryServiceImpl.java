@@ -3,12 +3,14 @@ package ru.byprogminer.Lab4_Web.impl;
 import ru.byprogminer.Lab4_Web.history.HistoryService;
 import ru.byprogminer.Lab4_Web.history.QueryEntity;
 
+import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Stateless
+// @Stateless
+@Singleton
 public class HistoryServiceImpl implements HistoryService {
 
     // TODO replace by repository

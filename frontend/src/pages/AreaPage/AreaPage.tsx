@@ -30,6 +30,11 @@ export interface AreaPageProps {
 
 interface AreaPageState {
 
+    formPoint: {
+        x: string;
+        y: string | null;
+    }
+
     r: string;
     history: Query[];
 }
@@ -37,6 +42,11 @@ interface AreaPageState {
 export class AreaPage extends Page<AreaPageProps, AreaPageState> {
 
     state: AreaPageState = {
+        formPoint: {
+            x: '0',
+            y: null
+        },
+
         r: '0',
         history: []
     };
@@ -53,7 +63,6 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
             if (!response.ok) {
                 if (response.status === 401) {
                     backendApiUserNotifyWrapper(Promise.resolve(response));
-                    this.props.signOut();
                 }
 
                 return;
@@ -93,8 +102,22 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
         }
     }
 
+    private dispatchFormPoint<T extends string | null>(field: string, value: T) {
+        const { formPoint } = this.state;
+
+        this.setState({
+            ...this.state,
+
+            formPoint: {
+                ...formPoint,
+
+                [field]: value
+            }
+        })
+    }
+
     renderContent() {
-        const { r, history } = this.state;
+        const { formPoint, r, history } = this.state;
 
         const historyTable = (<HistoryTable history={this.state.history} />);
 
@@ -102,11 +125,15 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
             <ForAuthorizedGuard redirectUrl="/">
                 <div className="area-page-main">
                     <div className="area-container">
-                        <AreaContainer r={r} history={history} submitQuery={this.submitQuery.bind(this)} />
+                        <AreaContainer formPoint={formPoint} r={r} history={history}
+                                       submitQuery={this.submitQuery.bind(this)} />
                     </div>
 
                     <div className="area-form-container">
-                        <AreaFormContainer r={r} dispatchR={stateDispatcher(this, 'r')}
+                        <AreaFormContainer x={formPoint.x} y={formPoint.y} r={r}
+                                           dispatchX={(x: string) => this.dispatchFormPoint('x', x)}
+                                           dispatchY={(y: string | null) => this.dispatchFormPoint('y', y)}
+                                           dispatchR={stateDispatcher(this, 'r')}
                                            dispatchHistory={stateDispatcher(this, 'history')}
                                            submitQuery={this.submitQuery.bind(this)} />
                     </div>

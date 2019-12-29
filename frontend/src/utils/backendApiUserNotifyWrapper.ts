@@ -18,7 +18,7 @@ export async function backendApiUserNotifyWrapper(responsePromise: Promise<Respo
                     growl.current?.show({
                         severity: 'error',
                         summary: 'Session error',
-                        detail: 'Your session is not longer valid. Please, sign out and sign up again.'
+                        detail: 'Your session is not longer valid. Please, sign out or reload page and sign up again.'
                     });
                     break;
             }

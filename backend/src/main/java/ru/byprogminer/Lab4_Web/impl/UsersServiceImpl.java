@@ -3,6 +3,7 @@ package ru.byprogminer.Lab4_Web.impl;
 import ru.byprogminer.Lab4_Web.users.UserEntity;
 import ru.byprogminer.Lab4_Web.users.UsersService;
 
+import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,7 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Stateless
+// @Stateless
+@Singleton
 public class UsersServiceImpl implements UsersService {
 
     private static final String PASSWORD_HASH_ALGORITHM = "SHA-1";

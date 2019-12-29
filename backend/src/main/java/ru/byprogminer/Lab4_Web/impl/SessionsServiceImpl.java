@@ -3,11 +3,13 @@ package ru.byprogminer.Lab4_Web.impl;
 import ru.byprogminer.Lab4_Web.sessions.SessionsService;
 import ru.byprogminer.Lab4_Web.users.UserEntity;
 
+import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-@Stateless
+// @Stateless
+@Singleton
 public class SessionsServiceImpl implements SessionsService {
 
     // TODO replace by repository

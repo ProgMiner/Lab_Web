@@ -6,8 +6,6 @@ import { Button } from 'primereact/button';
 import { Panel } from 'primereact/panel';
 
 import { Query } from '../../models/query';
-import { htmlInputStateDispatcher } from '../../utils/htmlInputStateDispatcher';
-import { valueStateDispatcher } from '../../utils/valueStateDispatcher';
 
 import './AreaForm.css';
 
@@ -17,29 +15,22 @@ export interface AreaFormProps {
 
     locked: boolean;
 
+    x: string;
+    y: string | null;
     r: string;
 
+    dispatchX: (value: string) => void;
+    dispatchY: (value: string | null) => void;
     dispatchR: (value: string) => void;
     dispatchHistory: (history: Query[]) => void;
 
     submitQuery(x: string, y: string): void;
 }
 
-interface AreaFormState {
-    x: string;
-    y: string | null;
-}
-
-export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
-
-    state: AreaFormState = {
-        x: '0',
-        y: null
-    };
+export class AreaForm extends React.Component<AreaFormProps> {
 
     private onCheck(event: React.FormEvent) {
-        const { submitQuery } = this.props;
-        const { x, y } = this.state;
+        const { x, y, submitQuery } = this.props;
 
         if (y != null) {
             submitQuery(x, y);
@@ -66,6 +57,10 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
 
     private static verifyY(value: string): string | null {
         value = value.trim();
+
+        if (value.length === 0) {
+            return null;
+        }
 
         for (const key in AreaForm.replacements) {
             value = value.replace(new RegExp(key, 'g'), '' + AreaForm.replacements[key]);
@@ -108,17 +103,31 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
         return '' + (+value / SLIDER_ZOOM);
     }
 
-    private onChangeR(event: { value: any }) {
-        const { value } = event as { value: string };
+    private static onChange<T>(dispatch: (value: T) => void, filter: (value: string) => T): (event: { value: any }) => void {
+        return function (event: { value: any }) {
+            const { value } = event as { value: string };
 
-        if (value != null) {
-            this.props.dispatchR(AreaForm.normalizeSlider(value));
-        }
+            if (value != null) {
+                dispatch(filter(value));
+            }
+        };
+    }
+
+    private static onChangeFormInput<T>(dispatch: (value: T) => void, filter: (value: string) => T):
+        (event: React.FormEvent<HTMLInputElement>) => void {
+        return function (event: React.FormEvent<HTMLInputElement>) {
+            const { target } = event;
+
+            if (target instanceof HTMLInputElement && target.value) {
+                const { value } = target;
+
+                setTimeout(() => dispatch(filter(value)), 1);
+            }
+        };
     }
 
     render() {
-        const { locked, r } = this.props;
-        const { x, y } = this.state;
+        const { locked, x, y, r, dispatchX, dispatchY, dispatchR } = this.props;
 
         return (
             <Panel header="New query" className="area-form">
@@ -126,21 +135,20 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
                     <div className="form-group">
                         <label>X: {x}</label>
                         <Slider min={-5 * SLIDER_ZOOM + 1} max={3 * SLIDER_ZOOM - 1} step={1} value={+x * SLIDER_ZOOM}
-                                disabled={locked} onChange={valueStateDispatcher(this, 'x',
-                            compose(AreaForm.normalizeSlider, Number))} />
+                                disabled={locked} onChange={AreaForm.onChange(dispatchX, AreaForm.normalizeSlider)} />
                     </div>
 
                     <div className="form-group max-width">
                         <label>Y:&nbsp;</label>
-                        <InputText data-invalid={y == null} placeholder="(-5, 3)" disabled={locked}
-                                   onChange={htmlInputStateDispatcher(this, 'y',
-                                       compose(AreaForm.validateY, AreaForm.verifyY))} />
+                        <InputText data-invalid={y == null} placeholder="(-5, 3)" disabled={locked} onInput={AreaForm
+                            .onChangeFormInput(dispatchY, compose(AreaForm.validateY, AreaForm.verifyY))} />
                     </div>
 
                     <div className="form-group">
                         <label>R: {r}</label>
-                        <Slider min={-5 * SLIDER_ZOOM + 1} max={3 * SLIDER_ZOOM - 1} step={1} disabled={locked}
-                                value={+r * SLIDER_ZOOM} onChange={this.onChangeR.bind(this)} />
+                        <Slider min={-5 * SLIDER_ZOOM + 1} max={3 * SLIDER_ZOOM - 1}
+                                step={1} disabled={locked} value={+r * SLIDER_ZOOM}
+                                onChange={AreaForm.onChange(dispatchR, AreaForm.normalizeSlider)} />
                     </div>
 
                     <Button type="submit" disabled={y == null} label="Check" />
