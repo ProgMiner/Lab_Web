@@ -1,7 +1,7 @@
 export interface Query {
 
-    x: number;
-    y: number;
-    r: number;
+    x: string;
+    y: string;
+    r: string;
     result: boolean;
 }

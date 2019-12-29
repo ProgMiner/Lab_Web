@@ -17,23 +17,23 @@ export interface AreaFormProps {
 
     locked: boolean;
 
-    r: number;
+    r: string;
 
-    dispatchR: (value: number) => void;
+    dispatchR: (value: string) => void;
     dispatchHistory: (history: Query[]) => void;
 
-    submitQuery(x: number, y: number): void;
+    submitQuery(x: string, y: string): void;
 }
 
 interface AreaFormState {
-    x: number;
-    y: number | null;
+    x: string;
+    y: string | null;
 }
 
 export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
 
     state: AreaFormState = {
-        x: 0,
+        x: '0',
         y: null
     };
 
@@ -64,7 +64,7 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
         'and': '.'
     };
 
-    private static verifyY(value: string): number | null {
+    private static verifyY(value: string): string | null {
         value = value.trim();
 
         for (const key in AreaForm.replacements) {
@@ -73,41 +73,43 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
 
         value = value.split(' ').join('');
 
-        const dotPosition = value.indexOf('.');
-        if ((dotPosition >= 0 ? dotPosition : value.length) > 10) {
-            return null;
-        }
-
-        if (dotPosition >= 0) {
-            value = value.substring(0, Math.min(dotPosition + 11, value.length));
-        }
-
         const numeric = +value;
         if (isNaN(numeric)) {
-            return null;
-        }
-
-        return numeric;
-    }
-
-    private static validateY(value: number | null): number | null {
-        if (value == null) {
-            return null;
-        }
-
-        if (value <= -5 || value >= 3) {
             return null;
         }
 
         return value;
     }
 
-    private static normalizeSlider(value: number) {
-        return value / SLIDER_ZOOM;
+    private static validateY(value: string | null): string | null {
+        if (value == null) {
+            return null;
+        }
+
+        const dotPosition = value.indexOf('.');
+        if ((dotPosition >= 0 ? dotPosition : value.length) > 10) {
+            return null;
+        }
+
+        let preparedValue = value;
+        if (dotPosition >= 0) {
+            preparedValue = value.substring(0, Math.min(dotPosition + 11, value.length));
+        }
+
+        const numeric = +preparedValue;
+        if (isNaN(numeric) || numeric <= -5 || numeric >= 3) {
+            return null;
+        }
+
+        return value;
+    }
+
+    private static normalizeSlider(value: string): string {
+        return '' + (+value / SLIDER_ZOOM);
     }
 
     private onChangeR(event: { value: any }) {
-        const { value } = event as { value: number };
+        const { value } = event as { value: string };
 
         if (value != null) {
             this.props.dispatchR(AreaForm.normalizeSlider(value));
@@ -119,11 +121,11 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
         const { x, y } = this.state;
 
         return (
-            <Panel header="Controls" className="area-form">
+            <Panel header="New query" className="area-form">
                 <form onSubmit={this.onCheck.bind(this)}>
                     <div className="form-group">
                         <label>X: {x}</label>
-                        <Slider min={-5 * SLIDER_ZOOM + 1} max={3 * SLIDER_ZOOM - 1} step={1} value={x * SLIDER_ZOOM}
+                        <Slider min={-5 * SLIDER_ZOOM + 1} max={3 * SLIDER_ZOOM - 1} step={1} value={+x * SLIDER_ZOOM}
                                 disabled={locked} onChange={valueStateDispatcher(this, 'x',
                             compose(AreaForm.normalizeSlider, Number))} />
                     </div>
@@ -138,7 +140,7 @@ export class AreaForm extends React.Component<AreaFormProps, AreaFormState> {
                     <div className="form-group">
                         <label>R: {r}</label>
                         <Slider min={-5 * SLIDER_ZOOM + 1} max={3 * SLIDER_ZOOM - 1} step={1} disabled={locked}
-                                value={r * SLIDER_ZOOM} onChange={this.onChangeR.bind(this)} />
+                                value={+r * SLIDER_ZOOM} onChange={this.onChangeR.bind(this)} />
                     </div>
 
                     <Button type="submit" disabled={y == null} label="Check" />

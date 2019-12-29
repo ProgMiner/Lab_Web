@@ -55,6 +55,11 @@ public class HistoryController {
     }
 
     private QueryDto entityToDto(QueryEntity entity) {
-        return new QueryDto(entity.getX(), entity.getY(), entity.getR(), entity.getResult());
+        return new QueryDto(
+                entity.getX().toPlainString(),
+                entity.getY().toPlainString(),
+                entity.getR().toPlainString(),
+                entity.getResult()
+        );
     }
 }

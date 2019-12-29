@@ -24,20 +24,20 @@ export interface AreaPageProps {
 
     session: Session | null;
 
-    onSubmitQuery(x: number, y: number, r: number, session: Session, addPoint: (result: boolean) => void): void;
+    onSubmitQuery(x: string, y: string, r: string, session: Session, addPoint: (result: boolean) => void): void;
     signOut(): void;
 }
 
 interface AreaPageState {
 
-    r: number;
+    r: string;
     history: Query[];
 }
 
 export class AreaPage extends Page<AreaPageProps, AreaPageState> {
 
     state: AreaPageState = {
-        r: 0,
+        r: '0',
         history: []
     };
 
@@ -64,7 +64,7 @@ export class AreaPage extends Page<AreaPageProps, AreaPageState> {
         }, 1000);
     }
 
-    private submitQuery(x: number, y: number) {
+    private submitQuery(x: string, y: string) {
         const { session, onSubmitQuery } = this.props;
         const { r } = this.state;
 

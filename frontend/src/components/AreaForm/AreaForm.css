@@ -16,6 +16,6 @@
     flex: 1;
 }
 
-input[data-invalid] {
+input.p-inputtext[data-invalid=true] {
     background-color: #f3626f;
 }

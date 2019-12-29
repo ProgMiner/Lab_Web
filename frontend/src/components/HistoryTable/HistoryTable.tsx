@@ -4,6 +4,8 @@ import { Column } from 'primereact/column';
 
 import { Query } from '../../models/query';
 
+import './HistoryTable.css';
+
 export interface HistoryTableProps {
 
     history: Query[];
@@ -26,20 +28,17 @@ export class HistoryTable extends React.Component<HistoryTableProps> {
         const { history } = this.props;
         const { first } = this.state;
 
-        const value = history.map(query => ({
-            x: query.x,
-            y: query.y,
-            r: query.r,
-            result: query.result ? 'includes' : 'not includes',
-        })).reverse();
+        const value = history
+            .map(query => ({ ...query, result: query.result ? 'includes' : 'not includes' }))
+            .reverse();
 
         return (
             <DataTable value={value} paginator rows={PER_PAGE} first={first}
                        onPage={e => this.setState({ first: e.first })}>
-                <Column field="x" header="X" />
-                <Column field="y" header="Y" />
-                <Column field="r" header="R" />
-                <Column field="result" header="Result" />
+                <Column field="x" header="X" bodyStyle={{ whiteSpace: 'nowrap' }} />
+                <Column field="y" header="Y" bodyStyle={{ wordBreak: 'break-all' }} />
+                <Column field="r" header="R" bodyStyle={{ whiteSpace: 'nowrap' }} />
+                <Column field="result" header="Result" bodyStyle={{ whiteSpace: 'nowrap' }} />
             </DataTable>
         );
     }

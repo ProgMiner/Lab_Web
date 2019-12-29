@@ -9,10 +9,14 @@ const CANVAS_HEIGHT = 400;
 const CANVAS_STEP_X = CANVAS_WIDTH / 2 / 7;
 const CANVAS_STEP_Y = CANVAS_HEIGHT / 2 / 7;
 
-const CANVAS_COLOR_PRIMARY = "#090909";
-const CANVAS_COLOR_SECONDARY = "#C0C0C0";
-const CANVAS_COLOR_BACKGROUND = "#F9F9F9";
-const CANVAS_COLOR_AREA = "#007AD9";
+const CANVAS_COLOR_PRIMARY = '#090909';
+const CANVAS_COLOR_SECONDARY = '#C0C0C0';
+const CANVAS_COLOR_BACKGROUND = '#F9F9F9';
+const CANVAS_COLOR_SHADOW = 'rgba(0, 0, 0, 0.5)';
+const CANVAS_COLOR_AREA = '#007AD9';
+const CANVAS_COLOR_POINT_OTHER = '#333333';
+const CANVAS_COLOR_POINT_INCLUDES = '#00ff00';
+const CANVAS_COLOR_POINT_NOT_INCLUDES = '#ff0000';
 
 export interface AreaProps {
 
@@ -21,10 +25,10 @@ export interface AreaProps {
     width?: number | string;
     height?: number | string;
 
-    r: number;
+    r: string;
     history: Query[];
 
-    submitQuery(x: number, y: number): void;
+    submitQuery(x: string, y: string): void;
 }
 
 interface AreaState {
@@ -103,15 +107,16 @@ export class Area extends React.Component<AreaProps, AreaState> {
         context.clip();
 
         // Area
-        const halfR = r / 2;
+        const R = +r;
+        const halfR = +r / 2;
 
         context.fillStyle = CANVAS_COLOR_AREA;
 
         context.beginPath();
         context.moveTo(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
-        context.lineTo(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - CANVAS_STEP_Y * r);
-        context.lineTo(CANVAS_WIDTH / 2 + CANVAS_STEP_X * r, CANVAS_HEIGHT / 2 - CANVAS_STEP_Y * r);
-        context.lineTo(CANVAS_WIDTH / 2 + CANVAS_STEP_X * r, CANVAS_HEIGHT / 2);
+        context.lineTo(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - CANVAS_STEP_Y * R);
+        context.lineTo(CANVAS_WIDTH / 2 + CANVAS_STEP_X * R, CANVAS_HEIGHT / 2 - CANVAS_STEP_Y * R);
+        context.lineTo(CANVAS_WIDTH / 2 + CANVAS_STEP_X * R, CANVAS_HEIGHT / 2);
         context.lineTo(CANVAS_WIDTH / 2 + CANVAS_STEP_X * halfR, CANVAS_HEIGHT / 2);
         context.arcTo(CANVAS_WIDTH / 2 + CANVAS_STEP_X * halfR, CANVAS_HEIGHT / 2 + CANVAS_STEP_Y * halfR,
             CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + CANVAS_STEP_Y * halfR,
@@ -154,30 +159,8 @@ export class Area extends React.Component<AreaProps, AreaState> {
 
         context.lineWidth = 1;
 
-        // History
-
-        const centerX = CANVAS_WIDTH / 2;
-        const centerY = CANVAS_HEIGHT / 2;
-        history.forEach((point) => {
-            context.fillStyle = point.r !== r
-                ? CANVAS_COLOR_PRIMARY
-                : point.result
-                    ? '#00ff00'
-                    : '#ff0000'
-            ;
-
-            context.beginPath();
-            context.arc(
-                centerX + point.x * CANVAS_STEP_X,
-                centerY - point.y * CANVAS_STEP_Y,
-                3, 0, Math.PI * 2
-            );
-            context.fill();
-            context.stroke();
-        });
-
         // Shadow
-        context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        context.fillStyle = CANVAS_COLOR_SHADOW;
 
         context.beginPath();
         context.moveTo(0, 0);
@@ -225,6 +208,29 @@ export class Area extends React.Component<AreaProps, AreaState> {
             context.fillText(mouseYLabelText, CANVAS_STEP_X * 0.75, whereMeDrawText(context, CANVAS_STEP_Y * 1.25));
             context.fillStyle = CANVAS_COLOR_BACKGROUND;
         }
+
+        // History
+        context.lineWidth = 0.5;
+
+        const centerX = CANVAS_WIDTH / 2;
+        const centerY = CANVAS_HEIGHT / 2;
+        history.forEach((point) => {
+            context.fillStyle = point.r !== r
+                ? CANVAS_COLOR_PRIMARY
+                : point.result
+                    ? CANVAS_COLOR_POINT_INCLUDES
+                    : CANVAS_COLOR_POINT_NOT_INCLUDES
+            ;
+
+            context.beginPath();
+            context.arc(
+                centerX + +point.x * CANVAS_STEP_X,
+                centerY - +point.y * CANVAS_STEP_Y,
+                3, 0, Math.PI * 2
+            );
+            context.fill();
+            context.stroke();
+        });
     }
 
     componentDidMount(): void {
@@ -240,7 +246,7 @@ export class Area extends React.Component<AreaProps, AreaState> {
         const { mouse } = this.state;
 
         if (!locked && mouse) {
-            submitQuery(mouse.x, mouse.y);
+            submitQuery(`${mouse.x}`, `${mouse.y}`);
         }
     }
 

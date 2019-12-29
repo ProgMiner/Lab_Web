@@ -19,7 +19,7 @@ type DispatchProps = Pick<AreaPageProps, 'onSubmitQuery' | 'signOut'>;
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     return {
-        onSubmitQuery(x: number, y: number, r: number, session: Session, addPoint: (result: boolean) => void): void {
+        onSubmitQuery(x: string, y: string, r: string, session: Session, addPoint: (result: boolean) => void): void {
             lockAndDo(dispatch, async () => {
                 const response = await backendApiUserNotifyWrapper(
                     authorizedBackendApi('area/check', session, 'POST', { x, y, r })
