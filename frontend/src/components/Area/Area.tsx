@@ -297,6 +297,15 @@ export class Area extends React.Component<AreaProps, AreaState> {
         const { previousR, previousFormPoint, previousFormPointRequest } = this.state;
 
         if (Date.now() - previousFormPointRequest > 100 && (previousR !== r || previousFormPoint !== formPoint)) {
+            this.setState({
+                ...this.state,
+
+                previousR: r,
+                previousFormPoint: formPoint,
+                previousFormPointRequest: Date.now(),
+                formPointResult: null
+            });
+
             this.checkFormPoint();
         }
 
@@ -305,15 +314,6 @@ export class Area extends React.Component<AreaProps, AreaState> {
 
     private async checkFormPoint() {
         const { formPoint, r, session } = this.props;
-
-        this.setState({
-            ...this.state,
-
-            previousR: r,
-            previousFormPoint: formPoint,
-            previousFormPointRequest: Date.now(),
-            formPointResult: null
-        });
 
         if (formPoint.y != null && formPoint.y.trim().length > 0 && session != null) {
             const response = await backendApiUserNotifyWrapper(

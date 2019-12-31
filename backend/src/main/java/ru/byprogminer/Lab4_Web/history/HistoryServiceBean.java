@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.validation.constraints.NotNull;
+import java.math.RoundingMode;
 import java.util.ArrayDeque;
 import java.util.stream.Collectors;
 
@@ -32,8 +33,24 @@ public class HistoryServiceBean implements HistoryService {
 
     @Override
     public boolean addQuery(@NotNull QueryEntity query) {
-        if (query.getId() != null) {
-            query = new QueryEntity(null, query.getUser(), query.getX(), query.getY(), query.getR(), query.getResult());
+        query = new QueryEntity(
+                null,
+                query.getUser(),
+                query.getX().setScale(20, RoundingMode.DOWN),
+                query.getY().setScale(20, RoundingMode.DOWN),
+                query.getR().setScale(20, RoundingMode.DOWN),
+                query.getResult()
+        );
+
+        final QueryEntity last = entityManager.createNamedQuery("history.findByUserDesc", QueryEntity.class)
+                .setParameter("user", query.getUser()).setMaxResults(1)
+                .getResultStream().findAny().orElse(null);
+
+        if (last != null
+                && last.getX().equals(query.getX())
+                && last.getY().equals(query.getY())
+                && last.getR().equals(query.getR())) {
+            return false;
         }
 
         try {

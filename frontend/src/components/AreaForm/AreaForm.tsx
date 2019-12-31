@@ -8,6 +8,8 @@ import { Panel } from 'primereact/panel';
 import { Query } from '../../models/query';
 
 import './AreaForm.css';
+import { htmlInputEventExtractor } from '../../utils/htmlInputEventExtractor';
+import { customDispatcher } from '../../utils/customDispatcher';
 
 const SLIDER_ZOOM = 1e10;
 
@@ -113,19 +115,6 @@ export class AreaForm extends React.Component<AreaFormProps> {
         };
     }
 
-    private static onChangeFormInput<T>(dispatch: (value: T) => void, filter: (value: string) => T):
-        (event: React.FormEvent<HTMLInputElement>) => void {
-        return function (event: React.FormEvent<HTMLInputElement>) {
-            const { target } = event;
-
-            if (target instanceof HTMLInputElement && target.value) {
-                const { value } = target;
-
-                setTimeout(() => dispatch(filter(value)), 1);
-            }
-        };
-    }
-
     render() {
         const { locked, x, y, r, dispatchX, dispatchY, dispatchR } = this.props;
 
@@ -140,8 +129,8 @@ export class AreaForm extends React.Component<AreaFormProps> {
 
                     <div className="form-group max-width">
                         <label>Y:&nbsp;</label>
-                        <InputText data-invalid={y == null} placeholder="(-5, 3)" disabled={locked} /* TODO fix empty handling */
-                                   onInput={AreaForm.onChangeFormInput(dispatchY, compose(AreaForm.validateY, AreaForm.verifyY))} />
+                        <InputText data-invalid={y == null} placeholder="(-5, 3)" disabled={locked} onChange=
+                            {customDispatcher(htmlInputEventExtractor, dispatchY, compose(AreaForm.validateY, AreaForm.verifyY))} />
                     </div>
 
                     <div className="form-group">

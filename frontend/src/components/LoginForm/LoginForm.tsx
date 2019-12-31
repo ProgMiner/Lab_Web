@@ -4,9 +4,11 @@ import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Panel } from 'primereact/panel';
 
-import { htmlInputStateDispatcher } from '../../utils/htmlInputStateDispatcher';
+import { htmlInputEventExtractor } from '../../utils/htmlInputEventExtractor';
 
 import './LoginForm.css';
+import { stateDispatcher } from '../../utils/stateDispatcher';
+import { customDispatcher } from '../../utils/customDispatcher';
 
 export interface LoginFormProps {
 
@@ -36,14 +38,16 @@ export class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
             <Panel header="Sign in / Sign up" className="login-form">
                 <form onSubmit={this.onSignIn.bind(this)}>
                     <span className="p-float-label">
-                        <InputText id="username" className="login-form__username" disabled={locked}
-                                   onInput={htmlInputStateDispatcher(this, 'username', String)} />
+                        <InputText id="username" className="login-form__username" disabled={locked} onInput=
+                            {customDispatcher(htmlInputEventExtractor, stateDispatcher(this, 'username'), String)} />
+
                         <label htmlFor="username">Username</label>
                     </span>
 
                     <span className="p-float-label">
                         <Password id="password" className="login-form__password" feedback={false} disabled={locked}
-                                  onInput={htmlInputStateDispatcher(this, 'password', String)} />
+                                  onInput={customDispatcher(htmlInputEventExtractor, stateDispatcher(this, 'password'), String)} />
+
                         <label htmlFor="password">Password</label>
                     </span>
 

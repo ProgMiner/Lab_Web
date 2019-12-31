@@ -11,6 +11,7 @@ import java.util.Objects;
 
 @Entity(name = "history")
 @NamedQuery(name = "history.findByUser", query = "from history where user = :user order by id asc")
+@NamedQuery(name = "history.findByUserDesc", query = "from history where user = :user order by id desc")
 @NamedQuery(name = "history.deleteByUser", query = "delete from history where user = :user")
 public class QueryEntity implements Serializable {
 
