@@ -22,7 +22,7 @@ public class QueryEntity implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private final UserEntity user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 25, scale = 20)
     private final BigDecimal x, y, r;
 
     private final boolean result;
@@ -52,15 +52,15 @@ public class QueryEntity implements Serializable {
     }
 
     public BigDecimal getX() {
-        return x;
+        return x != null ? x.stripTrailingZeros() : null;
     }
 
     public BigDecimal getY() {
-        return y;
+        return y != null ? y.stripTrailingZeros() : null;
     }
 
     public BigDecimal getR() {
-        return r;
+        return r != null ? r.stripTrailingZeros() : null;
     }
 
     public boolean getResult() {

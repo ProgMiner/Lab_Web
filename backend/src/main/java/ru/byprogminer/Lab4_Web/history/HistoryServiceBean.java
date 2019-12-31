@@ -18,15 +18,16 @@ public class HistoryServiceBean implements HistoryService {
 
     @Override
     public ArrayDeque<QueryEntity> getQueries(UserEntity user) {
-        return entityManager.createNamedQuery("history.findByUser", QueryEntity.class).getResultStream()
+        return entityManager.createNamedQuery("history.findByUser", QueryEntity.class)
+                .setParameter("user", user).getResultStream()
                 .collect(Collectors.toCollection(ArrayDeque::new));
     }
 
     @Override
     public ArrayDeque<QueryEntity> getQueries(UserEntity user, long offset, long count) {
         return entityManager.createNamedQuery("history.findByUser", QueryEntity.class)
-                .setFirstResult((int) offset).setMaxResults((int) count).getResultStream()
-                .collect(Collectors.toCollection(ArrayDeque::new));
+                .setParameter("user", user).setFirstResult((int) offset).setMaxResults((int) count)
+                .getResultStream().collect(Collectors.toCollection(ArrayDeque::new));
     }
 
     @Override

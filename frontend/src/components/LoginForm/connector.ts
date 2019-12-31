@@ -22,13 +22,16 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
     return {
         onSignIn(username: string, password: string): void {
             lockAndDo(dispatch, async () => {
-                const response = await backendApi('session/create', 'POST', { username, password });
+                const response = await backendApiUserNotifyWrapper(
+                    backendApi('session/create', 'POST', { username, password }),
+                    [401]
+                );
 
                 if (response.ok) {
                     const json = await response.json();
 
                     dispatch(signIn(json as Session));
-                } else {
+                } else if (response.status === 401) {
                     growl.current?.show({
                         severity: 'error',
                         summary: 'Sign in error',
@@ -42,7 +45,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
             lockAndDo(dispatch, async () => {
                 const response = await backendApiUserNotifyWrapper(
                     backendApi('user/create', 'POST', { username, password }),
-                    [401]
+                    [400]
                 );
 
                 if (response.ok) {
