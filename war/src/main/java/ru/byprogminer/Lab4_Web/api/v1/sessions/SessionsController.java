@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Objects;
 
 @Path("/session")
@@ -21,27 +22,30 @@ public class SessionsController {
     private final UsersService usersService;
 
     private final UserEntity authenticatedUser;
-    private final String authenticatedUserToken;
 
     @Deprecated
     public SessionsController() {
         service = null;
         usersService = null;
         authenticatedUser = null;
-        authenticatedUserToken = null;
     }
 
     @Inject
     public SessionsController(
             SessionsService service,
             UsersService usersService,
-            @AuthenticatedUser UserEntity authenticatedUser,
-            @AuthenticatedUser String authenticatedUserToken
+            @AuthenticatedUser UserEntity authenticatedUser
     ) {
         this.service = service;
         this.usersService = usersService;
         this.authenticatedUser = authenticatedUser;
-        this.authenticatedUserToken = authenticatedUserToken;
+    }
+
+    @GET
+    @Secured
+    @Path("/list")
+    public List<String> list() {
+        return Objects.requireNonNull(service).getSessionTokens(Objects.requireNonNull(authenticatedUser));
     }
 
     @POST
@@ -64,7 +68,21 @@ public class SessionsController {
     @DELETE
     @Secured
     @Path("/destroy")
-    public boolean destroy() {
-        return Objects.requireNonNull(service).destroySession(authenticatedUser, authenticatedUserToken);
+    public boolean destroy(@NotNull @FormParam("token") String token) {
+        return Objects.requireNonNull(service).destroySession(authenticatedUser, token);
+    }
+
+    @GET
+    @Secured
+    @Path("/check")
+    public boolean check() {
+        return true;
+    }
+
+    @GET
+    @Secured
+    @Path("/check/{token}")
+    public boolean check(@PathParam("token") String token) {
+        return Objects.requireNonNull(service).checkSession(authenticatedUser, token);
     }
 }

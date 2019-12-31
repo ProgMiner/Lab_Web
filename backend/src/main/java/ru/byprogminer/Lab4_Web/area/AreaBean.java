@@ -1,6 +1,4 @@
-package ru.byprogminer.Lab4_Web.impl;
-
-import ru.byprogminer.Lab4_Web.area.AreaService;
+package ru.byprogminer.Lab4_Web.area;
 
 import javax.ejb.Stateless;
 import javax.validation.constraints.DecimalMax;
@@ -9,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Stateless
-public class AreaServiceImpl implements AreaService {
+public class AreaBean implements Area {
 
     private static final BigDecimal MINUS_ONE = BigDecimal.valueOf(-1);
     private static final BigDecimal HALF = new BigDecimal("0.5");

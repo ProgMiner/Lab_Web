@@ -1,6 +1,6 @@
 package ru.byprogminer.Lab4_Web;
 
-import ru.byprogminer.Lab4_Web.area.AreaService;
+import ru.byprogminer.Lab4_Web.area.Area;
 import ru.byprogminer.Lab4_Web.history.HistoryService;
 import ru.byprogminer.Lab4_Web.sessions.SessionsService;
 import ru.byprogminer.Lab4_Web.users.UsersService;
@@ -13,7 +13,7 @@ import javax.enterprise.inject.Produces;
 public class InjectionProducer {
 
     @Produces @EJB
-    private AreaService areaService;
+    private Area area;
 
     @Produces @EJB
     private HistoryService historyService;

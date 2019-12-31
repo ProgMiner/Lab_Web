@@ -1,7 +1,9 @@
 package ru.byprogminer.Lab4_Web.users;
 
 import javax.ejb.Remote;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Remote
@@ -33,7 +35,7 @@ public interface UsersService extends Serializable {
      *
      * @return created user or null if creating failed
      */
-    UserEntity createUser(@NotNull String username, @NotNull String password);
+    UserEntity createUser(@NotNull @Size(min = 2) @NotBlank String username, @NotNull @NotBlank String password);
 
     /**
      * Removes specified user

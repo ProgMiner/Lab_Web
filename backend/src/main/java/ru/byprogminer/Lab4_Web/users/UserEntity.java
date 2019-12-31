@@ -1,16 +1,31 @@
 package ru.byprogminer.Lab4_Web.users;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity(name = "users")
+@NamedQuery(name = "users.findByUsername", query = "from users where username = :username")
 public class UserEntity implements Serializable {
 
+    @Id @GeneratedValue
     private final Long id;
 
+    @Column(nullable = false, unique = true)
     private final String username;
 
+    @Column(nullable = false)
     private final String passwordHash;
+
+    @Column(nullable = false)
     private final String passwordSalt;
+
+    public UserEntity() {
+        id = null;
+        username = null;
+        passwordHash = null;
+        passwordSalt = null;
+    }
 
     public UserEntity(Long id, String username, String passwordHash, String passwordSalt) {
         this.id = id;

@@ -1,0 +1,19 @@
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px
+}
+
+@media (min-width: 699px) {
+    .container {
+        width: 680px
+    }
+}
+
+@media (min-width: 1147px) {
+    .container {
+        width: 1100px
+    }
+}

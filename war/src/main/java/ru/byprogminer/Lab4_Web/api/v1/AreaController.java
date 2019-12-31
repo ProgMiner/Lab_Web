@@ -2,7 +2,7 @@ package ru.byprogminer.Lab4_Web.api.v1;
 
 import ru.byprogminer.Lab4_Web.api.v1.auth.AuthenticatedUser;
 import ru.byprogminer.Lab4_Web.api.v1.auth.Secured;
-import ru.byprogminer.Lab4_Web.area.AreaService;
+import ru.byprogminer.Lab4_Web.area.Area;
 import ru.byprogminer.Lab4_Web.history.HistoryService;
 import ru.byprogminer.Lab4_Web.history.QueryEntity;
 import ru.byprogminer.Lab4_Web.users.UserEntity;
@@ -19,7 +19,7 @@ import java.util.Objects;
 @Produces(MediaType.APPLICATION_JSON)
 public class AreaController {
 
-    private final AreaService service;
+    private final Area service;
     private final HistoryService historyService;
 
     private final UserEntity authenticatedUser;
@@ -33,7 +33,7 @@ public class AreaController {
 
     @Inject
     public AreaController(
-            AreaService service,
+            Area service,
             HistoryService historyService,
             @AuthenticatedUser UserEntity authenticatedUser
     ) {
@@ -60,9 +60,8 @@ public class AreaController {
             @NotNull @FormParam("r") BigDecimal r
     ) {
         final boolean result = check(x, y, r);
-
-        Objects.requireNonNull(historyService).addQuery(new QueryEntity(null,
-                Objects.requireNonNull(authenticatedUser).getId(), x, y, r, result));
+        Objects.requireNonNull(historyService)
+                .addQuery(new QueryEntity(null, Objects.requireNonNull(authenticatedUser), x, y, r, result));
 
         return result;
     }

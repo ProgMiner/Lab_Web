@@ -16,15 +16,8 @@ public class AuthenticatedUserInjectionProducer {
     }
 
     @Produces
-    // @RequestScoped
     @AuthenticatedUser
     public UserEntity getAuthenticatedUser() {
         return event == null ? null : event.user;
-    }
-
-    @Produces
-    @AuthenticatedUser
-    public String getAuthenticatedUserToken() {
-        return event == null ? null : event.token;
     }
 }

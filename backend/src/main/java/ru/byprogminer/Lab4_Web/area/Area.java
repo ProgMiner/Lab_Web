@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Remote
-public interface AreaService extends Serializable {
+public interface Area extends Serializable {
 
     /**
      * Checks is point includes in the area

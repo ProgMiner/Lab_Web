@@ -5,9 +5,19 @@ import ru.byprogminer.Lab4_Web.users.UserEntity;
 import javax.ejb.Remote;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 @Remote
 public interface SessionsService extends Serializable {
+
+    /**
+     * Returns list of user's session tokens
+     *
+     * @param user user, never null
+     *
+     * @return list of tokens, never null
+     */
+    List<String> getSessionTokens(@NotNull UserEntity user);
 
     /**
      * Creates new user's session
