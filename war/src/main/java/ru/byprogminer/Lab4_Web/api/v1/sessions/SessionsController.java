@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Objects;
 
 @Path("/session")
@@ -38,6 +39,13 @@ public class SessionsController {
         this.service = service;
         this.usersService = usersService;
         this.authenticatedUser = authenticatedUser;
+    }
+
+    @GET
+    @Secured
+    @Path("/list")
+    public List<String> list() {
+        return Objects.requireNonNull(service).getSessionTokens(Objects.requireNonNull(authenticatedUser));
     }
 
     @POST

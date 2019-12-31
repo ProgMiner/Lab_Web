@@ -40,7 +40,7 @@ public class HistoryController {
     @GET
     @Path("/get")
     public List<QueryDto> get() {
-        return Objects.requireNonNull(service).getQueries(Objects.requireNonNull(authenticatedUser).getId()).stream()
+        return Objects.requireNonNull(service).getQueries(Objects.requireNonNull(authenticatedUser)).stream()
                 .map(this::entityToDto).collect(Collectors.toList());
     }
 
@@ -50,7 +50,7 @@ public class HistoryController {
             @PathParam("offset") long offset,
             @PathParam("count") long count
     ) {
-        return Objects.requireNonNull(service).getQueries(Objects.requireNonNull(authenticatedUser).getId(),
+        return Objects.requireNonNull(service).getQueries(Objects.requireNonNull(authenticatedUser),
                 offset, count).stream().map(this::entityToDto).collect(Collectors.toList());
     }
 

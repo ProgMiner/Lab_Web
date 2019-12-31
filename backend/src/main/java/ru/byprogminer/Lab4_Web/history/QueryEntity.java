@@ -1,20 +1,42 @@
 package ru.byprogminer.Lab4_Web.history;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import ru.byprogminer.Lab4_Web.users.UserEntity;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity(name = "history")
+@NamedQuery(name = "history.findByUser", query = "from history where user = :user order by id asc")
+@NamedQuery(name = "history.deleteByUser", query = "delete from history where user = :user")
 public class QueryEntity implements Serializable {
 
+    @Id @GeneratedValue
     private final Long id;
-    private final long userId;
 
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private final UserEntity user;
+
+    @Column(nullable = false)
     private final BigDecimal x, y, r;
+
     private final boolean result;
 
-    public QueryEntity(Long id, long userId, BigDecimal x, BigDecimal y, BigDecimal r, boolean result) {
+    public QueryEntity() {
+        id = null;
+        user = null;
+        x = y = r = null;
+        result = false;
+    }
+
+    public QueryEntity(Long id, UserEntity user, BigDecimal x, BigDecimal y, BigDecimal r, boolean result) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.x = x;
         this.y = y;
         this.r = r;
@@ -25,8 +47,8 @@ public class QueryEntity implements Serializable {
         return id;
     }
 
-    public long getUserId() {
-        return userId;
+    public UserEntity getUser() {
+        return user;
     }
 
     public BigDecimal getX() {
@@ -51,9 +73,9 @@ public class QueryEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         final QueryEntity that = (QueryEntity) o;
-        return userId == that.userId &&
-                result == that.result &&
+        return result == that.result &&
                 Objects.equals(id, that.id) &&
+                Objects.equals(user, that.user) &&
                 Objects.equals(x, that.x) &&
                 Objects.equals(y, that.y) &&
                 Objects.equals(r, that.r);
@@ -61,6 +83,6 @@ public class QueryEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, x, y, r, result);
+        return Objects.hash(id, user, x, y, r, result);
     }
 }

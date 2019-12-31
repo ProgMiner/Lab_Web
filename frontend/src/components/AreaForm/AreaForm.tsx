@@ -140,8 +140,8 @@ export class AreaForm extends React.Component<AreaFormProps> {
 
                     <div className="form-group max-width">
                         <label>Y:&nbsp;</label>
-                        <InputText data-invalid={y == null} placeholder="(-5, 3)" disabled={locked} onInput={AreaForm
-                            .onChangeFormInput(dispatchY, compose(AreaForm.validateY, AreaForm.verifyY))} />
+                        <InputText data-invalid={y == null} placeholder="(-5, 3)" disabled={locked} /* TODO fix empty handling */
+                                   onInput={AreaForm.onChangeFormInput(dispatchY, compose(AreaForm.validateY, AreaForm.verifyY))} />
                     </div>
 
                     <div className="form-group">

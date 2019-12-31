@@ -1,7 +1,7 @@
 package ru.byprogminer.Lab4_Web;
 
-import ru.byprogminer.Lab4_Web.area.AreaService;
-import ru.byprogminer.Lab4_Web.impl.AreaServiceImpl;
+import ru.byprogminer.Lab4_Web.area.Area;
+import ru.byprogminer.Lab4_Web.area.AreaBean;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -55,7 +55,7 @@ public class AreaTest {
             }
         }
 
-        final AreaService areaService = new AreaServiceImpl();
+        final Area area = new AreaBean();
 
         final double center = (double) side / 2;
         final CompletableFuture<?>[] futures = new CompletableFuture[side];
@@ -70,7 +70,7 @@ public class AreaTest {
                     final BigDecimal realY = BigDecimal.valueOf(center - y)
                             .divide(zoom, 5, RoundingMode.HALF_UP);
 
-                    if (areaService.checkPoint(realX, realY, r)) {
+                    if (area.checkPoint(realX, realY, r)) {
                         image.setRGB(finalX, y, COLOR.getRGB());
                     }
                 }
