@@ -8,7 +8,7 @@ import java.util.Objects;
 @NamedQuery(name = "users.findByUsername", query = "from users where username = :username")
 public class UserEntity implements Serializable {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
 
     @Column(nullable = false, unique = true)

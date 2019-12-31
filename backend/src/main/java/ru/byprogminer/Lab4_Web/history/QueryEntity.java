@@ -15,7 +15,7 @@ import java.util.Objects;
 @NamedQuery(name = "history.deleteByUser", query = "delete from history where user = :user")
 public class QueryEntity implements Serializable {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
 
     @ManyToOne
