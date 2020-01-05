@@ -1,6 +1,39 @@
 
+.login-page-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto 30px;
+}
+
+.lab-info-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lab-info {
+    width: 400px;
+    min-width: 300px;
+}
+
 .login-form-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 30px;
+}
+
+@media (min-width: 1147px) {
+    .login-page-main {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .login-form-container {
+        margin-top: 0;
+        margin-left: 30px;
+    }
 }

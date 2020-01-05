@@ -65,7 +65,7 @@ export class AreaForm extends React.Component<AreaFormProps> {
         }
 
         for (const key in AreaForm.replacements) {
-            value = value.replace(new RegExp(key, 'g'), '' + AreaForm.replacements[key]);
+            value = value.toLowerCase().replace(new RegExp(key, 'g'), '' + AreaForm.replacements[key]);
         }
 
         value = value.split(' ').join('');

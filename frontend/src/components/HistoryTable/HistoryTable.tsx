@@ -35,9 +35,9 @@ export class HistoryTable extends React.Component<HistoryTableProps> {
         return (
             <DataTable value={value} paginator rows={PER_PAGE} first={first}
                        onPage={e => this.setState({ first: e.first })}>
-                <Column field="x" header="X" bodyStyle={{ whiteSpace: 'nowrap' }} />
+                <Column field="x" header="X" bodyStyle={{ wordBreak: 'break-all' }} />
                 <Column field="y" header="Y" bodyStyle={{ wordBreak: 'break-all' }} />
-                <Column field="r" header="R" bodyStyle={{ whiteSpace: 'nowrap' }} />
+                <Column field="r" header="R" bodyStyle={{ wordBreak: 'break-all' }} />
                 <Column field="result" header="Result" bodyStyle={{ whiteSpace: 'nowrap' }} />
             </DataTable>
         );

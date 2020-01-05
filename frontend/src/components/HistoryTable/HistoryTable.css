@@ -1,4 +1,8 @@
 
+.p-datatable {
+    margin: 0 auto 30px;
+}
+
 .p-datatable-tbody td {
     text-align: center;
 }

@@ -1,4 +1,8 @@
 
+.area-form {
+    width: 400px;
+}
+
 .area-form.p-panel .p-panel-content {
     padding: 25px 15px;
 }
