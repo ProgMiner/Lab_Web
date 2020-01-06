@@ -14,7 +14,7 @@ export function backendApi(
         dataArray.push(`${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`);
     }
 
-    return fetch(`//${backendHost}/api/v1/${method}`, {
+    return fetch(`${backendHost}/api/v1/${method}`, {
         ...init,
 
         method: httpMethod,

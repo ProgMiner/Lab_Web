@@ -1,1 +1,2 @@
-export const backendHost = 'localhost:8080';
+
+export const backendHost = ''; // '//localhost:8080';
