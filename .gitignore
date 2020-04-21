@@ -125,3 +125,5 @@ hs_err_pid*
 # Especially for Valera
 /.idea
 *.iml
+
+!libs/**/*.jar
