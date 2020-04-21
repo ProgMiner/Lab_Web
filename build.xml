@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Lab3_OPI" default="compile">
+<project name="Lab_OPI" default="build">
 
     <property file="build.properties" />
 
     <path id="libraries">
-        <fileset dir="${libraries.path}" includes="**/*.jar" />
+        <fileset dir="${libraries.compile.path}" includes="**/*.jar" />
+        <fileset dir="${libraries.provided.path}" includes="**/*.jar" />
     </path>
 
     <target name="clean">
@@ -22,4 +23,42 @@
             <src path="${sources.path}" />
         </javac>
     </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="${build.path}/${ant.project.name}-${project.version}.jar"
+             basedir="${build.path}/classes" index="true" indexmetainf="true">
+
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}" />
+                <attribute name="Implementation-Version" value="${project.version}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="war" depends="compile">
+        <property name="war.directory.path" value="${build.path}/${ant.project.name}-${project.version}_war" />
+
+        <mkdir dir="${war.directory.path}" />
+        <copy todir="${war.directory.path}">
+            <fileset dir="${web.path}" />
+        </copy>
+
+        <mkdir dir="${war.directory.path}/WEB-INF/classes" />
+        <copy todir="${war.directory.path}/WEB-INF/classes">
+            <fileset dir="${build.path}/classes" />
+        </copy>
+
+        <mkdir dir="${war.directory.path}/WEB-INF/lib" />
+        <copy todir="${war.directory.path}/WEB-INF/lib">
+            <fileset dir="${libraries.compile.path}" includes="**/*.jar" />
+        </copy>
+
+        <war warfile="${build.path}/${ant.project.name}-${project.version}.war"
+             webxml="${war.directory.path}/WEB-INF/web.xml">
+
+            <fileset dir="${war.directory.path}" excludes="WEB-INF/web.xml"/>
+        </war>
+    </target>
+
+    <target name="build" depends="jar,war" />
 </project>
