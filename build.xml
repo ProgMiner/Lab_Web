@@ -2,11 +2,15 @@
 <project name="Lab3_OPI" default="compile">
 
     <path id="libraries">
-        <fileset dir="libs" includes="**/*.jar"/>
+        <fileset dir="libs" includes="**/*.jar" />
     </path>
 
     <target name="compile">
         <mkdir dir="target/classes" />
+
+        <copy todir="target/classes">
+            <fileset dir="src/main/resources" excludes="**/*.java" />
+        </copy>
 
         <javac destdir="target/classes" includeantruntime="false" classpathref="libraries">
             <src path="src/main/java" />
