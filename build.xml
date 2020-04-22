@@ -4,7 +4,7 @@
     <property file="build.properties" />
 
     <path id="libraries.ant.class.path">
-        <fileset dir="${libraries.ant.path}" includes="**/*.jar" />
+        <fileset dir="${libraries.ant.path}" includes="*.jar" />
     </path>
 
     <!-- Add scp task -->
@@ -79,6 +79,16 @@
         <delete dir="${build.path}" />
     </target>
 
+    <target name="run">
+        <java classname="${main.class}">
+            <classpath refid="libraries" />
+
+            <classpath>
+                <pathelement location="${build.path}/${ant.project.name}-${project.version}.jar" />
+            </classpath>
+        </java>
+    </target>
+
     <target name="compile.test" depends="compile">
         <mkdir dir="${build.path}/test-classes" />
 
@@ -128,6 +138,15 @@
             <fileset dir="${build.path}/reports" includes="*.xml" />
         </copy>
 
-        <!-- TODO -->
+        <exec executable="git" spawn="true">
+            <arg value="add" />
+            <arg path="${report.path}" />
+        </exec>
+
+        <exec executable="git" spawn="true">
+            <arg value="commit" />
+            <arg value="-m" />
+            <arg value="${report.commit.msg}" />
+        </exec>
     </target>
 </project>
