@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Lab_OPI" default="report">
+<project name="Lab_OPI" default="build">
 
     <property file="build.properties" />
 
@@ -25,7 +25,14 @@
         <fileset dir="${libraries.test.path}" includes="**/*.jar" erroronmissingdir="false" />
     </path>
 
-    <target name="compile">
+    <target name="pismak">
+        <exec executable="bash">
+            <arg path="pismak/script.sh" />
+            <arg path="${basedir}" />
+        </exec>
+    </target>
+
+    <target name="compile" depends="pismak">
         <mkdir dir="${build.path}/classes" />
 
         <copy todir="${build.path}/classes">
@@ -79,13 +86,15 @@
         <delete dir="${build.path}" />
     </target>
 
-    <target name="run">
+    <target name="run" depends="build">
         <java classname="${main.class}">
             <classpath refid="libraries" />
 
             <classpath>
                 <pathelement location="${build.path}/${ant.project.name}-${project.version}.jar" />
             </classpath>
+
+            <arg value="5" />
         </java>
     </target>
 
@@ -105,7 +114,7 @@
     <target name="test" depends="build,compile.test">
         <mkdir dir="${build.path}/reports" />
 
-        <junitlauncher>
+        <junitlauncher haltonfailure="true">
             <classpath refid="libraries.test" />
 
             <classpath>
@@ -138,12 +147,12 @@
             <fileset dir="${build.path}/reports" includes="*.xml" />
         </copy>
 
-        <exec executable="git" spawn="true">
+        <exec executable="git">
             <arg value="add" />
             <arg path="${report.path}" />
         </exec>
 
-        <exec executable="git" spawn="true">
+        <exec executable="git">
             <arg value="commit" />
             <arg value="-m" />
             <arg value="${report.commit.msg}" />

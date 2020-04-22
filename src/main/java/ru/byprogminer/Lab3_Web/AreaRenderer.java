@@ -1,12 +1,9 @@
 package ru.byprogminer.Lab3_Web;
 
-import ru.byprogminer.Lab3_Web.beans.QueryBean;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
@@ -15,12 +12,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class AreaTest {
+public class AreaRenderer {
 
     private static final int DEFAULT_SIDE = 1600;
     private static final Color COLOR = new Color(0xF9, 0xF9, 0xF9);
 
-    public static void main(String[] args) throws IOException, NoSuchFieldException {
+    public static void main(String[] args) throws IOException {
         if (args.length < 1) {
             System.err.println("Usage: <R> [side = " + DEFAULT_SIDE + "]");
             return;
@@ -44,36 +41,35 @@ public class AreaTest {
             return thread;
         });
 
-        final Field queryBeanQueryField = QueryBean.class.getDeclaredField("query");
-        queryBeanQueryField.setAccessible(true);
-
         final BigDecimal zoom = BigDecimal.valueOf(side).multiply(BigDecimal.TEN)
                 .divide(BigDecimal.valueOf(24), 5, RoundingMode.HALF_UP)
-                .divide(r, RoundingMode.HALF_UP);
+                .divide(r.equals(BigDecimal.ZERO) ? BigDecimal.ONE : r, RoundingMode.HALF_UP);
+
+        for (int i = 1; i < 24; ++i) {
+            for (int x = 0; x < side; ++x) {
+                image.setRGB(i * side / 24, x, Color.LIGHT_GRAY.getRGB());
+                image.setRGB(x, i * side / 24, Color.LIGHT_GRAY.getRGB());
+            }
+        }
 
         final double center = (double) side / 2;
-        final CompletableFuture[] futures = new CompletableFuture[side];
+        final CompletableFuture<?>[] futures = new CompletableFuture[side];
         for (int x = 0; x < side; ++x) {
             final BigDecimal realX = BigDecimal.valueOf(x - center)
                     .divide(zoom, 5, RoundingMode.HALF_UP);
 
             final int finalX = x;
             futures[x] = CompletableFuture.runAsync(() -> {
-                final QueryBean queryBean = new QueryBean(realX, null, r, null);
+                final Query query = new Query(realX, null, r, null);
 
                 for (int y = 0; y < side; ++y) {
                     final BigDecimal realY = BigDecimal.valueOf(center - y)
                             .divide(zoom, 5, RoundingMode.HALF_UP);
 
-                    queryBean.setY(realY);
-                    try {
-                        ((Query) queryBeanQueryField.get(queryBean)).setResult(null);
-
-                        if (queryBean.getResult()) {
-                            image.setRGB(finalX, y, COLOR.getRGB());
-                        }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                    query.setY(realY);
+                    query.setResult(null);
+                    if (query.getResult()) {
+                        image.setRGB(finalX, y, COLOR.getRGB());
                     }
                 }
             }, executor);
@@ -81,7 +77,7 @@ public class AreaTest {
 
         CompletableFuture.allOf(futures).join();
 
-        final Path path = Files.createTempFile("Lab3_Web.AreaTest.", ".png");
+        final Path path = Files.createTempFile("Lab4_Web.AreaTest.", ".png");
         ImageIO.write(image, "PNG", Files.newOutputStream(path));
 
         System.out.println("Result saved to " + path.toString());
