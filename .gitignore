@@ -126,4 +126,7 @@ hs_err_pid*
 /.idea
 *.iml
 
+# OPI lab
+
 !lib/**/*.jar
+remote.properties

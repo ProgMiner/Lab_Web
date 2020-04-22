@@ -3,20 +3,33 @@
 
     <property file="build.properties" />
 
-    <path id="libraries">
-        <fileset dir="${libraries.compile.path}" includes="**/*.jar" />
-        <fileset dir="${libraries.provided.path}" includes="**/*.jar" />
+    <!-- Load the jsch lib -->
+
+    <path id="jsch.class.path">
+        <!--pathelement location="${libraries.ant.path}/ant-jsch*.jar" /-->
+        <pathelement location="${libraries.ant.path}/jsch*.jar" />
     </path>
 
-    <target name="clean">
-        <delete dir="${build.path}" />
-    </target>
+    <taskdef name="scp" classname="org.apache.tools.ant.taskdefs.optional.ssh.Scp" classpathref="jsch.class.path" />
+    <taskdef name="sshexec" classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec" classpathref="jsch.class.path" />
+
+    <!-- /Load the jsch lib -->
+
+    <path id="libraries">
+        <fileset dir="${libraries.compile.path}" includes="**/*.jar" erroronmissingdir="false" />
+        <fileset dir="${libraries.provided.path}" includes="**/*.jar" erroronmissingdir="false" />
+    </path>
+
+    <path id="libraries.test">
+        <path refid="libraries" />
+        <fileset dir="${libraries.test.path}" includes="**/*.jar" erroronmissingdir="false" />
+    </path>
 
     <target name="compile">
         <mkdir dir="${build.path}/classes" />
 
         <copy todir="${build.path}/classes">
-            <fileset dir="${resources.path}" excludes="**/*.java" />
+            <fileset dir="${resources.path}" excludes="**/*.java" erroronmissingdir="false" />
         </copy>
 
         <javac destdir="${build.path}/classes" includeantruntime="false" classpathref="libraries">
@@ -40,7 +53,7 @@
 
         <mkdir dir="${war.directory.path}" />
         <copy todir="${war.directory.path}">
-            <fileset dir="${web.path}" />
+            <fileset dir="${web.path}" erroronmissingdir="false" />
         </copy>
 
         <mkdir dir="${war.directory.path}/WEB-INF/classes" />
@@ -50,15 +63,48 @@
 
         <mkdir dir="${war.directory.path}/WEB-INF/lib" />
         <copy todir="${war.directory.path}/WEB-INF/lib">
-            <fileset dir="${libraries.compile.path}" includes="**/*.jar" />
+            <fileset dir="${libraries.compile.path}" includes="**/*.jar" erroronmissingdir="false" />
         </copy>
 
         <war warfile="${build.path}/${ant.project.name}-${project.version}.war"
              webxml="${war.directory.path}/WEB-INF/web.xml">
 
-            <fileset dir="${war.directory.path}" excludes="WEB-INF/web.xml"/>
+            <fileset dir="${war.directory.path}" excludes="WEB-INF/web.xml" />
         </war>
     </target>
 
     <target name="build" depends="jar,war" />
+
+    <target name="clean">
+        <delete dir="${build.path}" />
+    </target>
+
+    <target name="compile.test" depends="compile">
+        <mkdir dir="${build.path}/test-classes" />
+
+        <copy todir="${build.path}/test-classes">
+            <fileset dir="${resources.test.path}" excludes="**/*.java" erroronmissingdir="false" />
+        </copy>
+
+        <javac destdir="${build.path}/test-classes" includeantruntime="false"
+               classpath="${build.path}/classes" classpathref="libraries.test">
+            <src path="${sources.test.path}" />
+        </javac>
+    </target>
+
+    <target name="test" depends="build,compile.test">
+        <!-- TODO -->
+    </target>
+
+    <target name="scp" depends="build">
+        <property file="remote.properties" />
+
+        <scp file="${build.path}/${ant.project.name}-${project.version}.war"
+             todir="${remote.username}@${remote.hostname}:${remote.directory.path}"
+             password="${remote.password}" trust="true" port="${remote.port}" />
+    </target>
+
+    <target name="report" depends="test">
+        <!-- TODO -->
+    </target>
 </project>
