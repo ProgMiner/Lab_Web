@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Lab_OPI" default="build">
+<project name="Lab_OPI" default="report">
 
     <property file="build.properties" />
 
-    <!-- Load the jsch lib -->
-
-    <path id="jsch.class.path">
-        <!--pathelement location="${libraries.ant.path}/ant-jsch*.jar" /-->
-        <pathelement location="${libraries.ant.path}/jsch*.jar" />
+    <path id="libraries.ant.class.path">
+        <fileset dir="${libraries.ant.path}" includes="**/*.jar" />
     </path>
 
-    <taskdef name="scp" classname="org.apache.tools.ant.taskdefs.optional.ssh.Scp" classpathref="jsch.class.path" />
-    <taskdef name="sshexec" classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec" classpathref="jsch.class.path" />
+    <!-- Add scp task -->
+    <taskdef name="scp" classname="org.apache.tools.ant.taskdefs.optional.ssh.Scp" classpathref="libraries.ant.class.path" />
+    <!-- /Add scp task -->
 
-    <!-- /Load the jsch lib -->
+    <!-- Add junitlauncher task -->
+    <taskdef name="junitlauncher" classname="org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.JUnitLauncherTask" classpathref="libraries.ant.class.path" />
+    <!-- /Add junitlauncher task -->
 
     <path id="libraries">
         <fileset dir="${libraries.compile.path}" includes="**/*.jar" erroronmissingdir="false" />
@@ -93,7 +93,23 @@
     </target>
 
     <target name="test" depends="build,compile.test">
-        <!-- TODO -->
+        <mkdir dir="${build.path}/reports" />
+
+        <junitlauncher>
+            <classpath refid="libraries.test" />
+
+            <classpath>
+                <pathelement location="${build.path}/classes" />
+                <pathelement location="${build.path}/test-classes" />
+            </classpath>
+
+            <testclasses outputdir="${build.path}/reports">
+                <fileset dir="${build.path}/test-classes" includes="**/*.class" />
+
+                <listener type="legacy-xml" />
+                <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" />
+            </testclasses>
+        </junitlauncher>
     </target>
 
     <target name="scp" depends="build">
@@ -105,6 +121,13 @@
     </target>
 
     <target name="report" depends="test">
+        <delete dir="${report.path}" />
+
+        <mkdir dir="${report.path}" />
+        <copy todir="${report.path}">
+            <fileset dir="${build.path}/reports" includes="*.xml" />
+        </copy>
+
         <!-- TODO -->
     </target>
 </project>
