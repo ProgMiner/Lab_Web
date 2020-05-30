@@ -5,9 +5,11 @@ import ru.byprogminer.Lab4_Web.api.v1.auth.Secured;
 import ru.byprogminer.Lab4_Web.area.Area;
 import ru.byprogminer.Lab4_Web.history.HistoryService;
 import ru.byprogminer.Lab4_Web.history.QueryEntity;
+import ru.byprogminer.Lab4_Web.querycounter.QueryCounter;
 import ru.byprogminer.Lab4_Web.users.UserEntity;
 
 import javax.inject.Inject;
+import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -21,6 +23,7 @@ public class AreaController {
 
     private final Area service;
     private final HistoryService historyService;
+    private final QueryCounter queryCounter;
 
     private final UserEntity authenticatedUser;
 
@@ -28,6 +31,7 @@ public class AreaController {
     public AreaController() {
         this.service = null;
         this.historyService = null;
+        this.queryCounter = null;
         this.authenticatedUser = null;
     }
 
@@ -35,10 +39,12 @@ public class AreaController {
     public AreaController(
             Area service,
             HistoryService historyService,
+            QueryCounter queryCounter,
             @AuthenticatedUser UserEntity authenticatedUser
     ) {
         this.service = service;
         this.historyService = historyService;
+        this.queryCounter = queryCounter;
         this.authenticatedUser = authenticatedUser;
     }
 
@@ -49,7 +55,15 @@ public class AreaController {
             @NotNull @PathParam("y") BigDecimal y,
             @NotNull @PathParam("r") BigDecimal r
     ) {
-        return Objects.requireNonNull(service).checkPoint(x, y, r);
+        try {
+            final boolean result = Objects.requireNonNull(service).checkPoint(x, y, r);
+            Objects.requireNonNull(queryCounter).sendCheckPointResult(result);
+
+            return result;
+        } catch (ValidationException exception) {
+            Objects.requireNonNull(queryCounter).sendCheckPointValidationFailure(x, y, r);
+            throw exception;
+        }
     }
 
     @POST
@@ -59,10 +73,17 @@ public class AreaController {
             @NotNull @FormParam("y") BigDecimal y,
             @NotNull @FormParam("r") BigDecimal r
     ) {
-        final boolean result = check(x, y, r);
-        Objects.requireNonNull(historyService)
-                .addQuery(new QueryEntity(null, Objects.requireNonNull(authenticatedUser), x, y, r, result));
+        try {
+            final boolean result = check(x, y, r);
+            Objects.requireNonNull(queryCounter).sendCheckPointResult(result);
 
-        return result;
+            Objects.requireNonNull(historyService)
+                    .addQuery(new QueryEntity(null, Objects.requireNonNull(authenticatedUser), x, y, r, result));
+
+            return result;
+        } catch (ValidationException exception) {
+            Objects.requireNonNull(queryCounter).sendCheckPointValidationFailure(x, y, r);
+            throw exception;
+        }
     }
 }

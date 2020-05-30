@@ -2,6 +2,7 @@ package ru.byprogminer.Lab4_Web;
 
 import ru.byprogminer.Lab4_Web.area.Area;
 import ru.byprogminer.Lab4_Web.history.HistoryService;
+import ru.byprogminer.Lab4_Web.querycounter.QueryCounter;
 import ru.byprogminer.Lab4_Web.sessions.SessionsService;
 import ru.byprogminer.Lab4_Web.users.UsersService;
 
@@ -23,4 +24,7 @@ public class InjectionProducer {
 
     @Produces @EJB
     private UsersService usersService;
+
+    @Produces @EJB
+    private QueryCounter queryCounter;
 }
