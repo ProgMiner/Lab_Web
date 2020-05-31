@@ -7,10 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.lang.management.ManagementFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Singleton
@@ -79,7 +76,7 @@ public class QueriesAreaCalculatorBean implements QueriesAreaCalculator, Queries
                     lengths.put(currentPoint, Math.sqrt(x.multiply(x).add(y.multiply(y)).doubleValue()));
                 }
 
-                points.subList(1, pointsCount).sort((a, b) -> (int) (angles.get(a) - angles.get(b)));
+                points.subList(1, pointsCount).sort(Comparator.comparingDouble(angles::get));
             }
 
             BigDecimal area = BigDecimal.ZERO;
