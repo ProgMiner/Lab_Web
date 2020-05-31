@@ -1,6 +1,7 @@
 package ru.byprogminer.Lab4_Web;
 
 import ru.byprogminer.Lab4_Web.area.Area;
+import ru.byprogminer.Lab4_Web.queriesareacalculator.QueriesAreaCalculator;
 import ru.byprogminer.Lab4_Web.history.HistoryService;
 import ru.byprogminer.Lab4_Web.querycounter.QueryCounter;
 import ru.byprogminer.Lab4_Web.sessions.SessionsService;
@@ -27,4 +28,7 @@ public class InjectionProducer {
 
     @Produces @EJB
     private QueryCounter queryCounter;
+
+    @Produces @EJB
+    private QueriesAreaCalculator queriesAreaCalculator;
 }

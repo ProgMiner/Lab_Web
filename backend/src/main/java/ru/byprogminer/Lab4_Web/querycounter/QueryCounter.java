@@ -7,6 +7,6 @@ import java.math.BigDecimal;
 @Remote
 public interface QueryCounter {
 
-    void sendCheckPointResult(boolean result);
-    void sendCheckPointValidationFailure(@NotNull BigDecimal x, @NotNull BigDecimal y, @NotNull BigDecimal r);
+    void addPointCheckingResult(boolean result);
+    void sendPointCheckingValidationFailure(@NotNull BigDecimal x, @NotNull BigDecimal y, @NotNull BigDecimal r);
 }
