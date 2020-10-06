@@ -52,7 +52,7 @@ public class QueryBean {
         errorBean.setMessage(messages.next().getSummary());
         errorBean.error();
 
-        event.getFacesContext().getExternalContext().redirect("/error.xhtml");
+        event.getFacesContext().getExternalContext().redirect("error.xhtml");
     }
 
     public Boolean getResult() {
